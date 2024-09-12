@@ -1,0 +1,293 @@
+" list of all actions - :actionlist
+" example config https://github.com/amzyang/dotfiles/blob/master/.ideavimrc
+
+" Manipulate case: guu, gUU, g~~
+
+let mapleader=" "
+let maplocalleader=" "
+
+imap jj <Esc>
+imap JJ <Esc>
+imap kk <Esc>
+imap оо <Esc>
+nmap vv ggVG
+nmap Y y$
+nmap <leader>o :close<cr>
+nmap <leader>; :
+set ignorecase
+set smartcase
+set hlsearch
+set showmode
+set incsearch
+set wrapscan
+set nonumber
+" set relativenumber
+" nmap <leader><leader> :w<cr>
+nmap <leader><leader> <Action>(ShowIntentionActions)
+" nnoremap <space> :
+nnoremap Q :
+nnoremap <silent> <C-l> :nohlsearch<CR>
+set clipboard=unnamed,unnamedplus
+set visualbell
+set nonumber
+set scrolloff=9999
+inoremap <C-f> <Right>
+inoremap <C-b> <Left>
+inoremap <A-f> <S-Right>
+inoremap <A-b> <S-Left>
+inoremap II <Esc>I
+inoremap AA <Esc>A
+nmap dJ dG
+nmap dK dgg
+nmap vJ vG
+nmap vK vgg
+nmap <C-;> mgA;<Esc>`g
+imap <C-;> <Esc>mgA;<Esc>`gi<Right>
+nmap <C-s> mgA;<Esc>`g
+imap <C-s> <Esc>mgA;<Esc>`gi<Right>
+
+nmap <C-,> mgA,<Esc>`g
+imap <C-,> <Esc>mgA,<Esc>`gi<Right>
+nmap <C-c> mgA,<Esc>`g
+imap <C-c> <Esc>mgA,<Esc>`gi<Right>
+nmap <C-]> mgA}<Esc>`g
+imap <C-]> <Esc>mgA}<Esc>`gi<Right>
+
+nmap <C-.> :action EditorCompleteStatement<CR>
+
+" Git
+nmap <leader>G :action Vcs.Operations.Popup<CR>
+nmap <leader>gf :action Git.Fetch<CR>
+nmap <leader>gpl :action Git.Pull<CR>
+nmap <leader>gpu :action Vcs.Push<CR>
+nmap <leader>gm :action Git.Merge<CR>
+nmap <leader>gd :action Compare.SameVersion<CR>
+nmap <leader>gc :action CheckinProject<CR>
+nmap <leader>gst :action Git.Stash<CR>
+nmap <leader>gust :action Git.Unstash<CR>
+nmap <leader>grb :action Git.Rebase<CR>
+nmap <leader>gre :action Git.Reset<CR>
+nmap <leader>grm :action Git.Configure.Remotes<CR>
+nmap <leader>gn :action Git.CreateNewBranch<CR><Esc>
+nmap <leader>gb :action Git.Branches<CR><Esc>
+nmap <leader>gl :action Vcs.Show.Log<CR>
+nmap <leader>ga :action Git.Add<CR>
+nmap <leader>gh <Action>(Vcs.ShowTabbedFileHistory)
+vmap <leader>gh <Action>(Vcs.ShowHistoryForBlock)
+
+" Refactorings
+nmap <leader>ri :action Inline<CR>
+nmap <M-r> <Action>(RenameElement)
+nmap <leader>rr :action RenameElement<CR>
+nmap <leader>rv :action IntroduceVariable<CR>
+nmap <leader>rc :action IntroduceConstant<CR>
+nmap <leader>rm :action Move<CR>
+nmap <leader>ro :action OptimizeImports<CR>
+nmap <leader>rs :action SurroundWith<CR>
+vmap <leader>rs :action SurroundWith<CR>
+nmap <leader>re :action SurroundWithEmmet<CR>
+vmap <leader>re :action SurroundWithEmmet<CR>
+
+" Goto
+nmap <leader>fa :action GotoAction<CR>
+nmap <leader>ff :action GotoFile<CR>
+nmap <leader>fs :action GotoSymbol<CR>
+nmap <leader>ft :action StructuralSearchPlugin.StructuralSearchAction<CR>
+nmap <leader>fu :action FindUsages<CR>
+nmap <leader>fp :action ManageRecentProjects<CR>
+
+" Plugins
+nmap <leader>pi :action WelcomeScreen.Plugins<CR>
+nmap <leader>pu :action CheckForUpdate<CR>
+
+" StringManipulation
+nmap crs :action StringManipulation.ToSnakeCaseOrCamelCase<CR>
+nmap crp :action StringManipulation.ToPascalCaseOrCamelCase<CR>
+nmap crh :action StringManipulation.ToHyphenCaseOrCamelCase<CR>
+nmap crt :action StringManipulation.SwitchStyleAction<CR>
+
+nmap cru gUiw
+nmap crl guiw
+" map crt g~iw
+
+" Close
+nmap <leader>cp :action CloseProject<CR>
+
+" tool windows
+nmap <leader>te :action ActivateEventLogToolWindow<CR>
+nmap <leader>tp :action ActivateProjectToolWindow<CR>
+nmap <leader>ts :action ActivateStructureToolWindow<CR>
+nmap <leader>tt :action ActivateTerminalToolWindow<CR>
+nmap <leader>to :action ActivateTODOToolWindow<CR>
+nmap <leader>tv :action ActivateVersionControlToolWindow<CR>
+nmap <leader>th :action ToggleInlayHintsGloballyAction<CR>
+
+nmap [x k0dd<Action>(SaveAll)
+nmap ]x j0ddk<Action>(SaveAll)
+
+nmap [d k0dd<Action>(SaveAll)
+nmap ]d j0ddk<Action>(SaveAll)
+
+nmap <leader>j :action AceLineStartsAction<CR>
+nmap <leader>L :action AceLineAction<CR>
+nmap <leader>a :action AceTargetAction<CR>
+nmap <leader>d :action AceDeclarationAction<CR>
+nmap <leader>W :action AceWordAction<CR>
+nmap <leader>w :action AceWordForwardAction<CR>
+nmap <leader>b :action AceWordBackwardsAction<CR>
+nmap = :action AceAction<CR>
+nmap <D-;> :action AceAction<CR>
+imap <D-;> <Esc>:action AceAction<CR>i
+
+nmap <leader>k :action HighlightUsagesInFile<CR>
+
+nmap <leader>se :e ~/.ideavimrc<CR>
+"nmap <leader>ss :source ~/.ideavimrc<CR>
+nmap <leader>ss <Action>(IdeaVim.ReloadVimRc.reload)
+nmap <leader>sl :e ~/.ideavimrc.local<CR>
+
+nmap <leader>- :action SplitHorizontally<CR>
+nmap <leader>\ :action SplitVertically<CR>
+
+imap <c-a> <c-o>^
+imap <c-e> <c-o>$<Right>
+
+" unimpaired mappings - from https://github.com/saaguero/ideavimrc/blob/master/.ideavimrc
+nmap [<Space> O<Esc>j<Action>(SaveAll)
+nmap ]<Space> o<Esc>k<Action>(SaveAll)
+nnoremap [[ :action MethodUp<cr>
+nnoremap ]] :action MethodDown<cr>
+nmap ]c :action VcsShowNextChangeMarker<CR>
+nmap [c :action VcsShowPrevChangeMarker<CR>
+
+nnoremap zc :action CollapseRegion<CR>
+nnoremap zo :action ExpandRegion<CR>
+
+" Moving lines
+nmap [e :action MoveLineUp<CR>
+nmap ]e :action MoveLineDown<CR>
+
+" Moving statements
+nmap [s :action MoveStatementUp<cr>
+nmap ]s :action MoveStatementDown<cr>
+
+nmap <leader>e :action JumpToLastChange<cr>
+
+nmap dae ggVGd
+
+nnoremap gf :action ShowIntentionActions<CR>
+nmap gh :action QuickJavaDoc<CR>
+" Reselect pasted text
+nnoremap gp `[v`]
+" nmap gp :action PinActiveTabToggle<CR>
+nmap g- ciwtrue<Esc>
+nmap g= ciwfalse<Esc>
+" nmap gc :close<cr>
+" Paste from non-volatile (not affected by dd) yank buffer
+nnoremap yp "0p
+
+" delete current line from beginning
+nmap dal 0dd
+
+nmap ]> j0>>k_
+nmap ]< j0<<k_
+nmap [> k0>>j_
+nmap [< k0<<j_
+
+" enable plugins
+" https://github.com/tpope/vim-surround/blob/master/doc/surround.txt#L138
+" If f, F, or <C-F> is used, Vim prompts for a function name to insert.
+set surround
+set multiple-cursors
+set commentary " gcc gcip
+set easymotion
+set argtextobj
+set textobj-entire
+set exchange
+set sneak
+" :NERDTree, :NERDTreeFocus, :NERDTreeToggle, :NERDTreeFind
+" j, k, o, t, s, x, p, K, r
+set NERDTree
+set ReplaceWithRegister
+set highlightedyank
+let g:highlightedyank_highlight_duration = "1000"
+set vim-paragraph-motion
+set which-key
+let g:WhichKey_ShowVimActions = "true"
+set notimeout
+"set timeoutlen=5000
+set vim-paragraph-motion
+
+" set idea-specific settings
+set clipboard+=ideaput
+set smartjoin " to perform a join via the IDE (deprecated?)
+set ideajoin
+set ideamarks " :delmark A
+set ideastatusicon=gray
+set idearefactormode=keep
+
+set keep-english-in-normal
+
+nmap <leader>n :NERDTree<CR>
+
+nmap <C-n> :action GotoNextError<CR>
+nmap <C-p> :action GotoPreviousError<CR>
+
+imap <C-p> <C-o>:action HippieCompletion<CR>
+imap <C-n> <C-o>:action HippieBackwardCompletion<CR>
+
+imap <C-d> <C-o>x
+
+nmap <leader>hp :action VcsShowCurrentChangeMarker<CR>
+nmap <leader>hu :action Vcs.RollbackChangedLines<CR>
+nmap <C-i> <Action>(Forward)
+nmap <C-o> <Action>(Back)
+
+nmap <C-w>t :action ChangeSplitOrientation<CR>
+nmap <C-w>= :action ChangeSplitOrientation<CR>
+nmap <leader>= :action ChangeSplitOrientation<CR>
+
+nmap yon :set number!<CR>
+nmap yor :set relativenumber!<CR>
+
+nmap <leader>q :action NewScratchBuffer<CR>
+
+" map <C-K> <Action>(CommentByLineComment)
+nmap <C-K> <Action>(CommentByBlockComment)
+vmap <C-K> <Action>(CommentByBlockComment)
+
+nmap <leader>yr <Action>(CopyReference)
+
+" disable ideavim in dialog windows
+" set ideaenabledbufs=
+
+nmap <leader>S :action Scratch.ShowFilesPopup<CR>
+
+nmap <leader>siB viB:sort<CR>
+nmap <leader>sib vi[:sort<CR>
+nmap <leader>sib vib:sort<CR>
+
+" Closing tabs
+nmap <leader>x :action CloseContent<CR>
+nmap <leader>X :action ReopenClosedTab<CR>
+
+nnoremap <c-z> :action ToggleDistractionFreeMode<CR>
+" nnoremap <c-x> :action HideAllWindows<CR>
+
+" have x (removes single character) not go into the default registry
+nnoremap x "_x
+
+" Make X an operator that removes without placing text in the default registry
+" nmap X "_d
+" nmap XX "_dd
+" vmap X "_d
+" vmap x "_d
+
+" don't yank to default register when changing something
+nnoremap c "xc
+xnoremap c "xc
+
+map <C-g> <Plug>NextOccurrence
+nmap <leader>l <Action>(ClearAllNotifications)
+
+source ~/.ideavimrc.local
