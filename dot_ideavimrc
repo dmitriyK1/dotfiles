@@ -17,10 +17,10 @@
 let mapleader=" "
 let maplocalleader=" "
 
-imap jj <Esc>
-imap JJ <Esc>
-imap kk <Esc>
-imap оо <Esc>
+imap jj <Esc>l
+imap JJ <Esc>l
+imap kk <Esc>l
+imap оо <Esc>l
 nmap vv ggVG
 nmap Y y$
 nmap <leader>o :close<cr>
