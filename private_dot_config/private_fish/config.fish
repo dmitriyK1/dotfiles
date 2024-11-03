@@ -10,6 +10,9 @@
 # fasd support here:
 # https://github.com/fishgretel/fasd
 
+# https://github.com/FabioAntunes/fish-nvm
+# Run 'nvm_alias_command' to create aliases for binaries: npm node npx yarn
+
 # fisher automatic install
 if not functions -q fisher
     set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
