@@ -10,9 +10,6 @@
 # fasd support here:
 # https://github.com/fishgretel/fasd
 
-# tide shell prompt
-# https://github.com/IlanCosman/tide
-
 # fisher automatic install
 if not functions -q fisher
     set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
@@ -54,9 +51,8 @@ if status --is-interactive
 
     # caniuse --completion-fish | source
 
+    # Generates shell code to override your shell's "command not found" handler with one that calls npx
     # source (npx --shell-auto-fallback fish | psub)
-
-    # starship init fish | source
 
     function fish_user_key_bindings
         bind \cr _atuin_search
@@ -71,11 +67,6 @@ if status --is-interactive
 
     [ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
 
-
-    function tere
-        set --local result (command tere $argv)
-        [ -n "$result" ] && cd -- "$result"
-    end
 
     #function fish_exit --on-event fish_exit
     #    atuin sync -f >/dev/null 2>&1
