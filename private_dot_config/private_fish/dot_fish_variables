@@ -1,0 +1,88 @@
+export LANG=en_US.UTF-8
+export LESS='-R'
+export LESSOPEN='|pygmentize -g %s'
+export SHELL=/usr/local/bin/fish
+export EDITOR=/usr/local/bin/nvim
+export CHEATCOLORS=true
+export GEM_HOME=$HOME/.gem_home
+export ANDROID_HOME=$HOME/Library/Android/sdk
+
+set -g fish_user_paths "/usr/local/sbin" $fish_user_paths
+
+# set --export NODE_ENV development
+
+# These paths are set with this omf plugin https://github.com/oh-my-fish/plugin-brew
+#   /usr/local/bin
+#   /usr/bin
+#   /bin
+#   /usr/local/sbin
+#   /usr/sbin
+#   /sbin
+
+# nodejs per-project version manager
+# https://github.com/notion-cli/notion
+# set --export NOTION_HOME $HOME/.notion
+# set --export PATH $NOTION_HOME/bin $PATH
+# set --export PATH $NOTION_HOME $PATH
+
+set --export XDG_RUNTIME_DIR /run/user/$UID
+set --export XDG_DATA_HOME $HOME/.local/share
+set --export XDG_CONFIG_HOME $HOME/.config
+set --export XDG_STATE_HOME $HOME/.local/state
+set --export XDG_CACHE_HOME $HOME/.cache
+
+set --export PATH $HOME/.local/bin $PATH
+set --export PATH /opt/local/bin $PATH
+set --export PATH $HOME/.node_modules_global/bin $PATH
+set --export PATH $HOME/.nimble/bin $PATH
+set --export PATH $HOME/.yarn/bin $PATH
+# set --export PATH $HOME/.git-semantic-commits $PATH
+set --export PATH $HOME/.cargo/bin $PATH
+set --export PATH $HOME/go/bin $PATH
+set --export PATH $GEM_HOME/bin $PATH
+
+# requires `git clone https://github.com/unixorn/git-extra-commands.git ~/Development/git-extra-commands`
+set --export PATH $HOME/Development/git-extra-commands/bin $PATH
+
+set EDITOR nvim
+# set VISUAL mvim
+
+# Use fd to list filenames for fzf
+# https://github.com/sharkdp/fd
+# search for files, including hidden, follow symlinks, colorize results instead of fzf
+set --export FZF_DEFAULT_COMMAND 'fd --type file --hidden --follow --color=always --exclude "{.DS_Store,.git,node_modules,flow-typed}"'
+set --export FZF_ALT_C_COMMAND 'fd --type directory --hidden --follow --color=always --exclude "{.DS_Store,.git,node_modules,flow-typed}"'
+set --export FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
+set --export FZF_DEFAULT_OPTS '--ansi --highlight-line'
+set --export LESSKEY '~/.lesskey'
+set --export LESS '-w --incsearch --quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
+set --export BAT_PAGER "less"
+set --export ENHANCD_FILTER 'fzy:fzf:peco'
+
+# TODO alias to ctrl+o
+# fzf --preview '/usr/local/bin/bat {} --color=always'
+
+# NOTE: disable '--ansi' and '--color=always' to speedup
+set --export BAT_THEME 'TwoDark'
+
+set --export TERM xterm-256color
+
+# don't create .pyc or .pyo files on the import of source modules
+set -xg PYTHONDONTWRITEBYTECODE 1
+set -U PIPENV_VENV_IN_PROJECT 1 # to create .venv in a project dir
+
+# https://github.com/jethrokuan/fzf options
+# set -U FZF_LEGACY_KEYBINDINGS 0
+set -U FZF_ENABLE_OPEN_PREVIEW 1 # available via <Ctrl-g>
+# set -U FZF_CTRL_T_OPTS="--preview='head -$LINES {}'"
+# set -U FZF_COMPLETE 1 # Enable fzf for fish tab completion
+
+# requires https://github.com/rkitover/vimpager#install
+# set --export PAGER vimpager
+
+# Load machine-specific variables if the file exists
+if test -f ~/.config/fish/.fish_variables.local
+    source ~/.config/fish/.fish_variables.local
+end
+
+# vim: filetype=sh
