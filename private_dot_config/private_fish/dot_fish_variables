@@ -3,7 +3,6 @@ export LC_ALL=en_US.UTF-8
 export LESSOPEN='|pygmentize -g %s'
 export SHELL=/usr/local/bin/fish
 export CHEATCOLORS=true
-export GEM_HOME=$HOME/.gem_home
 
 set -g fish_user_paths /usr/local/sbin $fish_user_paths
 
@@ -33,7 +32,6 @@ set --export PATH $HOME/.yarn/bin $PATH
 # set --export PATH $HOME/.git-semantic-commits $PATH
 set --export PATH $HOME/.cargo/bin $PATH
 set --export PATH $HOME/go/bin $PATH
-set --export PATH $GEM_HOME/bin $PATH
 
 # requires `git clone https://github.com/unixorn/git-extra-commands.git ~/Development/git-extra-commands`
 set --export PATH $HOME/Development/git-extra-commands/bin $PATH
