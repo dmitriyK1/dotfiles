@@ -23,6 +23,7 @@ set --export XDG_CONFIG_HOME $HOME/.config
 set --export XDG_STATE_HOME $HOME/.local/state
 set --export XDG_CACHE_HOME $HOME/.cache
 
+# Path Configuration
 set -gx PATH /usr/local/bin $PATH
 set -gx PATH /opt/homebrew/bin/ $PATH
 set --export PATH $HOME/.local/bin $PATH
@@ -33,7 +34,6 @@ set --export PATH $HOME/.yarn/bin $PATH
 # set --export PATH $HOME/.git-semantic-commits $PATH
 set --export PATH $HOME/.cargo/bin $PATH
 set --export PATH $HOME/go/bin $PATH
-
 # requires `git clone https://github.com/unixorn/git-extra-commands.git ~/Development/git-extra-commands`
 set --export PATH $HOME/Development/git-extra-commands/bin $PATH
 
