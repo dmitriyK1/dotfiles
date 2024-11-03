@@ -1,0 +1,265 @@
+# To just rerun your last command, simply type '!!'
+# '!! sudo' will prepend sudo to your most recent command
+# Running !! with anything other than sudo will append the argument to your most recent command
+# To add another command to prepend list remove the # on line 10 and put the command in the quotes. Repeat as needed
+# function !!;
+#   set var (history | head -n 1)
+#   if test $argv
+#     if test $argv = "sudo"        #; or "any other command you want to prepend"
+#         eval $argv $var
+#     else
+#         eval $var $argv
+#     end
+#     else
+#         eval $var
+#   end
+# end
+
+function bind_bang
+  switch (commandline -t)
+  case "!"
+    commandline -t $history[1]; commandline -f repaint
+  case "*"
+    commandline -i !
+  end
+end
+
+function bind_dollar
+  switch (commandline -t)
+  case "!"
+    commandline -t ""
+    commandline -f history-token-search-backward
+  case "*"
+    commandline -i '$'
+  end
+end
+
+function fish_user_key_bindings
+  bind ! bind_bang
+  bind '$' bind_dollar
+  fzf_key_bindings
+end
+
+# Git log find by commit message
+function glf
+  git log --all --grep=$argv
+end
+
+# function vim
+#   mvim -v $argv
+# end
+
+# Git find all commits unique to a current branch
+function gitu
+  git log (git rev-parse --abbrev-ref HEAD) --not (git for-each-ref --format='%(refname)' refs/heads/ | grep -v "refs/heads/"(git rev-parse --abbrev-ref HEAD))
+end
+
+# Diff current branch with specified branch
+function gdh
+  git diff $argv HEAD
+end
+
+# Diff current branch with specified branch using difftool
+function gdlh
+  git difftool $argv HEAD | less
+end
+
+function gro
+  gron $argv[2] | fgrep $argv[1] | norg
+end
+
+function findbyport
+  # sudo lsof -i :$argv
+  lsof -i :$argv | grep \* | cut -d ' ' -f5
+end
+
+function killbyport
+  kill -9 (findbyport $argv)
+end
+
+# https://github.com/SidOfc/dotfiles/tree/master/.config/fish/functions
+# https://medium.com/@sidneyliebrand/how-fzf-and-ripgrep-improved-my-workflow-61c7ca212861
+function kp --description "Kill processes"
+  set -l __kp__pid (ps -ef | sed 1d | eval "fzf $FZF_DEFAULT_OPTS -m --header='[kill:process]'" | awk '{print $2}')
+  set -l __kp__kc $argv[1]
+
+  if test "x$__kp__pid" != "x"
+    if test "x$argv[1]" != "x"
+      echo $__kp__pid | xargs kill $argv[1]
+    else
+      echo $__kp__pid | xargs kill -9
+    end
+    kp
+  end
+end
+
+function fp --description "Search your path"
+  set -l loc (echo $PATH | tr ' ' '\n' | eval "fzf $FZF_DEFAULT_OPTS --header='[find:path]'")
+
+  if test (count $loc) = 1
+    set -l cmd (rg --files -L $loc | rev | cut -d'/' -f1 | rev | tr ' ' '\n' | eval "fzf $FZF_DEFAULT_OPTS --header='[find:exe] => $loc'")
+    if test (count $cmd) = 1
+      echo $cmd
+    else
+      fp
+    end
+  end
+end
+
+function bip --description "Install brew plugins"
+  set -l inst (brew search | eval "fzf $FZF_DEFAULT_OPTS -m --header='[brew:install]'")
+
+  if not test (count $inst) = 0
+    for prog in $inst
+      brew install "$prog"
+    end
+  end
+end
+
+function pbclear --description "Provide functionality to clear from the pasteboard (the Clipboard) from command line"
+  if test (which pbcopy)
+    echo '' | pbcopy
+  end
+end
+
+function reload --description "Reload fish shell"
+  if contains -- -f $argv
+    set -e __initialized
+  end
+  source ~/.config/fish/config.fish
+end
+
+# search for a pattern in files, then fuzzy select file and open in nvim
+function rgvim
+    set choice (command rg -il $argv | fzf -0 -1 --ansi --preview "cat {} | rg $argv --context 3")
+    if [ $choice ]
+        /usr/local/bin/nvim "+/"(string lower $argv) $choice
+    end
+end
+
+function install -d "Interactive package installer"
+  if [ $argv[1] ]
+    set choice $argv[1]
+  else
+    set choice (brew search | fzf --reverse --preview "brew info {}" --preview-window=right:75%)
+  end
+  if [ $choice ]
+    brew install $choice
+  end
+end
+
+# https://github.com/junegunn/fzf/wiki/Examples-(fish)
+function fzf-bcd-widget -d 'cd backwards'
+	pwd | awk -v RS=/ '/\n/ {exit} {p=p $0 "/"; print p}' | tail -r | eval (__fzfcmd) +m --select-1 --exit-0 $FZF_BCD_OPTS | read -l result
+	[ "$result" ]; and cd $result
+	commandline -f repaint
+end
+
+# TODO bind to shortcut
+function fzf-cdhist-widget -d 'cd to one of the previously visited locations'
+	# Clear non-existent folders from cdhist.
+	set -l buf
+	for i in (seq 1 (count $dirprev))
+		set -l dir $dirprev[$i]
+		if test -d $dir
+			set buf $buf $dir
+		end
+	end
+	set dirprev $buf
+	string join \n $dirprev | tail -r | sed 1d | eval (__fzfcmd) +m --tiebreak=index --toggle-sort=ctrl-r $FZF_CDHIST_OPTS | read -l result
+	[ "$result" ]; and cd $result
+	commandline -f repaint
+end
+
+function fco -d "Fuzzy-find and checkout a branch"
+  git branch --all | grep -v HEAD | string trim | fzf | read -l result; and git checkout "$result"
+end
+
+function fcoc -d "Fuzzy-find and checkout a commit"
+  git log --pretty=oneline --abbrev-commit --reverse | fzf --tac +s -e | awk '{print $1;}' | read -l result; and git checkout "$result"
+end
+
+# count file occurences of a specified pattern
+function rgc
+  echo File occurences: (rgn $argv[1] | wc -l | string trim)
+end
+
+# use diff-so-fancy for a single/multiple changed files
+# function gd
+#   git diff --color $argv | diff-so-fancy | less --tabs=4 -RFXi --pattern '^(Date|added|deleted|modified): '
+# end
+
+# compare current branch with a specified remote branch
+function gdrb
+  git fetch; git diff ...origin/$argv
+end
+
+# compare logs of a current branch with a specified remote branch
+function glrb
+  git fetch; git log ...origin/$argv
+end
+
+function mkcd
+  mkdir -pv $argv; cd $argv
+end
+
+# function nvm_find_nvmrc
+#   bass source ~/.nvm/nvm.sh --no-use ';' nvm_find_nvmrc
+# end
+
+# function load_nvm --on-variable="PWD"
+#   set -l default_node_version (nvm version default)
+#   set -l node_version (nvm version)
+#   set -l nvmrc_path (nvm_find_nvmrc)
+#   if test -n "$nvmrc_path"
+#     set -l nvmrc_node_version (nvm version (cat $nvmrc_path))
+#     if test "$nvmrc_node_version" = "N/A"
+#       nvm install (cat $nvmrc_path)
+#     else if test nvmrc_node_version != node_version
+#       nvm use $nvmrc_node_version
+#     end
+#   else if test "$node_version" != "$default_node_version"
+#     echo "Reverting to default Node version"
+#     nvm use default
+#   end
+# end
+
+function commit-count
+  git rev-list --count HEAD
+end
+
+function count_commits
+  commit-count
+end
+
+function diff_commits
+  if test $argv[1]
+    git log --left-right --graph --cherry-pick --oneline (git rev-parse --abbrev-ref HEAD)...$argv[1]
+  else
+    echo "Branch name is required"
+  end
+end
+
+function build_status
+  if test $argv[1]
+    set projectname $argv[1]
+  else
+    set projectname "lwa-ui-dev-build"
+  end
+
+  echo $projectname
+
+  set id $(aws codebuild list-builds-for-project --project-name $projectname | jq -r '.ids[0]')
+  aws codebuild batch-get-builds --ids "$id" | jq '.builds[].phases[] | select (.phaseType=="BUILD") | .phaseStatus'
+end
+
+function yy
+	set tmp (mktemp -t "yazi-cwd.XXXXXX")
+	yazi $argv --cwd-file="$tmp"
+	if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+		builtin cd -- "$cwd"
+	end
+	rm -f -- "$tmp"
+end
+
+# vim: filetype=sh
