@@ -262,4 +262,4 @@ function yy
 	rm -f -- "$tmp"
 end
 
-# vim: filetype=sh
+# vim: filetype=fish

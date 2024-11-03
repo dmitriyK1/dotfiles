@@ -343,4 +343,4 @@ alias restart-touchbar="sudo pkill TouchBarServer && sudo killall ControlStrip"
 # git multi status
 # git relation develop feature/some-feature-branch
 
-# vim: filetype=sh
+# vim: filetype=fish
