@@ -18,6 +18,10 @@ if not functions -q fisher
     set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
     curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
     fish -c fisher
+
+    if test -f "$XDG_CONFIG_HOME/fish/fish_plugins"
+        fisher install (cat $XDG_CONFIG_HOME/fish/fish_plugins)
+    end
 end
 
 set -g theme_powerline_fonts no
