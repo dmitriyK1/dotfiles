@@ -68,8 +68,7 @@ if status --is-interactive
 
     # source (pyenv init -|psub)
 
-    [ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
-
+    [ -f "$HOMEBREW_PREFIX/share/autojump/autojump.fish" ]; and source "$HOMEBREW_PREFIX/share/autojump/autojump.fish"
 
     #function fish_exit --on-event fish_exit
     #    atuin sync -f >/dev/null 2>&1
