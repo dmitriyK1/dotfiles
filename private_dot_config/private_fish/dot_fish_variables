@@ -42,32 +42,35 @@ set VISUAL nvim
 # Use fd to list filenames for fzf
 # https://github.com/sharkdp/fd
 # search for files, including hidden, follow symlinks, colorize results instead of fzf
+
+# fzf config
 set --export FZF_DEFAULT_COMMAND 'fd --type file --hidden --follow --color=always --exclude "{.DS_Store,.git,node_modules,flow-typed}"'
 set --export FZF_ALT_C_COMMAND 'fd --type directory --hidden --follow --color=always --exclude "{.DS_Store,.git,node_modules,flow-typed}"'
 set --export FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set --export FZF_DEFAULT_OPTS '--ansi --highlight-line'
+# https://github.com/jethrokuan/fzf options
+# set -U FZF_LEGACY_KEYBINDINGS 0
+set -U FZF_ENABLE_OPEN_PREVIEW 1 # available via <Ctrl-g>
+# set -U FZF_CTRL_T_OPTS="--preview='head -$LINES {}'"
+# set -U FZF_COMPLETE 1 # Enable fzf for fish tab completion
+
+# pager config
 set --export LESSKEY '~/.lesskey'
 set --export LESS '-w --incsearch --quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4 -R'
 set --export BAT_PAGER less
+# NOTE: disable '--ansi' and '--color=always' to speedup
+set --export BAT_THEME TwoDark
+
 set --export ENHANCD_FILTER 'fzy:fzf:peco'
 
 # TODO alias to ctrl+o
 # fzf --preview '/usr/local/bin/bat {} --color=always'
-
-# NOTE: disable '--ansi' and '--color=always' to speedup
-set --export BAT_THEME TwoDark
 
 set --export TERM xterm-256color
 
 # don't create .pyc or .pyo files on the import of source modules
 set -xg PYTHONDONTWRITEBYTECODE 1
 set -U PIPENV_VENV_IN_PROJECT 1 # to create .venv in a project dir
-
-# https://github.com/jethrokuan/fzf options
-# set -U FZF_LEGACY_KEYBINDINGS 0
-set -U FZF_ENABLE_OPEN_PREVIEW 1 # available via <Ctrl-g>
-# set -U FZF_CTRL_T_OPTS="--preview='head -$LINES {}'"
-# set -U FZF_COMPLETE 1 # Enable fzf for fish tab completion
 
 # requires https://github.com/rkitover/vimpager#install
 # set --export PAGER vimpager
