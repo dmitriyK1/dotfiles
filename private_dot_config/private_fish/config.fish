@@ -23,8 +23,6 @@ end
 set theme_display_node yes
 # set -g theme_display_nvm yes
 set fish_prompt_pwd_dir_length 1
-# requires `omf install bobthefish`
-set theme_color_scheme gruvbox
 set -g theme_nerd_fonts yes
 # set -g theme_display_docker_machine yes
 set -g fish_prompt_pwd_dir_length 0
