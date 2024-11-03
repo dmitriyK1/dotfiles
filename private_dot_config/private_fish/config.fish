@@ -20,10 +20,11 @@ if not functions -q fisher
     fish -c fisher
 end
 
-set theme_display_node yes
+set -g theme_powerline_fonts no
+set -g theme_nerd_fonts yes
+set -g theme_display_node always
 # set -g theme_display_nvm yes
 set fish_prompt_pwd_dir_length 1
-set -g theme_nerd_fonts yes
 # set -g theme_display_docker_machine yes
 set -g fish_prompt_pwd_dir_length 0
 set -g theme_display_jobs_verbose yes
@@ -31,20 +32,21 @@ set -g theme_show_exit_status yes
 set -g theme_date_format "+%a %d-%m-%Y [%H:%M]"
 # set -g fish_hybrid_key_bindings
 
-source ~/.config/fish/.fish_variables
-source ~/.config/fish/.fish_functions
-source ~/.config/fish/.fish_aliases
-
-test -e {$HOME}/.iterm2_shell_integration.fish; and source {$HOME}/.iterm2_shell_integration.fish
-
-[ -f $HOME/.config/fish/config.local.fish ]; and source $HOME/.config/fish/config.local.fish
-
 if status --is-interactive
+    # Commands to run in interactive sessions
+
+    source ~/.config/fish/.fish_variables
+    source ~/.config/fish/.fish_functions
+    source ~/.config/fish/.fish_aliases
+    [ -f $HOME/.config/fish/config.local.fish ]; and source $HOME/.config/fish/config.local.fish
+
+    test -e {$HOME}/.iterm2_shell_integration.fish; and source {$HOME}/.iterm2_shell_integration.fish
+
     atuin init fish | source
 
     zoxide init fish | source
 
-    [ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
+    fzf --fish | source
 
     # caniuse --completion-fish | source
 
@@ -62,6 +64,18 @@ if status --is-interactive
     end
 
     # source (pyenv init -|psub)
+
+    [ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
+
+
+    function tere
+        set --local result (command tere $argv)
+        [ -n "$result" ] && cd -- "$result"
+    end
+
+    #function fish_exit --on-event fish_exit
+    #    atuin sync -f >/dev/null 2>&1
+    #end
 end
 
 # activate https://github.com/adambrenecki/virtualfish
@@ -70,3 +84,5 @@ end
 # You must call it on initialization or listening to directory switching won't work
 # https://github.com/nvm-sh/nvm#deeper-shell-integration
 # load_nvm
+
+# vim: filetype=fish
