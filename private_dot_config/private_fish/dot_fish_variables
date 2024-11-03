@@ -5,7 +5,6 @@ export SHELL=/usr/local/bin/fish
 export EDITOR=/usr/local/bin/nvim
 export CHEATCOLORS=true
 export GEM_HOME=$HOME/.gem_home
-export ANDROID_HOME=$HOME/Library/Android/sdk
 
 set -g fish_user_paths "/usr/local/sbin" $fish_user_paths
 
@@ -85,4 +84,4 @@ if test -f ~/.config/fish/.fish_variables.local
     source ~/.config/fish/.fish_variables.local
 end
 
-# vim: filetype=sh
+# vim: filetype=fish
