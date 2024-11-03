@@ -1,5 +1,5 @@
 export LANG=en_US.UTF-8
-export LC_ALL en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 export LESSOPEN='|pygmentize -g %s'
 export SHELL=/usr/local/bin/fish
 export CHEATCOLORS=true
