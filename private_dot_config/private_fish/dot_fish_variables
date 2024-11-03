@@ -6,7 +6,7 @@ export EDITOR=/usr/local/bin/nvim
 export CHEATCOLORS=true
 export GEM_HOME=$HOME/.gem_home
 
-set -g fish_user_paths "/usr/local/sbin" $fish_user_paths
+set -g fish_user_paths /usr/local/sbin $fish_user_paths
 
 # set --export NODE_ENV development
 
@@ -55,14 +55,14 @@ set --export FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set --export FZF_DEFAULT_OPTS '--ansi --highlight-line'
 set --export LESSKEY '~/.lesskey'
 set --export LESS '-w --incsearch --quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
-set --export BAT_PAGER "less"
+set --export BAT_PAGER less
 set --export ENHANCD_FILTER 'fzy:fzf:peco'
 
 # TODO alias to ctrl+o
 # fzf --preview '/usr/local/bin/bat {} --color=always'
 
 # NOTE: disable '--ansi' and '--color=always' to speedup
-set --export BAT_THEME 'TwoDark'
+set --export BAT_THEME TwoDark
 
 set --export TERM xterm-256color
 
