@@ -1,0 +1,345 @@
+alias updatedb="sudo /usr/libexec/locate.updatedb"
+alias up ~/update.sh
+alias upc "cd ~/configs; git pull; cd-"
+
+alias locate "mdfind"
+# alias updatedb "sudo /usr/libexec/locate.updatedb"
+
+alias n "npm"
+alias ns "npm start"
+alias nb "npm run build"
+alias ni "npm i"
+alias nib "npm install; npm run build"
+alias nis "npm install; npm start"
+alias nit "npm it"
+alias nig "npm i -g"
+alias nug "npm uninstall -g"
+alias nid "npm i -D"
+alias nu "npm uninstall"
+alias nud "npm uninstall -D"
+alias nt "npm t"
+alias nr "npm run"
+alias nl "npm link"
+alias nul "npm unlink"
+alias no "npm outdated"
+alias nup "npm upgrade"
+alias ndd "npm dedupe"
+alias nls "npm ls"
+
+alias y "yarn"
+alias ys "yarn start"
+alias yas "yarn; yarn start"
+alias yb "yarn build"
+alias yt "yarn test"
+alias ya "yarn add"
+alias yag "yarn global add"
+alias yr "yarn remove"
+alias yad "yarn add -D"
+
+alias fi "find . -name"
+
+alias g "git"
+alias multipull "find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} pull \;"
+# alias gh "git rev-parse --verify HEAD"
+alias ggc "git gc --aggressive"
+alias gh "git log --pretty=format:'%h' -n 1 | pbcopy"
+alias gm "git log -1 --pretty=%B; git log -1 --pretty=%B | pbcopy"
+alias gwa "git worktree add"
+alias gwr "git worktree remove"
+alias gwl "git worktree list"
+alias gt "git checkout -"
+alias gtl "gt; gpl"
+alias gre "git reset"
+alias gre. "git reset ."
+alias grE 'git reset --hard "@{u}"'
+alias grch "git reset .; git checkout ."
+alias gi "git init"
+alias gia "git-iadd"
+alias gis "git ishow"
+alias gish "git ishow"
+alias gai "git-iadd"
+alias rb "recursive-blame"
+alias gl="git log --format='%Cred%h%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset%C(yellow)%d%Creset' --no-merges"
+alias gll="git log --oneline --decorate --no-merges"
+alias glp="git log -p --stat --no-merges"
+alias gls="git log -S"
+alias glr="gf; git log ...origin/(git branch | grep \* | cut -d ' ' -f2)" # compare commit on remote branch
+alias gma="git merge --abort"
+alias gmra="gma"
+alias gmr="git merge"
+# gitu - from .fish_functions
+# glf  - from .fish_functions
+alias gcl="git clone"
+alias gcln="git clean -df"
+alias gca="git commit --amend"
+alias gcaa="git commit --amend --reset-author --no-edit"
+alias gac="git add -u; git commit -m"
+alias grepall="git branch -a | tr -d \* | sed '/->/d' | xargs git grep"
+# alias gf "git fetch --all --prune --quiet"
+alias gf "git fetch --all --prune"
+alias gfo "git follow" # requires https://github.com/nickolasburr/git-follow
+alias gs "git status"
+alias gsm "git status --short | grep '^[MARCD]'" # show only modified (without new files)
+alias gS "git branch-status"
+alias gss "git status -sb"
+alias gsy "legit sync"
+alias gb "git branch"
+alias gbc "git branch --merged | grep -v '*' | xargs git branch -d"
+alias gbd "git branch -D"
+alias gbD "git push origin --delete"
+alias gba "git branch -a"
+alias gbv "git branch -vva"
+alias gbs "git branches"
+alias gst "git stash"
+alias gstp "git stash pop"
+alias gsta "git stash apply"
+alias gstl "git stash list"
+alias gsts "git stash show -p"
+alias gstpa "git stash -p"
+alias gstpu "git stash push"
+
+#alias gbl "git blame"
+# requires `gem install git-blame-color`
+# https://rubygems.org/gems/git-blame-color/versions/0.1.0
+
+alias gbl "git-blame-color"
+alias gc "git commit -v -m"
+alias gcz "git cz"
+alias gco "git checkout"
+alias gch "git checkout"
+alias gch. "git checkout ."
+alias gchp "git checkout -p"
+alias gn "git checkout -b"
+alias gdn "git diff --name-only"
+# alias gdd "git diff --color | diff-so-fancy"
+alias gd "git diff"
+# alias gdc "git diff --color --cached | diff-so-fancy | less --tabs=4 -RFXi --pattern '^(Date|added|deleted|modified): '"
+alias gdc "git diff --cached"
+# alias gdcnp "git diff --color --cached -- ':!package-lock.json' ':!yarn.lock' | diff-so-fancy | less --tabs=4 -RFXi --pattern '^(Date|added|deleted|modified): '"
+alias gdcnp "git diff --color -- ':!package-lock.json' ':!yarn.lock'"
+# alias gddc "git diff --color --cached | diff-so-fancy"
+alias gdnp "git diff -- ':!package-lock.json' ':!yarn.lock'"
+alias gdl "git difftool"
+alias gdlc "git difftool --cached"
+alias gde "git diff develop HEAD"
+alias gdv "git diff dev HEAD"
+alias gDen "git diff dev HEAD --name-only"
+alias gden "git diff develop HEAD --name-only"
+alias gdm "git diff master HEAD"
+# from https://stackoverflow.com/questions/4944376/how-to-check-real-git-diff-before-merging-from-remote-branch
+alias gdr "gf; git diff ...origin/(git branch | grep \* | cut -d ' ' -f2)" # compare with a same remote branch
+alias gdrm "gf; git diff ...origin/master"
+alias gdrd "gf; git diff ...origin/develop"
+alias ga "git add"
+alias ga.="ga ."
+alias gaa="ga ."
+alias gau="git add -u"
+alias gan "git add (git ls-files -o --exclude-standard)"
+alias gap="ga -p"
+alias gr "git recent -n10"
+alias grb "git rebase"
+alias gri "git rebase -i"
+alias grba "git rebase --abort"
+alias grbc "git rebase --continue"
+alias grs "git reset"
+alias gps "git push -u"
+# alias gpl "echo '\"git pull --ff-only\"'; git pull --ff-only" # to avoid creating merge commits
+alias gpl "git pull"
+alias gplm "git pull origin master"
+alias gpld "git pull origin develop"
+alias gplD "git pull origin dev"
+alias gsh "git show"
+alias grec "git recommit"
+alias gshn "git show --name-only"
+alias gshf "gshn"
+alias grev "git remote -vv"
+alias gcp "git cherry-pick"
+alias gcf "git commit --no-verify -m"
+alias gpf "git push --no-verify"
+alias gpF "git push --force"
+# alias gplf "gf; git reset --hard origin/develop"
+# alias gpu "git publish"
+# alias gpu "git push origin (git rev-parse --abbrev-ref HEAD) -u"
+alias gtg "git tag"
+# alias h "how2 -l javascript "
+
+# requires brew install gron
+alias norg="gron --ungron"
+alias ungron="gron --ungron"
+
+alias df="duf"
+alias ping="gping"
+alias top="btop"
+alias dig="dog"
+alias ps="procs"
+# alias du="dua"
+
+alias cd- "cd -"
+alias cdt "cd -"
+alias cdd "cd -"
+alias cdr "cd (git rev-parse --show-toplevel)"
+alias nano="env LC_ALL=ru_RU.UTF-8 nano"
+# alias vim "/usr/local/bin/vim"
+alias v "vim"
+alias v. "vim ."
+alias vi "vim"
+alias nv "env ESCDELAY=0 nvim" # ESCDELAY to remove delay in fzf (when closing popup) https://github.com/junegunn/fzf.vim/issues/248
+# alias vf "vifm ."
+alias vv "vifm ."
+alias mi "micro"
+alias ms "m sleep"
+alias ml "m lock"
+alias bi "brew install"
+alias bic "brew install --cask"
+alias bu "brew uninstall"
+alias bre "brew reinstall"
+alias bs "brew search"
+alias bif "brew info"
+# alias p "percol" # brew install percol
+alias p "peco" # brew install peco
+alias ss "reload"
+alias se "nvim ~/.config/fish/config.fish"
+alias sl "nvim ~/config.local.fish"
+alias sea "nvim ~/fish/.fish_aliases"
+alias seal "nvim ~/.fish_aliases.local"
+alias sef "nvim ~/fish/.fish_functions"
+alias sev "nvim ~/fish/.fish_variables"
+alias sc="pushd .; cd ~/configs; gdr; legit sync; popd; reload"
+alias vless='/usr/share/vim/vim74/macros/less.sh'
+
+alias cp='cp -iv' # Preferred 'cp' implementation
+alias cpr='cp -ivR'
+alias cpp='command cp'
+alias mv='mv -iv' # Preferred 'mv' implementation
+alias mvv='command mv'
+alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
+
+alias numfiles='echo (command ls -1 | wc -l)' # numfiles:     Count of non-hidden files in current dir
+alias count_files='numfiles'
+
+alias emacs "/Applications/Emacs.app/Contents/MacOS/Emacs -nw"
+alias em='emacs'
+alias cat=ccat
+
+alias fp='ls | fpp'
+
+alias cal='cal | grep --color -EC6 "\b"(date +%e | sed "s/ //g")'
+
+alias rg="rg -i --color=always --hidden --smart-case"
+alias rga="rga --hidden"
+alias rgf="rg -F"
+alias rgw="rg -w"
+alias rgn="rg -l"
+alias rgh="rg --hidden"
+
+alias rr="ranger"
+
+alias ls='eza -lha --color=always --icons --git --group-directories-first'
+alias ll='lsd -lA -F --group-dirs=first'
+alias lc='colorls --gs -la'
+
+alias tree='tree -a'
+
+# alias tm='tmux new-session -A -s main'
+alias tm='tmux -CC'         # start iterm tmux mode
+alias tma='tmux -CC attach' # attach to existing tmux session
+
+# requires https://github.com/rkitover/vimpager#install
+# alias less=$PAGER
+# alias zless=$PAGER
+# alias cat=vimcat
+
+alias b='bat'
+
+alias t='python ~/Downloads/t/t.py --task-dir ~/tasks --list tasks --delete-if-empty'
+alias totalfolderusage='command du -sh'
+
+alias unset 'set --erase'
+
+alias rmr 'rm -rf'
+alias ntla='ntl -A'
+# alias yarn='env NPQ_PKG_MGR=yarn npq-hero'
+# alias npm='npq-hero'
+
+alias p3='python3'
+alias pi='pip3 install'
+alias pir='pip3 install -r requirements.txt'
+alias pfr='pip3 freeze > requirements.txt'
+alias activate='. venv/bin/activate.fish'
+[ -f $HOME/.fish_aliases.local ]
+and source $HOME/.fish_aliases.local
+
+alias gpu="legit publish"
+alias gup="legit unpublish"
+alias gsw="legit switch"
+alias lg="lazygit"
+alias git-iadd "git status -s | sed s/^...// | ipt -m -M 'Select files to add:' | xargs git add"
+
+# fuzzy select and jump into folder
+alias jf="cd (cat ~/Library/autojump/autojump.txt | sort -nr | awk '{print \$2}' | fzf +s)"
+alias diff="delta"
+alias ncdu="ncdu --color dark -x --exclude .git --exclude node_modules"
+alias du="ncdu"
+alias cat='bat'
+alias ping='prettyping --nolegend'
+alias preview="fzf --preview 'bat --color \"always\" {}'"
+# alias top="sudo htop" # alias top and fix high sierra bug
+
+# --------------------------------------------------------------------------------
+# DOCKER ALIASES START
+# --------------------------------------------------------------------------------
+alias dps "docker ps"
+alias dlg "docker logs"
+alias dlgf "docker logs --follow"
+alias dka "docker kill (docker ps -q)"
+alias dr "docker restart"
+
+alias dkps "docker ps"
+alias dkst "docker stats"
+alias dkpsa "docker ps -a"
+alias dkimgs "docker images"
+alias dkcpup "docker-compose up -d"
+alias dkcpdown "docker-compose down"
+alias dkcpstart "docker-compose start"
+alias dkcpstop "docker-compose stop"
+
+alias docker-clean-unused='docker system prune --all --force --volumes'
+
+alias docker-clean-all='docker stop (docker container ls -a -q) && docker system prune -a -f --volumes'
+
+alias docker-clean-containers='docker container stop (docker container ls -a -q) && docker container rm (docker container ls -a -q)'
+# --------------------------------------------------------------------------------
+# DOCKER ALIASES END
+# --------------------------------------------------------------------------------
+
+alias bsl="brew services list"
+alias bss="brew services start"
+alias bst="brew services stop"
+alias bsr="brew services run"
+alias bsre="brew services restart"
+
+# --------------------------------------------------------------------------------
+# HEROKU ALIASES START
+# --------------------------------------------------------------------------------
+alias ha="heroku run bash" # connect to heroku app
+alias hd="heroku ps:exec"  # connect to running dyno
+alias hl="heroku logs --tail"
+# --------------------------------------------------------------------------------
+# HEROKU ALIASES END
+# --------------------------------------------------------------------------------
+
+alias youtube-dl-channel='youtube-dl -f best -ciw -o "%(title)s.%(ext)s" -v --download-archive .downloadslist'
+
+alias o.="open ."
+alias o="open ."
+
+alias router-ssh="ssh admin@router"
+alias restart-touchbar="sudo pkill TouchBarServer && sudo killall ControlStrip"
+
+# git imerge
+# git when-merged <commit_hash>
+# git branch-status
+# git multi status
+# git relation develop feature/some-feature-branch
+
+# vim: filetype=sh
