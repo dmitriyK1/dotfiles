@@ -18,12 +18,6 @@ set -g fish_user_paths /usr/local/sbin $fish_user_paths
 #   /usr/sbin
 #   /sbin
 
-# nodejs per-project version manager
-# https://github.com/notion-cli/notion
-# set --export NOTION_HOME $HOME/.notion
-# set --export PATH $NOTION_HOME/bin $PATH
-# set --export PATH $NOTION_HOME $PATH
-
 set --export XDG_RUNTIME_DIR /run/user/$UID
 set --export XDG_DATA_HOME $HOME/.local/share
 set --export XDG_CONFIG_HOME $HOME/.config
