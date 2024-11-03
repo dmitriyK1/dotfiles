@@ -72,6 +72,8 @@ set -U FZF_ENABLE_OPEN_PREVIEW 1 # available via <Ctrl-g>
 # requires https://github.com/rkitover/vimpager#install
 # set --export PAGER vimpager
 
+set --export HOMEBREW_PREFIX (brew --prefix)
+
 # Load machine-specific variables if the file exists
 if test -f ~/.config/fish/.fish_variables.local
     source ~/.config/fish/.fish_variables.local
