@@ -17,6 +17,9 @@ set -g fish_user_paths /usr/local/sbin $fish_user_paths
 #   /sbin
 
 # XDG Base Directory Specification
+if not test -d "$HOME/.runtime"
+    mkdir -p "$HOME/.runtime"
+end
 set --export XDG_RUNTIME_DIR $HOME/.runtime
 set --export XDG_DATA_HOME $HOME/.local/share
 set --export XDG_CONFIG_HOME $HOME/.config
