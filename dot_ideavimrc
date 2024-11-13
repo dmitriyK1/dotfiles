@@ -18,9 +18,9 @@ let mapleader=" "
 let maplocalleader=" "
 
 imap jj <Esc>l
-imap JJ <Esc>l
-imap kk <Esc>l
-imap оо <Esc>l
+"imap JJ <Esc>l
+"imap kk <Esc>l
+"imap оо <Esc>l
 nmap vv ggVG
 nmap Y y$
 nmap <leader>o :close<cr>
@@ -224,7 +224,7 @@ set ReplaceWithRegister
 set highlightedyank
 let g:highlightedyank_highlight_duration = "1000"
 set vim-paragraph-motion
-set which-key
+"set which-key
 let g:WhichKey_ShowVimActions = "true"
 set notimeout
 "set timeoutlen=5000
