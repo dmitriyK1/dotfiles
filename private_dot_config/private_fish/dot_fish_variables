@@ -41,8 +41,8 @@ set --export PATH $HOME/go/bin $PATH
 # requires `git clone https://github.com/unixorn/git-extra-commands.git ~/Development/git-extra-commands`
 set --export PATH $HOME/Development/git-extra-commands/bin $PATH
 
-set EDITOR nvim
-set VISUAL nvim
+set -Ux EDITOR nvim
+set -Ux VISUAL nvim
 
 # Use fd to list filenames for fzf
 # https://github.com/sharkdp/fd
