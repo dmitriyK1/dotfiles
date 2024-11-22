@@ -1,7 +1,8 @@
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export LESSOPEN='|pygmentize -g %s'
-export SHELL=/usr/local/bin/fish
+#export SHELL=/usr/local/bin/fish
+#export SHELL=/opt/homebrew/bin/fish
 export CHEATCOLORS=true
 
 set -g fish_user_paths /usr/local/sbin $fish_user_paths

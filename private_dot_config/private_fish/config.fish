@@ -48,7 +48,9 @@ if status --is-interactive
 
     atuin init fish | source
 
-    zoxide init fish | source
+    if command -v zoxide >/dev/null
+        zoxide init fish | source
+    end
 
     fzf --fish | source
 
