@@ -46,13 +46,17 @@ if status --is-interactive
 
     test -e {$HOME}/.iterm2_shell_integration.fish; and source {$HOME}/.iterm2_shell_integration.fish
 
-    atuin init fish | source
+    if command -v atuin >/dev/null
+        atuin init fish | source
+    end
 
     if command -v zoxide >/dev/null
         zoxide init fish | source
     end
 
-    fzf --fish | source
+    if command -v fzf >/dev/null
+        fzf --fish | source
+    end
 
     # caniuse --completion-fish | source
 
