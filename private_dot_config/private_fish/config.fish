@@ -36,10 +36,11 @@ set -g theme_show_exit_status yes
 set -g theme_date_format "+%a %d-%m-%Y [%H:%M]"
 # set -g fish_hybrid_key_bindings
 
+source ~/.config/fish/.fish_variables
+
 if status --is-interactive
     # Commands to run in interactive sessions
 
-    source ~/.config/fish/.fish_variables
     source ~/.config/fish/.fish_functions
     source ~/.config/fish/.fish_aliases
     [ -f $HOME/.config/fish/config.local.fish ]; and source $HOME/.config/fish/config.local.fish
