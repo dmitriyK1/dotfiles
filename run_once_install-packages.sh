@@ -16,3 +16,5 @@ if [[ -f "$BREWFILE" ]]; then
 else
   echo "Brewfile not found at $BREWFILE"
 fi
+
+git clone https://github.com/LazyVim/starter ~/.config/nvim
