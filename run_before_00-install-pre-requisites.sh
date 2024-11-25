@@ -7,7 +7,7 @@ if ! command -v brew &> /dev/null; then
 fi
 
 # Brewfile path
-BREWFILE="./Brewfile"
+BREWFILE=$CHEZMOI_SOURCE_DIR/Brewfile
 
 # Install packages from Brewfile
 if [[ -f "$BREWFILE" ]]; then
