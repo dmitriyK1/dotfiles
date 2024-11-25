@@ -17,4 +17,9 @@ else
   echo "Brewfile not found at $BREWFILE"
 fi
 
-git clone https://github.com/LazyVim/starter ~/.config/nvim
+if [ ! -d "$HOME/.config/nvim" ]; then
+  git clone https://github.com/LazyVim/starter ~/.config/nvim
+else
+  echo "Directory ~/.config/nvim already exists. Aborting clone."
+fi
+
