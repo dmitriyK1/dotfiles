@@ -10,3 +10,12 @@ function InsertDate()
 end
 
 vim.keymap.set("n", "<leader>id", InsertDate, { desc = "Insert Date" })
+
+-- vim.keymap.set("n", "<leader>rn", ":IncRename ")
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "LSP Rename" })
+
+vim.api.nvim_create_user_command("Dashboard", function()
+  require("snacks").dashboard.open()
+end, { desc = "Open Snacks Dashboard" })
+
+vim.keymap.set("n", "<leader>D", ":Dashboard<CR>", { noremap = true, silent = true })
