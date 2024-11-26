@@ -2,10 +2,10 @@ alias updatedb="sudo /usr/libexec/locate.updatedb"
 alias up ~/update.sh
 alias upc "cd ~/configs; git pull; cd-"
 
-alias locate "mdfind"
+alias locate mdfind
 # alias updatedb "sudo /usr/libexec/locate.updatedb"
 
-alias n "npm"
+alias n npm
 alias ns "npm start"
 alias nb "npm run build"
 alias ni "npm i"
@@ -26,7 +26,7 @@ alias nup "npm upgrade"
 alias ndd "npm dedupe"
 alias nls "npm ls"
 
-alias y "yarn"
+alias y yarn
 alias ys "yarn start"
 alias yas "yarn; yarn start"
 alias yb "yarn build"
@@ -36,9 +36,14 @@ alias yag "yarn global add"
 alias yr "yarn remove"
 alias yad "yarn add -D"
 
+alias chcd "chezmoi cd"
+alias chup "chezmoi update"
+alias chap "chezmoi apply"
+alias chst "chezmoi status"
+
 alias fi "find . -name"
 
-alias g "git"
+alias g git
 alias multipull "find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} pull \;"
 # alias gh "git rev-parse --verify HEAD"
 alias ggc "git gc --aggressive"
@@ -54,11 +59,11 @@ alias gre. "git reset ."
 alias grE 'git reset --hard "@{u}"'
 alias grch "git reset .; git checkout ."
 alias gi "git init"
-alias gia "git-iadd"
+alias gia git-iadd
 alias gis "git ishow"
 alias gish "git ishow"
-alias gai "git-iadd"
-alias rb "recursive-blame"
+alias gai git-iadd
+alias rb recursive-blame
 alias gl="git log --format='%Cred%h%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset%C(yellow)%d%Creset' --no-merges"
 alias gll="git log --oneline --decorate --no-merges"
 alias glp="git log -p --stat --no-merges"
@@ -102,7 +107,7 @@ alias gstpu "git stash push"
 # requires `gem install git-blame-color`
 # https://rubygems.org/gems/git-blame-color/versions/0.1.0
 
-alias gbl "git-blame-color"
+alias gbl git-blame-color
 alias gc "git commit -v -m"
 alias gcz "git cz"
 alias gco "git checkout"
@@ -151,7 +156,7 @@ alias gplD "git pull origin dev"
 alias gsh "git show"
 alias grec "git recommit"
 alias gshn "git show --name-only"
-alias gshf "gshn"
+alias gshf gshn
 alias grev "git remote -vv"
 alias gcp "git cherry-pick"
 alias gcf "git commit --no-verify -m"
@@ -180,13 +185,13 @@ alias cdd "cd -"
 alias cdr "cd (git rev-parse --show-toplevel)"
 alias nano="env LC_ALL=ru_RU.UTF-8 nano"
 # alias vim "/usr/local/bin/vim"
-alias v "vim"
+alias v vim
 alias v. "vim ."
-alias vi "vim"
+alias vi vim
 alias nv "env ESCDELAY=0 nvim" # ESCDELAY to remove delay in fzf (when closing popup) https://github.com/junegunn/fzf.vim/issues/248
 # alias vf "vifm ."
 alias vv "vifm ."
-alias mi "micro"
+alias mi micro
 alias ms "m sleep"
 alias ml "m lock"
 alias bi "brew install"
@@ -196,8 +201,8 @@ alias bre "brew reinstall"
 alias bs "brew search"
 alias bif "brew info"
 # alias p "percol" # brew install percol
-alias p "peco" # brew install peco
-alias ss "reload"
+alias p peco # brew install peco
+alias ss reload
 alias se "nvim ~/.local/share/chezmoi/private_dot_config/private_fish/config.fish"
 alias sl "nvim ~/.config/fish/config.local.fish"
 alias sea "nvim ~/.local/share/chezmoi/private_dot_config/private_fish/dot_fish_aliases"
@@ -242,7 +247,7 @@ alias lc='colorls --gs -la'
 alias tree='tree -a'
 
 # alias tm='tmux new-session -A -s main'
-alias tm='tmux -CC'         # start iterm tmux mode
+alias tm='tmux -CC' # start iterm tmux mode
 alias tma='tmux -CC attach' # attach to existing tmux session
 
 # requires https://github.com/rkitover/vimpager#install
@@ -323,7 +328,7 @@ alias bsre="brew services restart"
 # HEROKU ALIASES START
 # --------------------------------------------------------------------------------
 alias ha="heroku run bash" # connect to heroku app
-alias hd="heroku ps:exec"  # connect to running dyno
+alias hd="heroku ps:exec" # connect to running dyno
 alias hl="heroku logs --tail"
 # --------------------------------------------------------------------------------
 # HEROKU ALIASES END
