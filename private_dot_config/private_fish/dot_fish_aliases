@@ -40,6 +40,7 @@ alias chcd "chezmoi cd"
 alias chup "chezmoi update"
 alias chap "chezmoi apply"
 alias chst "chezmoi status"
+alias chdi "chezmoi diff"
 
 alias fi "find . -name"
 
