@@ -11,8 +11,8 @@ end
 
 vim.keymap.set("n", "<leader>id", InsertDate, { desc = "Insert Date" })
 
--- vim.keymap.set("n", "<leader>rn", ":IncRename ")
-vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "LSP Rename" })
+vim.keymap.set("n", "<leader>rn", ":IncRename ")
+-- vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "LSP Rename" })
 
 vim.api.nvim_create_user_command("Dashboard", function()
   require("snacks").dashboard.open()
