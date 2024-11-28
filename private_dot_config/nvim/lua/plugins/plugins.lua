@@ -2,4 +2,9 @@ require("gitsigns").setup({
   current_line_blame = true,
 })
 
-return {}
+return {
+  {
+    "smjonas/inc-rename.nvim",
+    event = "VeryLazy",
+  },
+}
