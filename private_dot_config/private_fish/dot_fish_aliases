@@ -4,6 +4,7 @@ alias upc "cd ~/configs; git pull; cd-"
 
 alias locate mdfind
 # alias updatedb "sudo /usr/libexec/locate.updatedb"
+alias tere "tere --normal-search-anywhere --mouse=on"
 
 alias n npm
 alias ns "npm start"
