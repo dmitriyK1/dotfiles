@@ -1,10 +1,15 @@
 require("gitsigns").setup({
-  current_line_blame = true,
+	current_line_blame = true,
 })
 
 return {
-  {
-    "smjonas/inc-rename.nvim",
-    event = "VeryLazy",
-  },
+	{
+		"nvim-zh/colorful-winsep.nvim",
+		config = true,
+		event = { "WinLeave" },
+	},
+	{
+		"smjonas/inc-rename.nvim",
+		event = "VeryLazy",
+	},
 }
