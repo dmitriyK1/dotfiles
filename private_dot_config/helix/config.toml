@@ -1,0 +1,43 @@
+theme = "onedark"
+
+[editor]
+line-number = "relative"
+cursorline = true
+mouse = true
+color-modes = true
+bufferline = "always" # Enable tab bar at the top
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+# File explorer configuration
+[editor.file-picker]
+hidden = false
+parents = false
+
+[editor.soft-wrap]
+enable = true
+
+# Do not render white spaces
+[editor.whitespace]
+render = "none"
+
+[editor.indent-guides]
+render = false
+character = "╎" # Some characters that work well: "▏", "┆", "┊", "⸽"
+skip-levels = 1
+
+# LSP Server configuration
+[editor.lsp]
+display-messages = true
+auto-signature-help	= true
+display-signature-help-docs	= true
+
+# Key mappings
+[keys.normal]
+D = "kill_to_line_end"
+# Use Shift-l and -h to move through tabs
+S-l = ":buffer-next"
+S-h = ":buffer-previous"
