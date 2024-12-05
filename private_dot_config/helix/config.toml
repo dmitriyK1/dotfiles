@@ -1,4 +1,5 @@
-theme = "onedark"
+# theme = "onedark"
+theme = "gruvbox"
 
 [editor]
 line-number = "relative"
@@ -9,8 +10,8 @@ bufferline = "always" # Enable tab bar at the top
 
 [editor.cursor-shape]
 insert = "bar"
-normal = "block"
-select = "underline"
+normal = "underline"
+select = "block"
 
 # File explorer configuration
 [editor.file-picker]
@@ -41,3 +42,9 @@ D = "kill_to_line_end"
 # Use Shift-l and -h to move through tabs
 S-l = ":buffer-next"
 S-h = ":buffer-previous"
+C-s = ":w"
+Z = { Q = ":q!" }
+
+[keys.insert]
+"A-x" = "normal_mode"
+j = { j = "normal_mode" }
