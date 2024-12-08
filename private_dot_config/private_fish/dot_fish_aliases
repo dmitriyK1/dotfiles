@@ -287,7 +287,8 @@ alias git-iadd "git status -s | sed s/^...// | ipt -m -M 'Select files to add:' 
 # fuzzy select and jump into folder
 alias jf="cd (cat ~/Library/autojump/autojump.txt | sort -nr | awk '{print \$2}' | fzf +s)"
 alias diff="delta"
-alias ncdu="ncdu --color dark -x --exclude .git --exclude node_modules"
+# alias ncdu="ncdu --color dark -x --exclude .git --exclude node_modules"
+alias ncdu="ncdu --color dark -x --exclude .git"
 alias du="ncdu"
 alias cat='bat'
 alias ping='prettyping --nolegend'
