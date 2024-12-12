@@ -187,7 +187,7 @@ alias cdt "cd -"
 alias cdd "cd -"
 alias cdr "cd (git rev-parse --show-toplevel)"
 alias nano="env LC_ALL=ru_RU.UTF-8 nano"
-# alias vim "/usr/local/bin/vim"
+alias vim nvim
 alias v vim
 alias v. "vim ."
 alias vi vim
@@ -241,7 +241,7 @@ alias rgw="rg -w"
 alias rgn="rg -l"
 alias rgh="rg --hidden"
 
-alias rr="ranger"
+alias rr="yy"
 
 alias ls='eza -lha --color=always --icons --git --group-directories-first'
 alias ll='lsd -lA -F --group-dirs=first'
