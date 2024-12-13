@@ -4,6 +4,17 @@ require("gitsigns").setup({
 
 return {
   {
+    "folke/snacks.nvim",
+    opts = {
+      scroll = {
+        animate = false,
+        filter = function()
+          return false
+        end,
+      },
+    },
+  },
+  {
     "nvim-zh/colorful-winsep.nvim",
     config = true,
     event = { "WinLeave" },
