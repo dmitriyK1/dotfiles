@@ -3,3 +3,4 @@
 -- Add any additional options here
 
 vim.opt.scrolloff = 9999
+vim.g.snacks_animate = false
