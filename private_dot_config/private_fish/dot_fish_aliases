@@ -67,7 +67,8 @@ alias gis "git ishow"
 alias gish "git ishow"
 alias gai git-iadd
 alias rb recursive-blame
-alias gl="git log --format='%Cred%h%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset%C(yellow)%d%Creset' --no-merges"
+alias gl="git log --format='%Cred%h%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset%C(yellow)%d%Creset'"
+# alias gl="git log --format='%Cred%h%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset%C(yellow)%d%Creset' --no-merges"
 alias gll="git log --oneline --decorate --no-merges"
 alias glp="git log -p --stat --no-merges"
 alias gls="git log -S"
