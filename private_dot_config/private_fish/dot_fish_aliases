@@ -158,6 +158,7 @@ alias gpld "git pull origin develop"
 alias gplD "git pull origin dev"
 alias gsh "git show"
 alias grec "git recommit"
+alias grecf "git recommit --no-verify"
 alias gshn "git show --name-only"
 alias gshf gshn
 alias grev "git remote -vv"
