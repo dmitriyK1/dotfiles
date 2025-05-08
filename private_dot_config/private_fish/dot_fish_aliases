@@ -84,7 +84,7 @@ alias gca="git commit --amend"
 alias gcaf="gca --no-verify"
 alias gcaa="git commit --amend --reset-author --no-edit"
 alias gac="git add -u; git commit -m"
-alias grepall="git branch -a | tr -d \* | sed '/->/d' | xargs git grep"
+alias grepall="git branch -a | command tr -d \* | sed '/->/d' | xargs git grep"
 # alias gf "git fetch --all --prune --quiet"
 alias gf "git fetch --all --prune"
 alias gfo "git follow" # requires https://github.com/nickolasburr/git-follow
