@@ -35,7 +35,6 @@ set number
 "set nonumber
 " set relativenumber
 " nmap <leader><leader> :w<cr>
-nmap <leader><leader> <Action>(ShowIntentionActions)
 " nnoremap <space> :
 nnoremap Q :
 nnoremap <silent> <C-l> :nohlsearch<CR>
@@ -186,6 +185,7 @@ nmap <leader>e :action JumpToLastChange<cr>
 
 nmap dae ggVGd
 
+nnoremap <leader><leader> :action ShowIntentionActions<CR>
 nnoremap gf :action ShowIntentionActions<CR>
 " Also could just use 'K'
 nmap gh :action QuickJavaDoc<CR>
@@ -212,7 +212,10 @@ nmap [< k0<<j_
 set surround
 set multiple-cursors
 set commentary " gcc gcip
+
+let g:EasyMotion_do_mapping = 0
 set easymotion
+
 set argtextobj
 set textobj-entire
 set exchange
