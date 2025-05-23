@@ -319,4 +319,9 @@ nmap <leader>l <Action>(ClearAllNotifications)
 " Expanding selection (from https://github.com/VSCodeVim/Vim/blob/master/README.md#-vscodevim-tricks):
 vmap af <Action>(EditorSelectWord)
 
+let g:switch_definitions = 'group:basic,group:java,group:rspec'
+set peekaboo
+set switch
+set functiontextobj
+
 source ~/.ideavimrc.local
