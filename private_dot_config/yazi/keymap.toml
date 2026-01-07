@@ -20,3 +20,14 @@ on = "<C-p>"
 run = '''
   shell 'qlmanage -p "$@"' --confirm
 '''
+
+# Navigation in the manager
+[[mgr.prepend_keymap]]
+on = "k"
+run = "arrow -1"
+desc = "Previous file"
+
+[[mgr.prepend_keymap]]
+on = "j"
+run = "arrow 1"
+desc = "Next file"
