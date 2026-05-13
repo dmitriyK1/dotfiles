@@ -68,10 +68,10 @@ if status --is-interactive
         bind \cr _atuin_search
     end
 
-    function tere
-        set --local result (command tere --normal-search-anywhere --mouse=on $argv)
-        [ -n "$result" ]; and cd -- "$result"
-    end
+    # function tere
+    #     set --local result (command tere --normal-search-anywhere --mouse=on $argv)
+    #     [ -n "$result" ]; and cd -- "$result"
+    # end
 
     # source (pyenv init -|psub)
 

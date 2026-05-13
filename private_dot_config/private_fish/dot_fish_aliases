@@ -4,7 +4,7 @@ alias upc "cd ~/configs; git pull; cd-"
 
 alias locate mdfind
 # alias updatedb "sudo /usr/libexec/locate.updatedb"
-alias tr "tere --normal-search-anywhere --mouse=on"
+# alias tr "tere --normal-search-anywhere --mouse=on"
 
 alias n npm
 alias ns "npm start"
@@ -167,7 +167,7 @@ alias grev "git remote -vv"
 alias gcp "git cherry-pick"
 alias gcf "git commit --no-verify -m"
 alias gpf "git push --no-verify"
-alias gpF "git push --force"
+alias gpF "git push --force-with-lease"
 # alias gplf "gf; git reset --hard origin/develop"
 # alias gpu "git publish"
 # alias gpu "git push origin (git rev-parse --abbrev-ref HEAD) -u"
