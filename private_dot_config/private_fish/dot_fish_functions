@@ -286,4 +286,10 @@ function cmus
     end
 end
 
+function fix-clipboard --description "Fix Continuity Universal Clipboard on macOS"
+    defaults write com.apple.sharingd DisallowHandoff -bool false
+    killall sharingd pboard
+    echo "Continuity & Clipboard services restarted."
+end
+
 # vim: filetype=fish
