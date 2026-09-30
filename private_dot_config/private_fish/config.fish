@@ -14,7 +14,6 @@ set -g theme_powerline_fonts no
 set -g theme_nerd_fonts yes
 set -g theme_display_node always
 set -g theme_display_nvm yes
-set fish_prompt_pwd_dir_length 1
 # set -g theme_display_docker_machine yes
 set -g fish_prompt_pwd_dir_length 0
 set -g theme_display_jobs_verbose yes

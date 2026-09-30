@@ -3,7 +3,6 @@ export LC_ALL=en_US.UTF-8
 export LESSOPEN='|pygmentize -g %s'
 #export SHELL=/usr/local/bin/fish
 #export SHELL=/opt/homebrew/bin/fish
-export CHEATCOLORS=true
 
 set -g fish_user_paths /usr/local/sbin $fish_user_paths
 
@@ -65,8 +64,6 @@ set --export LESS '-w --incsearch --quit-if-one-screen --ignore-case --status-co
 set --export BAT_PAGER less
 # NOTE: disable '--ansi' and '--color=always' to speedup
 set --export BAT_THEME TwoDark
-
-set --export ENHANCD_FILTER 'fzy:fzf:peco'
 
 # TODO alias to ctrl+o
 # fzf --preview '/usr/local/bin/bat {} --color=always'
