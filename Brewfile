@@ -60,6 +60,8 @@ brew "node"
 brew "pnpm"
 # Wrapper to colorize and simplify ping's output
 brew "prettyping"
+# Modern replacement for ps written in Rust
+brew "procs"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Modern and pretty fancy file manager for the terminal

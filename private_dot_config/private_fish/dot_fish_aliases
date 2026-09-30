@@ -213,7 +213,6 @@ alias seav "nvim ~/.config/fish/.fish_variables.local"
 alias sef "nvim ~/.local/share/chezmoi/private_dot_config/private_fish/dot_fish_functions"
 alias sev "nvim ~/.local/share/chezmoi/private_dot_config/private_fish/dot_fish_variables"
 alias sc="pushd .; cd ~/configs; gdr; legit sync; popd; reload"
-alias vless='/usr/share/vim/vim74/macros/less.sh'
 
 alias cp='cp -iv' # Preferred 'cp' implementation
 alias cpr='cp -ivR'
