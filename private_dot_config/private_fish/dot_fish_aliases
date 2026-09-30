@@ -1,6 +1,5 @@
 alias updatedb="sudo /usr/libexec/locate.updatedb"
 alias up ~/.local/bin/update.sh
-# alias upc "cd ~/configs; git pull; cd-"
 
 alias locate mdfind
 # alias updatedb "sudo /usr/libexec/locate.updatedb"
@@ -39,6 +38,7 @@ alias yad "yarn add -D"
 
 alias chcd "chezmoi cd"
 alias chup "chezmoi update"
+alias chpl "chezmoi git pull -- --autostash --rebase" # pull without applying; review with chdi, then chap
 alias chap "chezmoi apply"
 alias chst "chezmoi status"
 alias chdi "chezmoi diff"
