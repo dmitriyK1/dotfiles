@@ -1,6 +1,6 @@
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-export LESSOPEN='|pygmentize -g %s'
+export LESSOPEN='|bat --color=always --style=plain --paging=never %s'
 #export SHELL=/usr/local/bin/fish
 #export SHELL=/opt/homebrew/bin/fish
 
@@ -59,8 +59,7 @@ set -U FZF_ENABLE_OPEN_PREVIEW 1 # available via <Ctrl-g>
 # set -U FZF_COMPLETE 1 # Enable fzf for fish tab completion
 
 # pager config
-set --export LESSKEY '~/.lesskey'
-set --export LESS '-w --incsearch --quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4 -R'
+set --export LESS '--incsearch --quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
 set --export BAT_PAGER less
 # NOTE: disable '--ansi' and '--color=always' to speedup
 set --export BAT_THEME TwoDark
