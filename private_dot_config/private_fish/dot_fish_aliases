@@ -1,6 +1,6 @@
 alias updatedb="sudo /usr/libexec/locate.updatedb"
 alias up ~/update.sh
-alias upc "cd ~/configs; git pull; cd-"
+# alias upc "cd ~/configs; git pull; cd-"
 
 alias locate mdfind
 # alias updatedb "sudo /usr/libexec/locate.updatedb"
@@ -108,11 +108,6 @@ alias gsts "git stash show -p"
 alias gstpa "git stash -p"
 alias gstpu "git stash push"
 
-#alias gbl "git blame"
-# requires `gem install git-blame-color`
-# https://rubygems.org/gems/git-blame-color/versions/0.1.0
-
-alias gbl git-blame-color
 alias gc "git commit -v -m"
 alias gcz "git cz"
 alias gco "git checkout"
@@ -175,7 +170,7 @@ alias gtg "git tag"
 # alias h "how2 -l javascript "
 
 # requires brew install gron
-alias norg="gron --ungron"
+# alias norg="gron --ungron"
 alias ungron="gron --ungron"
 
 alias df="duf"
@@ -203,7 +198,6 @@ alias bre "brew reinstall"
 alias bs "brew search"
 alias bif "brew info"
 # alias p "percol" # brew install percol
-alias p peco # brew install peco
 alias ss reload
 alias se "nvim ~/.local/share/chezmoi/private_dot_config/private_fish/config.fish"
 alias sl "nvim ~/.config/fish/config.local.fish"
@@ -212,7 +206,7 @@ alias seal "nvim ~/.config/fish/.fish_aliases.local"
 alias seav "nvim ~/.config/fish/.fish_variables.local"
 alias sef "nvim ~/.local/share/chezmoi/private_dot_config/private_fish/dot_fish_functions"
 alias sev "nvim ~/.local/share/chezmoi/private_dot_config/private_fish/dot_fish_variables"
-alias sc="pushd .; cd ~/configs; gdr; legit sync; popd; reload"
+# alias sc="pushd .; cd ~/configs; gdr; legit sync; popd; reload"
 
 alias cp='cp -iv' # Preferred 'cp' implementation
 alias cpr='cp -ivR'
@@ -227,12 +221,13 @@ alias count_files='numfiles'
 alias emacs "/Applications/Emacs.app/Contents/MacOS/Emacs -nw"
 alias em='emacs'
 
-alias fp='ls | fpp'
+# alias fp='ls | fpp'
 
 alias cal='cal | grep --color -EC6 "\b"(date +%e | sed "s/ //g")'
 
 alias rg="rg -i --color=always --hidden --smart-case"
-alias rga="rga --hidden"
+# ripgrep-all: rg that also searches PDFs, Office docs, e-books and archives (brew install ripgrep-all)
+# alias rga="rga --hidden"
 alias rgf="rg -F"
 alias rgw="rg -w"
 alias rgn="rg -l"
@@ -241,7 +236,6 @@ alias rgh="rg --hidden"
 alias rr="yy"
 
 alias ls='eza -lha --color=always --icons --git --group-directories-first'
-alias lc='colorls --gs -la'
 
 alias tree='tree -a'
 
@@ -256,7 +250,6 @@ alias tree='tree -a'
 
 alias b='bat'
 
-alias t='python ~/Downloads/t/t.py --task-dir ~/tasks --list tasks --delete-if-empty'
 alias totalfolderusage='command du -sh'
 
 alias unset 'set --erase'
