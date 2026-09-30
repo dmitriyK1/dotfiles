@@ -91,10 +91,18 @@ function reload --description "Reload fish shell"
 end
 
 # search for a pattern in files, then fuzzy select file and open in nvim
+# usage: rgvim some pattern (all args form one pattern, matched case-insensitively)
 function rgvim
-    set choice (command rg -il $argv | fzf -0 -1 --ansi --preview "cat {} | rg $argv --context 3")
-    if [ $choice ]
-        /usr/local/bin/nvim "+/"(string lower $argv) $choice
+    set -l pattern (string join ' ' -- $argv)
+    if test -z "$pattern"
+        echo "usage: rgvim PATTERN"
+        return 1
+    end
+    # pass the pattern via env so the preview works whatever shell fzf uses
+    set -lx RGVIM_PATTERN $pattern
+    set -l choice (command rg -il -e $pattern | fzf -0 -1 --preview 'rg -i --color=always --context 3 -e "$RGVIM_PATTERN" {}')
+    if test -n "$choice"
+        nvim "+/\\c"(string replace -a / '\\/' -- $pattern) -- $choice
     end
 end
 
