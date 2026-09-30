@@ -70,6 +70,8 @@ brew "tree"
 brew "wget"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
 cask "font-fira-code"
 cask "font-symbols-only-nerd-font"
 # Keyboard customiser

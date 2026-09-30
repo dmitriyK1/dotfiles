@@ -36,8 +36,9 @@ if status --is-interactive
         atuin init fish | source
     end
 
+    # zoxide only tracks directories for superfile's zoxide panel; autojump provides `j`
     if command -v zoxide >/dev/null
-        zoxide init fish | source
+        zoxide init fish --no-cmd | source
     end
 
     if command -v fzf >/dev/null
