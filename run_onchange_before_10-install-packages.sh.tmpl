@@ -1,0 +1,12 @@
+#!/bin/bash
+# Install Homebrew and Brewfile packages; re-runs whenever the Brewfile changes.
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+set -euo pipefail
+
+if [ ! -x /opt/homebrew/bin/brew ]; then
+  echo "Homebrew not found. Installing Homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+brew bundle --file="{{ .chezmoi.sourceDir }}/Brewfile"
