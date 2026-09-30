@@ -50,7 +50,7 @@ alias g git
 alias multipull "find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} pull \;"
 # alias gh "git rev-parse --verify HEAD"
 alias ggc "git gc --aggressive"
-alias gh "git log --pretty=format:'%h' -n 1 | pbcopy"
+alias ghash "git log --pretty=format:'%h' -n 1 | pbcopy" # copy short hash of HEAD
 alias gm "git log -1 --pretty=%B; git log -1 --pretty=%B | pbcopy"
 alias gwa "git worktree add"
 alias gwr "git worktree remove"
