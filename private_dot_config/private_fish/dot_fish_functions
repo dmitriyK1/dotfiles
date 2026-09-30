@@ -72,7 +72,7 @@ end
 function bip --description "Install brew packages (fzf picker if no args)"
     set -l pkgs $argv
     if test (count $pkgs) -eq 0
-        set pkgs (brew search | fzf -m --reverse --header='[brew:install]' --preview 'brew info {}' --preview-window=right:75%)
+        set pkgs (begin; brew formulae; brew casks; end | fzf -m --reverse --header='[brew:install]' --preview 'brew info {}' --preview-window=right:75%)
     end
     test (count $pkgs) -gt 0; and brew install $pkgs
 end
