@@ -40,8 +40,8 @@ set --export PATH $HOME/go/bin $PATH
 # requires `git clone https://github.com/unixorn/git-extra-commands.git ~/Development/git-extra-commands`
 set --export PATH $HOME/Development/git-extra-commands/bin $PATH
 
-set -Ux EDITOR nvim
-set -Ux VISUAL nvim
+set -gx EDITOR nvim
+set -gx VISUAL nvim
 
 # Use fd to list filenames for fzf
 # https://github.com/sharkdp/fd
@@ -54,7 +54,7 @@ set --export FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set --export FZF_DEFAULT_OPTS '--ansi --highlight-line'
 # https://github.com/jethrokuan/fzf options
 # set -U FZF_LEGACY_KEYBINDINGS 0
-set -U FZF_ENABLE_OPEN_PREVIEW 1 # available via <Ctrl-g>
+set -gx FZF_ENABLE_OPEN_PREVIEW 1 # available via <Ctrl-g>
 # set -U FZF_CTRL_T_OPTS="--preview='head -$LINES {}'"
 # set -U FZF_COMPLETE 1 # Enable fzf for fish tab completion
 
@@ -69,7 +69,7 @@ set --export BAT_THEME TwoDark
 
 # don't create .pyc or .pyo files on the import of source modules
 set -xg PYTHONDONTWRITEBYTECODE 1
-set -U PIPENV_VENV_IN_PROJECT 1 # to create .venv in a project dir
+set -gx PIPENV_VENV_IN_PROJECT 1 # to create .venv in a project dir
 
 # requires https://github.com/rkitover/vimpager#install
 # set --export PAGER vimpager

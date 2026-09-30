@@ -202,24 +202,4 @@ function yy
     rm -f -- "$tmp"
 end
 
-function cmus
-    # Check if cmuscontrold is available
-    if type -q cmuscontrold
-        # Start cmuscontrold in a subshell that waits for cmus to finish
-        begin
-            cmuscontrold >/tmp/cmuscontrold-log.txt 2>&1 &
-            set -l cmuscontrold_pid $last_pid
-
-            # Run cmus and wait for it to exit
-            command cmus
-
-            # Kill cmuscontrold when cmus exits
-            kill $cmuscontrold_pid
-        end
-    else
-        # Run cmus normally if cmuscontrold is unavailable
-        command cmus
-    end
-end
-
 # vim: filetype=fish

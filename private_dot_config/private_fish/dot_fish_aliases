@@ -231,7 +231,6 @@ alias count_files='numfiles'
 
 alias emacs "/Applications/Emacs.app/Contents/MacOS/Emacs -nw"
 alias em='emacs'
-alias cat=ccat
 
 alias fp='ls | fpp'
 
