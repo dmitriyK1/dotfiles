@@ -26,13 +26,18 @@ function gro
     gron $argv[2] | fgrep $argv[1] | norg
 end
 
+# PIDs of processes listening on a TCP port (use sudo for other users' processes)
 function findbyport
-    # sudo lsof -i :$argv
-    lsof -i :$argv | grep \* | cut -d ' ' -f5
+    lsof -ti tcp:$argv[1] -sTCP:LISTEN
 end
 
 function killbyport
-    kill -9 (findbyport $argv)
+    set -l pids (findbyport $argv[1])
+    if test (count $pids) -eq 0
+        echo "Nothing listening on port $argv[1]"
+        return 1
+    end
+    kill -9 $pids
 end
 
 # https://github.com/SidOfc/dotfiles/tree/master/.config/fish/functions
@@ -95,7 +100,7 @@ function rgvim
     end
 end
 
-function install -d "Interactive package installer"
+function binstall -d "Interactive brew package installer"
     if [ $argv[1] ]
         set choice $argv[1]
     else
