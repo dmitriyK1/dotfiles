@@ -4,8 +4,6 @@ export LESSOPEN='|bat --color=always --style=plain --paging=never %s'
 #export SHELL=/usr/local/bin/fish
 #export SHELL=/opt/homebrew/bin/fish
 
-set -g fish_user_paths /usr/local/sbin $fish_user_paths
-
 # set --export NODE_ENV development
 
 # These paths are set with this omf plugin https://github.com/oh-my-fish/plugin-brew
@@ -27,18 +25,20 @@ set --export XDG_STATE_HOME $HOME/.local/state
 set --export XDG_CACHE_HOME $HOME/.cache
 
 # Path Configuration
-set -gx PATH /usr/local/bin $PATH
-set -gx PATH /opt/homebrew/bin/ $PATH
-set --export PATH $HOME/.local/bin $PATH
-set --export PATH /opt/local/bin $PATH
-set --export PATH $HOME/.node_modules_global/bin $PATH
-set --export PATH $HOME/.nimble/bin $PATH
-set --export PATH $HOME/.yarn/bin $PATH
-# set --export PATH $HOME/.git-semantic-commits $PATH
-set --export PATH $HOME/.cargo/bin $PATH
-set --export PATH $HOME/go/bin $PATH
-# requires `git clone https://github.com/unixorn/git-extra-commands.git ~/Development/git-extra-commands`
-set --export PATH $HOME/Development/git-extra-commands/bin $PATH
+# earlier entries take precedence; --move reorders existing entries instead of duplicating them
+# git-extra-commands requires `git clone https://github.com/unixorn/git-extra-commands.git ~/Development/git-extra-commands`
+fish_add_path --path --move \
+    $HOME/Development/git-extra-commands/bin \
+    $HOME/go/bin \
+    $HOME/.cargo/bin \
+    $HOME/.yarn/bin \
+    $HOME/.nimble/bin \
+    $HOME/.node_modules_global/bin \
+    /opt/local/bin \
+    $HOME/.local/bin \
+    /opt/homebrew/bin \
+    /usr/local/bin \
+    /usr/local/sbin
 
 set -gx EDITOR nvim
 set -gx VISUAL nvim
@@ -74,7 +74,7 @@ set -gx PIPENV_VENV_IN_PROJECT 1 # to create .venv in a project dir
 # requires https://github.com/rkitover/vimpager#install
 # set --export PAGER vimpager
 
-set --export HOMEBREW_PREFIX (brew --prefix)
+set --export HOMEBREW_PREFIX /opt/homebrew
 
 # Load machine-specific variables if the file exists
 if test -f ~/.config/fish/.fish_variables.local
