@@ -10,9 +10,6 @@
 # fasd support here:
 # https://github.com/fishgretel/fasd
 
-# https://github.com/FabioAntunes/fish-nvm
-# Run 'nvm_alias_command' to create aliases for binaries: npm node npx yarn
-
 # fisher automatic install
 if not functions -q fisher
     set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
@@ -84,9 +81,5 @@ end
 
 # activate https://github.com/adambrenecki/virtualfish
 # eval (python3 -m virtualfish)
-
-# You must call it on initialization or listening to directory switching won't work
-# https://github.com/nvm-sh/nvm#deeper-shell-integration
-#load_nvm
 
 # vim: filetype=fish
