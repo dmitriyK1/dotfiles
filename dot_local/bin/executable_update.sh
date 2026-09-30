@@ -19,7 +19,7 @@ chezmoi update
 colorize_text '>>> purging autojump database from non-existing paths'
 autojump --purge
 
-colorize_text '>>> updating homebrew'
+colorize_text '>>> updating Homebrew'
 brew update
 # --greedy also upgrades casks that normally update themselves
 brew upgrade --greedy
