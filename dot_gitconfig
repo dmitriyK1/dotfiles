@@ -1,0 +1,33 @@
+[user]
+	name = Dmytro Kaminskyi
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[push]
+	autoSetupRemote = true
+[alias]
+	sync = !/opt/homebrew/bin/legit sync
+	publish = !/opt/homebrew/bin/legit publish
+	unpublish = !/opt/homebrew/bin/legit unpublish
+	undo = !/opt/homebrew/bin/legit undo
+	branches = !/opt/homebrew/bin/legit branches
+	recommit = commit --amend --no-edit
+[core]
+	excludesfile = ~/.gitignore_global
+	pager = delta
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+[merge]
+	conflictStyle = zdiff3
+# Machine-specific settings (user.email, user.signingkey); keep last so it can override the above
+[include]
+	path = ~/.gitconfig.local
