@@ -27,24 +27,49 @@ if status --is-interactive
     # Commands to run in interactive sessions
 
     source ~/.config/fish/.fish_functions
-    source ~/.config/fish/.fish_aliases
+
+    # defining ~250 aliases takes ~30 ms per shell, so cache them as plain function definitions;
+    # the cache is rebuilt whenever .fish_aliases or .fish_aliases.local changes
+    set -l alias_file ~/.config/fish/.fish_aliases
+    set -l alias_cache ~/.cache/fish/aliases.fish
+    if not test -f $alias_cache; or test $alias_file -nt $alias_cache; or test $alias_file.local -nt $alias_cache
+        mkdir -p ~/.cache/fish
+        # alias-defined functions are the only ones whose --details is "-"
+        fish --no-config -c 'source $argv[1]; for f in (functions --all --names); test "$(functions --details $f)" = "-"; and functions $f; end' $alias_file >$alias_cache.tmp
+        and command mv $alias_cache.tmp $alias_cache
+    end
+    if test -f $alias_cache
+        source $alias_cache
+    else
+        source $alias_file
+    end
+
     [ -f $HOME/.config/fish/config.local.fish ]; and source $HOME/.config/fish/config.local.fish
 
     test -e {$HOME}/.iterm2_shell_integration.fish; and source {$HOME}/.iterm2_shell_integration.fish
 
+    # Print the path of a cached copy of a tool's generated init script, so it isn't regenerated
+    # on every start; rebuilt when the tool is upgraded (its resolved path changes) or the init
+    # command changes. Sourced by the caller so the script runs at top level, not in this function
+    function __cached_init
+        set -l bin (command -s $argv[1]); or return
+        set -l key "# "(path resolve $bin)" $argv"
+        set -l cache ~/.cache/fish/init-$argv[1].fish
+        set -l first
+        if not test -f $cache; or not read first <$cache; or test "$first" != "$key"
+            set -l out (command $argv); or return
+            mkdir -p ~/.cache/fish
+            printf '%s\n' $key $out >$cache
+        end
+        echo $cache
+    end
+
     # fzf before atuin so atuin's ctrl-r binding wins over fzf-history-widget
-    if command -v fzf >/dev/null
-        fzf --fish | source
-    end
-
-    if command -v atuin >/dev/null
-        atuin init fish | source
-    end
-
+    set -l init (__cached_init fzf --fish); and source $init
+    set -l init (__cached_init atuin init fish); and source $init
     # zoxide only tracks directories for superfile's zoxide panel; autojump provides `j`
-    if command -v zoxide >/dev/null
-        zoxide init fish --no-cmd | source
-    end
+    set -l init (__cached_init zoxide init fish --no-cmd); and source $init
+    functions -e __cached_init
 
     # caniuse --completion-fish | source
 
