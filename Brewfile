@@ -58,6 +58,8 @@ brew "neovim"
 brew "node"
 # Fast, disk space efficient package manager
 brew "pnpm"
+# Wrapper to colorize and simplify ping's output
+brew "prettyping"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Modern and pretty fancy file manager for the terminal
@@ -80,3 +82,5 @@ cask "font-fira-code"
 cask "font-symbols-only-nerd-font"
 # Keyboard customiser
 cask "karabiner-elements"
+# Replacement for Docker Desktop
+cask "orbstack"

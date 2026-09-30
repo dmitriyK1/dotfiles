@@ -179,7 +179,6 @@ alias norg="gron --ungron"
 alias ungron="gron --ungron"
 
 alias df="duf"
-alias ping="gping"
 alias top="btop"
 # alias dig="dog"
 alias ps="procs"
@@ -248,8 +247,8 @@ alias lc='colorls --gs -la'
 alias tree='tree -a'
 
 # alias tm='tmux new-session -A -s main'
-alias tm='tmux -CC' # start iterm tmux mode
-alias tma='tmux -CC attach' # attach to existing tmux session
+# alias tm='tmux -CC' # start iterm tmux mode
+# alias tma='tmux -CC attach' # attach to existing tmux session
 
 # requires https://github.com/rkitover/vimpager#install
 # alias less=$PAGER
@@ -278,7 +277,6 @@ alias gpu="legit publish"
 alias gup="legit unpublish"
 alias gsw="legit switch"
 alias lg="lazygit"
-alias git-iadd "git status -s | sed s/^...// | ipt -m -M 'Select files to add:' | xargs git add"
 
 # fuzzy select and jump into folder
 alias jf="cd (cat ~/Library/autojump/autojump.txt | sort -nr | awk '{print \$2}' | fzf +s)"
