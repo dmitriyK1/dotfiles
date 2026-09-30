@@ -80,9 +80,9 @@ brew "yazi"
 brew "yt-dlp"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
+# App to build and share containerised applications and microservices
+cask "docker-desktop"
 cask "font-fira-code"
 cask "font-symbols-only-nerd-font"
 # Keyboard customiser
 cask "karabiner-elements"
-# Replacement for Docker Desktop
-cask "orbstack"

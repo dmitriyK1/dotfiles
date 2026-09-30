@@ -33,7 +33,6 @@ fish_add_path --path --move \
     $HOME/.cargo/bin \
     $HOME/.yarn/bin \
     $HOME/.nimble/bin \
-    $HOME/.node_modules_global/bin \
     /opt/local/bin \
     $HOME/.local/bin \
     /opt/homebrew/bin \
