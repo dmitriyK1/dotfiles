@@ -277,8 +277,6 @@ alias pi='pip3 install'
 alias pir='pip3 install -r requirements.txt'
 alias pfr='pip3 freeze > requirements.txt'
 alias activate='. venv/bin/activate.fish'
-[ -f $HOME/.fish_aliases.local ]
-and source $HOME/.fish_aliases.local
 
 alias gpu="legit publish"
 alias gup="legit unpublish"
@@ -356,5 +354,10 @@ alias flush-dns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 # git branch-status
 # git multi status
 # git relation develop feature/some-feature-branch
+
+# Load machine-specific aliases last so they can override the ones above
+if test -f ~/.config/fish/.fish_aliases.local
+    source ~/.config/fish/.fish_aliases.local
+end
 
 # vim: filetype=fish

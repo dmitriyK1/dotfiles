@@ -30,6 +30,8 @@ brew "fzf"
 brew "gh"
 # Distributed revision control system
 brew "git"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
 # Browse your latest git branches, formatted real fancy
 brew "git-recent"
 # Blazing fast terminal-ui for git written in rust
