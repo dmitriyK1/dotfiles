@@ -195,9 +195,6 @@ alias v vim
 alias v. "vim ."
 alias vi vim
 alias nv "env ESCDELAY=0 nvim" # ESCDELAY to remove delay in fzf (when closing popup) https://github.com/junegunn/fzf.vim/issues/248
-# alias vf "vifm ."
-alias vv "vifm ."
-alias mi micro
 alias ms "m sleep"
 alias ml "m lock"
 alias bi "brew install"
@@ -246,7 +243,6 @@ alias rgh="rg --hidden"
 alias rr="yy"
 
 alias ls='eza -lha --color=always --icons --git --group-directories-first'
-alias ll='lsd -lA -F --group-dirs=first'
 alias lc='colorls --gs -la'
 
 alias tree='tree -a'
@@ -338,7 +334,7 @@ alias hl="heroku logs --tail"
 # HEROKU ALIASES END
 # --------------------------------------------------------------------------------
 
-alias youtube-dl-channel='youtube-dl -f best -ciw -o "%(title)s.%(ext)s" -v --download-archive .downloadslist'
+alias youtube-dl-channel='yt-dlp -ciw -o "%(title)s.%(ext)s" -v --download-archive .downloadslist'
 
 alias o.="open ."
 alias o="open ."
