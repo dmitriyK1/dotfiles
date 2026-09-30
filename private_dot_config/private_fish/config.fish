@@ -32,6 +32,11 @@ if status --is-interactive
 
     test -e {$HOME}/.iterm2_shell_integration.fish; and source {$HOME}/.iterm2_shell_integration.fish
 
+    # fzf before atuin so atuin's ctrl-r binding wins over fzf-history-widget
+    if command -v fzf >/dev/null
+        fzf --fish | source
+    end
+
     if command -v atuin >/dev/null
         atuin init fish | source
     end
@@ -41,18 +46,10 @@ if status --is-interactive
         zoxide init fish --no-cmd | source
     end
 
-    if command -v fzf >/dev/null
-        fzf --fish | source
-    end
-
     # caniuse --completion-fish | source
 
     # Generates shell code to override your shell's "command not found" handler with one that calls npx
     # source (npx --shell-auto-fallback fish | psub)
-
-    function fish_user_key_bindings
-        bind \cr _atuin_search
-    end
 
     # function tere
     #     set --local result (command tere --normal-search-anywhere --mouse=on $argv)
