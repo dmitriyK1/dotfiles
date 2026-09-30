@@ -13,11 +13,11 @@
 
 #-- File Editor
 # Default: $EDITOR
-editor = ""
+editor = "nvim"
 
 #-- Directory Editor
 # 
-dir_editor = ""
+dir_editor = "nvim"
 
 #-- Auto check for update
 auto_check_update = true
