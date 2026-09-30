@@ -346,6 +346,8 @@ alias youtube-dl-channel='youtube-dl -f best -ciw -o "%(title)s.%(ext)s" -v --do
 alias o.="open ."
 alias o="open ."
 
+# remote hosts often lack xterm-kitty/xterm-ghostty terminfo
+alias ssh "env TERM=xterm-256color ssh"
 alias router-ssh="ssh admin@router"
 alias restart-touchbar="sudo pkill TouchBarServer && sudo killall ControlStrip"
 alias flush-dns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
