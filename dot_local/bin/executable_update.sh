@@ -36,7 +36,15 @@ omf update
 
 # brew's npm, the same node that run_onchange_after_30-install-npm-globals.sh installs into
 colorize_text '>>> updating global npm packages'
-/opt/homebrew/bin/npm update -g
+# install only what's outdated: `npm update -g` also re-fetches git-installed packages like
+# git-iadd from the registry, where its tarball is gone (404), and that aborts the whole update.
+# --parseable lines are path:wanted:current:latest:location
+set -l outdated (/opt/homebrew/bin/npm outdated -g --parseable | cut -d: -f4)
+if test (count $outdated) -gt 0
+    /opt/homebrew/bin/npm install -g $outdated
+else
+    echo "all global npm packages are up to date"
+end
 
 if type -q uv
     colorize_text '>>> updating uv and uv tools'
