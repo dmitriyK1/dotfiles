@@ -69,14 +69,12 @@ function fp --description "Search your path"
     end
 end
 
-function bip --description "Install brew plugins"
-    set -l inst (brew search | eval "fzf $FZF_DEFAULT_OPTS -m --header='[brew:install]'")
-
-    if not test (count $inst) = 0
-        for prog in $inst
-            brew install "$prog"
-        end
+function bip --description "Install brew packages (fzf picker if no args)"
+    set -l pkgs $argv
+    if test (count $pkgs) -eq 0
+        set pkgs (brew search | fzf -m --reverse --header='[brew:install]' --preview 'brew info {}' --preview-window=right:75%)
     end
+    test (count $pkgs) -gt 0; and brew install $pkgs
 end
 
 function pbclear --description "Provide functionality to clear from the pasteboard (the Clipboard) from command line"
@@ -97,17 +95,6 @@ function rgvim
     set choice (command rg -il $argv | fzf -0 -1 --ansi --preview "cat {} | rg $argv --context 3")
     if [ $choice ]
         /usr/local/bin/nvim "+/"(string lower $argv) $choice
-    end
-end
-
-function binstall -d "Interactive brew package installer"
-    if [ $argv[1] ]
-        set choice $argv[1]
-    else
-        set choice (brew search | fzf --reverse --preview "brew info {}" --preview-window=right:75%)
-    end
-    if [ $choice ]
-        brew install $choice
     end
 end
 
