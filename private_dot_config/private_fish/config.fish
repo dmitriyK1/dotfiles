@@ -92,5 +92,3 @@ end
 
 # activate https://github.com/adambrenecki/virtualfish
 # eval (python3 -m virtualfish)
-
-# vim: filetype=fish
