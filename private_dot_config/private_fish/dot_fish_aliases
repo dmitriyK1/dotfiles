@@ -1,5 +1,5 @@
 alias updatedb="sudo /usr/libexec/locate.updatedb"
-alias up ~/.local/bin/update.sh
+alias up ~/.local/bin/update.fish
 
 alias locate mdfind
 # alias updatedb "sudo /usr/libexec/locate.updatedb"

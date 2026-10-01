@@ -27,7 +27,7 @@ brew cleanup
 brew tap --repair
 
 colorize_text '>>> updating neovim plugins'
-nvim --headless "+Lazy! sync" +qa
+nvim --headless "+Lazy! sync" "+UpdateRemotePlugins" +qa
 
 colorize_text '>>> updating fish plugins and completions'
 fisher update
