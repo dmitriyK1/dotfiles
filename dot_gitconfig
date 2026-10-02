@@ -24,6 +24,12 @@
 	diffFilter = delta --color-only
 [delta]
 	navigate = true
+	# restyle git's moved-line colors: keep syntax highlighting, tint the background instead
+	# (purple/blue = moved from, cyan/yellow = moved to; the alternates mark adjacent blocks)
+	map-styles = bold purple => syntax "#6b1f5c", bold blue => syntax "#2d3f8f", bold cyan => syntax "#00665c", bold yellow => syntax "#5c5c00"
+[diff]
+	# color moved lines differently from real additions/removals
+	colorMoved = default
 [merge]
 	conflictStyle = zdiff3
 # Machine-specific settings (user.email, user.signingkey); keep last so it can override the above
