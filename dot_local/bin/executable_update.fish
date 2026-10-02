@@ -22,9 +22,12 @@ autojump --purge
 colorize_text '>>> updating Homebrew'
 brew update
 # --greedy also upgrades casks that normally update themselves
-brew upgrade --greedy
+NONINTERACTIVE=1 brew upgrade --greedy --yes
 brew cleanup
 brew tap --repair
+
+colorize_text '>>> updating atuin db'
+atuin sync -f
 
 colorize_text '>>> updating neovim plugins'
 nvim --headless "+Lazy! sync" "+UpdateRemotePlugins" +qa
