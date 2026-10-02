@@ -11,6 +11,8 @@
 	undo = !/opt/homebrew/bin/legit undo
 	branches = !/opt/homebrew/bin/legit branches
 	recommit = commit --amend --no-edit
+	# syntax-aware side-by-side diff via difftastic (git dft, git dft HEAD~1)
+	dft = -c diff.external=difft diff --ext-diff
 [core]
 	excludesfile = ~/.gitignore_global
 	pager = delta
@@ -24,6 +26,9 @@
 	diffFilter = delta --color-only
 [delta]
 	navigate = true
+	line-numbers = true
+	# truncate long lines instead of wrapping them (no ↴ / … continuation rows)
+	wrap-max-lines = 0
 	# restyle git's moved-line colors: keep syntax highlighting, tint the background instead
 	# (purple/blue = moved from, cyan/yellow = moved to; the alternates mark adjacent blocks)
 	map-styles = bold purple => syntax "#6b1f5c", bold blue => syntax "#2d3f8f", bold cyan => syntax "#00665c", bold yellow => syntax "#5c5c00"
