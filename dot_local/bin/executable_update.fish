@@ -19,6 +19,9 @@ chezmoi update
 colorize_text '>>> purging autojump database from non-existing paths'
 autojump --purge
 
+colorize_text '>>> syncing atuin history'
+atuin sync
+
 colorize_text '>>> updating Homebrew'
 brew update
 # refresh the cache: pkg-based casks need sudo, and earlier steps can outlast the 5-minute timeout
@@ -27,9 +30,6 @@ sudo --validate
 brew upgrade --greedy-auto-updates --yes
 brew cleanup
 brew tap --repair
-
-colorize_text '>>> syncing atuin history'
-atuin sync
 
 colorize_text '>>> updating neovim plugins'
 nvim --headless "+Lazy! sync" "+UpdateRemotePlugins" +qa
