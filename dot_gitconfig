@@ -29,7 +29,9 @@
 	map-styles = bold purple => syntax "#6b1f5c", bold blue => syntax "#2d3f8f", bold cyan => syntax "#00665c", bold yellow => syntax "#5c5c00"
 [diff]
 	# color moved lines differently from real additions/removals
-	colorMoved = default
+	colorMoved = zebra
+	# still count a block as moved when it's uniformly re-indented, e.g. wrapped in an if
+	colorMovedWS = allow-indentation-change
 [merge]
 	conflictStyle = zdiff3
 # Machine-specific settings (user.email, user.signingkey); keep last so it can override the above
