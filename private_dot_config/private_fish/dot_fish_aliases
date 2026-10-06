@@ -101,8 +101,7 @@ abbr -a gss "git status -sb"
 abbr -a gsy "legit sync"
 abbr -a gb "git branch"
 alias gbc "git branch --merged | grep -v '*' | xargs git branch -d"
-abbr -a gbd "git branch -D"
-abbr -a gbD "git push origin --delete"
+abbr -a gbd "git branch -d"
 abbr -a gba "git branch -a"
 abbr -a gbv "git branch -vva"
 abbr -a gbs "git branches"
@@ -169,11 +168,18 @@ abbr -a grev "git remote -vv"
 abbr -a gcp "git cherry-pick"
 abbr -a --set-cursor gcf 'git commit --no-verify -m "%"'
 abbr -a gpf "git push --no-verify"
-abbr -a gpF "git push --force-with-lease"
 # alias gplf "gf; git reset --hard origin/develop"
 # alias gpu "git publish"
 # alias gpu "git push origin (git rev-parse --abbrev-ref HEAD) -u"
 abbr -a gtg "git tag"
+
+# destructive git commands: the trailing ! keeps them from being typed by accident
+# --force-if-includes keeps the lease meaningful after gf has updated origin/*
+abbr -a gp! "git push --force-with-lease --force-if-includes"
+abbr -a gbd! "git branch -D"
+abbr -a gbD! "git push origin --delete"
+abbr -a gup! "legit unpublish"
+
 # alias h "how2 -l javascript "
 
 # requires brew install gron
@@ -274,7 +280,6 @@ abbr -a pfr 'pip3 freeze > requirements.txt'
 alias activate='. venv/bin/activate.fish'
 
 abbr -a gpu "legit publish"
-abbr -a gup "legit unpublish"
 abbr -a gsw "legit switch"
 abbr -a lg lazygit
 
