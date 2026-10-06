@@ -10,7 +10,7 @@ function colorize_text
 end
 
 colorize_text '>>> start updating ...'
-sudo --validate
+# sudo --validate
 
 # first, so the later steps run with the freshly updated brew-installed tools
 colorize_text '>>> updating Homebrew'
