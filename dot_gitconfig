@@ -39,6 +39,12 @@
 	colorMovedWS = allow-indentation-change
 [merge]
 	conflictStyle = zdiff3
+[rerere]
+	# remember how conflicts were resolved and reapply the resolution automatically
+	enabled = true
+[pull]
+	# replay local commits on top of upstream instead of creating merge commits
+	rebase = true
 # Machine-specific settings (user.email, user.signingkey); keep last so it can override the above
 [include]
 	path = ~/.gitconfig.local
