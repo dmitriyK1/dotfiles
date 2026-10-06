@@ -28,14 +28,22 @@ if status --is-interactive
 
     source ~/.config/fish/.fish_functions
 
-    # defining ~250 aliases takes ~30 ms per shell, so cache them as plain function definitions;
+    # defining aliases takes ~30 ms per shell, so cache them as plain function definitions,
+    # followed by the abbrs from the same files;
     # the cache is rebuilt whenever .fish_aliases or .fish_aliases.local changes
     set -l alias_file ~/.config/fish/.fish_aliases
     set -l alias_cache ~/.cache/fish/aliases.fish
     if not test -f $alias_cache; or test $alias_file -nt $alias_cache; or test $alias_file.local -nt $alias_cache
         mkdir -p ~/.cache/fish
-        # alias-defined functions are the only ones whose --details is "-"
-        fish --no-config -c 'source $argv[1]; for f in (functions --all --names); test "$(functions --details $f)" = "-"; and functions $f; end' $alias_file >$alias_cache.tmp
+        # alias-defined functions are the only ones whose --details is "-". An abbr would shadow
+        # a same-named alias, so drop it to let .fish_aliases.local override an abbr with an alias
+        fish --no-config -c 'source $argv[1]
+            for f in (functions --all --names)
+                test "$(functions --details $f)" = "-"; or continue
+                functions $f
+                abbr -q -- $f; and abbr -e -- $f
+            end
+            abbr --show' $alias_file >$alias_cache.tmp
         and command mv $alias_cache.tmp $alias_cache
     end
     if test -f $alias_cache

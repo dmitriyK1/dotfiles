@@ -1,172 +1,179 @@
+# abbr: shortcuts for commands you would type yourself; they expand in place, so the full
+#       command is shown before running and saved to history. An abbr expansion is not
+#       expanded again, and functions can't call abbrs, so never reference one from elsewhere
+# alias: overrides of real commands (ls, cat, cp...), pipelines and named utilities, and
+#        anything called from functions or other aliases
+
 alias updatedb="sudo /usr/libexec/locate.updatedb"
-alias up ~/.local/bin/update.fish
+abbr -a up ~/.local/bin/update.fish
 
 alias locate mdfind
 # alias updatedb "sudo /usr/libexec/locate.updatedb"
 # alias tr "tere --normal-search-anywhere --mouse=on"
 
-alias n npm
-alias ns "npm start"
-alias nb "npm run build"
-alias ni "npm i"
-alias nib "npm install; npm run build"
-alias nis "npm install; npm start"
-alias nit "npm it"
-alias nig "/opt/homebrew/bin/npm i -g" # always brew node, whatever nvm version is active
-alias nug "/opt/homebrew/bin/npm uninstall -g"
-alias nid "npm i -D"
-alias nu "npm uninstall"
-alias nud "npm uninstall -D"
-alias nt "npm t"
-alias nr "npm run"
-alias nl "npm link"
-alias nul "npm unlink"
-alias no "npm outdated"
-alias nup "npm upgrade"
-alias ndd "npm dedupe"
-alias nls "npm ls"
+abbr -a n npm
+abbr -a ns "npm start"
+abbr -a nb "npm run build"
+abbr -a ni "npm i"
+abbr -a nib "npm install; npm run build"
+abbr -a nis "npm install; npm start"
+abbr -a nit "npm it"
+abbr -a nig "/opt/homebrew/bin/npm i -g" # always brew node, whatever nvm version is active
+abbr -a nug "/opt/homebrew/bin/npm uninstall -g"
+abbr -a nid "npm i -D"
+abbr -a nu "npm uninstall"
+abbr -a nud "npm uninstall -D"
+abbr -a nt "npm t"
+abbr -a nr "npm run"
+abbr -a nl "npm link"
+abbr -a nul "npm unlink"
+abbr -a no "npm outdated"
+abbr -a nup "npm upgrade"
+abbr -a ndd "npm dedupe"
+abbr -a nls "npm ls"
 
-alias y yarn
-alias ys "yarn start"
-alias yas "yarn; yarn start"
-alias yb "yarn build"
-alias yt "yarn test"
-alias ya "yarn add"
-alias yag "yarn global add"
-alias yr "yarn remove"
-alias yad "yarn add -D"
+abbr -a y yarn
+abbr -a ys "yarn start"
+abbr -a yas "yarn; yarn start"
+abbr -a yb "yarn build"
+abbr -a yt "yarn test"
+abbr -a ya "yarn add"
+abbr -a yag "yarn global add"
+abbr -a yr "yarn remove"
+abbr -a yad "yarn add -D"
 
-alias chcd "chezmoi cd"
-alias chup "chezmoi update"
-alias chpl "chezmoi git pull -- --autostash --rebase" # pull without applying; review with chdi, then chap
-alias chap "chezmoi apply"
-alias chst "chezmoi status"
-alias chdi "chezmoi diff"
-alias chad "chezmoi add"
+abbr -a chcd "chezmoi cd"
+abbr -a chup "chezmoi update"
+abbr -a chpl "chezmoi git pull -- --autostash --rebase" # pull without applying; review with chdi, then chap
+abbr -a chap "chezmoi apply"
+abbr -a chst "chezmoi status"
+abbr -a chdi "chezmoi diff"
+abbr -a chad "chezmoi add"
 
-alias fi "find . -name"
+abbr -a fi "find . -name"
 
-alias g git
+abbr -a g git
 alias multipull "find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} pull \;"
 # alias gh "git rev-parse --verify HEAD"
-alias ggc "git gc --aggressive"
+abbr -a ggc "git gc --aggressive"
 alias ghash "git log --pretty=format:'%h' -n 1 | pbcopy" # copy short hash of HEAD
 alias gm "git log -1 --pretty=%B; git log -1 --pretty=%B | pbcopy"
-alias gwa "git worktree add"
-alias gwr "git worktree remove"
-alias gwl "git worktree list"
-alias gt "git checkout -"
-alias gtl "gt; gpl"
-alias gre "git reset"
-alias gre. "git reset ."
-alias grE 'git reset --hard "@{u}"'
-alias grch "git reset .; git checkout ."
-alias gi "git init"
-alias gia git-iadd
-alias gis "git ishow"
-alias gish "git ishow"
-alias gai git-iadd
-alias rb recursive-blame
+abbr -a gwa "git worktree add"
+abbr -a gwr "git worktree remove"
+abbr -a gwl "git worktree list"
+abbr -a gt "git checkout -"
+abbr -a gtl "git checkout -; git pull"
+abbr -a gre "git reset"
+abbr -a gre. "git reset ."
+abbr -a grE 'git reset --hard "@{u}"'
+abbr -a grch "git reset .; git checkout ."
+abbr -a gi "git init"
+abbr -a gia git-iadd
+abbr -a gis "git ishow"
+abbr -a gish "git ishow"
+abbr -a gai git-iadd
+abbr -a rb recursive-blame
 alias gl="git log --format='%Cred%h%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset%C(yellow)%d%Creset'"
 # alias gl="git log --format='%Cred%h%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset%C(yellow)%d%Creset' --no-merges"
-alias gll="git log --oneline --decorate --no-merges"
-alias glp="git log -p --stat --no-merges"
-alias gls="git log -S"
-alias glr="gf; git log ...origin/(git branch | grep \* | cut -d ' ' -f2)" # compare commit on remote branch
-alias gma="git merge --abort"
-alias gmra="gma"
-alias gmr="git merge"
+abbr -a gll "git log --oneline --decorate --no-merges"
+abbr -a glp "git log -p --stat --no-merges"
+abbr -a gls "git log -S"
+alias glr="git fetch --all --prune; git log ...origin/(git branch | grep \* | cut -d ' ' -f2)" # compare commit on remote branch
+abbr -a gma "git merge --abort"
+abbr -a gmra "git merge --abort"
+abbr -a gmr "git merge"
 # gitu - from .fish_functions
 # glf  - from .fish_functions
-alias gcl="git clone"
-alias gcln="git clean -df"
-alias gca="git commit --amend"
-alias gcaf="gca --no-verify"
-alias gcaa="git commit --amend --reset-author --no-edit"
-alias gac="git add -u; git commit -m"
+abbr -a gcl "git clone"
+abbr -a gcln "git clean -df"
+abbr -a gca "git commit --amend"
+abbr -a gcaf "git commit --amend --no-verify"
+abbr -a gcaa "git commit --amend --reset-author --no-edit"
+abbr -a --set-cursor gac 'git add -u; git commit -m "%"'
 alias grepall="git branch -a | command tr -d \* | sed '/->/d' | xargs git grep"
 # alias gf "git fetch --all --prune --quiet"
-alias gf "git fetch --all --prune"
-alias gfo "git follow" # requires https://github.com/nickolasburr/git-follow
-alias gs "git status"
+abbr -a gf "git fetch --all --prune"
+abbr -a gfo "git follow" # requires https://github.com/nickolasburr/git-follow
+abbr -a gs "git status"
 alias gsm "git status --short | grep '^[MARCD]'" # show only modified (without new files)
-alias gS "git branch-status"
-alias gss "git status -sb"
-alias gsy "legit sync"
-alias gb "git branch"
+abbr -a gS "git branch-status"
+abbr -a gss "git status -sb"
+abbr -a gsy "legit sync"
+abbr -a gb "git branch"
 alias gbc "git branch --merged | grep -v '*' | xargs git branch -d"
-alias gbd "git branch -D"
-alias gbD "git push origin --delete"
-alias gba "git branch -a"
-alias gbv "git branch -vva"
-alias gbs "git branches"
-alias gst "git stash"
-alias gstp "git stash pop"
-alias gsta "git stash apply"
-alias gstl "git stash list"
-alias gsts "git stash show -p"
-alias gstpa "git stash -p"
-alias gstpu "git stash push"
+abbr -a gbd "git branch -D"
+abbr -a gbD "git push origin --delete"
+abbr -a gba "git branch -a"
+abbr -a gbv "git branch -vva"
+abbr -a gbs "git branches"
+abbr -a gst "git stash"
+abbr -a gstp "git stash pop"
+abbr -a gsta "git stash apply"
+abbr -a gstl "git stash list"
+abbr -a gsts "git stash show -p"
+abbr -a gstpa "git stash -p"
+abbr -a gstpu "git stash push"
 
-alias gc "git commit -v -m"
-alias gcz "git cz"
-alias gco "git checkout"
-alias gch "git checkout"
-alias gch. "git checkout ."
-alias gchp "git checkout -p"
-alias gn "git checkout -b"
-alias gdn "git diff --name-only"
+# the cursor lands inside the quotes: type "gc", space, then the message itself
+abbr -a --set-cursor gc 'git commit -v -m "%"'
+abbr -a gcz "git cz"
+abbr -a gco "git checkout"
+abbr -a gch "git checkout"
+abbr -a gch. "git checkout ."
+abbr -a gchp "git checkout -p"
+abbr -a gn "git checkout -b"
+abbr -a gdn "git diff --name-only"
 # alias gdd "git diff --color | diff-so-fancy"
-alias gd "git diff"
+abbr -a gd "git diff"
 # alias gdc "git diff --color --cached | diff-so-fancy | less --tabs=4 -RFXi --pattern '^(Date|added|deleted|modified): '"
-alias gdc "git diff --cached"
+abbr -a gdc "git diff --cached"
 # alias gdcnp "git diff --color --cached -- ':!package-lock.json' ':!yarn.lock' | diff-so-fancy | less --tabs=4 -RFXi --pattern '^(Date|added|deleted|modified): '"
-alias gdcnp "git diff --color -- ':!package-lock.json' ':!yarn.lock'"
+abbr -a gdcnp "git diff --color -- ':!package-lock.json' ':!yarn.lock'"
 # alias gddc "git diff --color --cached | diff-so-fancy"
-alias gdnp "git diff -- ':!package-lock.json' ':!yarn.lock'"
-alias gdl "git difftool"
-alias gdlc "git difftool --cached"
-alias gde "git diff develop HEAD"
-alias gdv "git diff dev HEAD"
-alias gDen "git diff dev HEAD --name-only"
-alias gden "git diff develop HEAD --name-only"
-alias gdm "git diff master HEAD"
+abbr -a gdnp "git diff -- ':!package-lock.json' ':!yarn.lock'"
+abbr -a gdl "git difftool"
+abbr -a gdlc "git difftool --cached"
+abbr -a gde "git diff develop HEAD"
+abbr -a gdv "git diff dev HEAD"
+abbr -a gDen "git diff dev HEAD --name-only"
+abbr -a gden "git diff develop HEAD --name-only"
+abbr -a gdm "git diff master HEAD"
 # from https://stackoverflow.com/questions/4944376/how-to-check-real-git-diff-before-merging-from-remote-branch
-alias gdr "gf; git diff ...origin/(git branch | grep \* | cut -d ' ' -f2)" # compare with a same remote branch
-alias gdrm "gf; git diff ...origin/master"
-alias gdrd "gf; git diff ...origin/develop"
-alias ga "git add"
-alias ga.="ga ."
-alias gaa="ga ."
-alias gau="git add -u"
-alias gan "git add (git ls-files -o --exclude-standard)"
-alias gap="ga -p"
-alias gr "git recent"
-alias grb "git rebase"
-alias gri "git rebase -i"
-alias grba "git rebase --abort"
-alias grbc "git rebase --continue"
-alias grs "git reset"
-alias gps "git push -u"
+alias gdr "git fetch --all --prune; git diff ...origin/(git branch | grep \* | cut -d ' ' -f2)" # compare with a same remote branch
+abbr -a gdrm "git fetch --all --prune; git diff ...origin/master"
+abbr -a gdrd "git fetch --all --prune; git diff ...origin/develop"
+abbr -a ga "git add"
+abbr -a ga. "git add ."
+abbr -a gaa "git add ."
+abbr -a gau "git add -u"
+abbr -a gan "git add (git ls-files -o --exclude-standard)"
+abbr -a gap "git add -p"
+abbr -a gr "git recent"
+abbr -a grb "git rebase"
+abbr -a gri "git rebase -i"
+abbr -a grba "git rebase --abort"
+abbr -a grbc "git rebase --continue"
+abbr -a grs "git reset"
+abbr -a gps "git push -u"
 # alias gpl "echo '\"git pull --ff-only\"'; git pull --ff-only" # to avoid creating merge commits
-alias gpl "git pull"
-alias gplm "git pull origin master"
-alias gpld "git pull origin develop"
-alias gplD "git pull origin dev"
-alias gsh "git show"
-alias grec "git recommit"
-alias grecf "git recommit --no-verify"
-alias gshn "git show --name-only"
-alias gshf gshn
-alias grev "git remote -vv"
-alias gcp "git cherry-pick"
-alias gcf "git commit --no-verify -m"
-alias gpf "git push --no-verify"
-alias gpF "git push --force-with-lease"
+abbr -a gpl "git pull"
+abbr -a gplm "git pull origin master"
+abbr -a gpld "git pull origin develop"
+abbr -a gplD "git pull origin dev"
+abbr -a gsh "git show"
+abbr -a grec "git recommit"
+abbr -a grecf "git recommit --no-verify"
+abbr -a gshn "git show --name-only"
+abbr -a gshf "git show --name-only"
+abbr -a grev "git remote -vv"
+abbr -a gcp "git cherry-pick"
+abbr -a --set-cursor gcf 'git commit --no-verify -m "%"'
+abbr -a gpf "git push --no-verify"
+abbr -a gpF "git push --force-with-lease"
 # alias gplf "gf; git reset --hard origin/develop"
 # alias gpu "git publish"
 # alias gpu "git push origin (git rev-parse --abbrev-ref HEAD) -u"
-alias gtg "git tag"
+abbr -a gtg "git tag"
 # alias h "how2 -l javascript "
 
 # requires brew install gron
@@ -179,46 +186,48 @@ alias top="btop"
 alias ps="procs"
 # alias du="dua"
 
-alias cd- "cd -"
-alias cdt "cd -"
-alias cdd "cd -"
-alias cdr "cd (git rev-parse --show-toplevel)"
+abbr -a cd- "cd -"
+abbr -a cdt "cd -"
+abbr -a cdd "cd -"
+abbr -a cdr "cd (git rev-parse --show-toplevel)"
 alias nano="env LC_ALL=ru_RU.UTF-8 nano"
 alias vim nvim
-alias v vim
-alias v. "vim ."
-alias vi vim
-alias nv "env ESCDELAY=0 nvim" # ESCDELAY to remove delay in fzf (when closing popup) https://github.com/junegunn/fzf.vim/issues/248
-alias ms "m sleep"
-alias ml "m lock"
-alias bi "brew install"
-alias bic "brew install --cask"
-alias bu "brew uninstall"
-alias bre "brew reinstall"
-alias bs "brew search"
-alias bif "brew info"
+abbr -a v nvim
+abbr -a v. "nvim ."
+alias vi nvim
+abbr -a nv "env ESCDELAY=0 nvim" # ESCDELAY to remove delay in fzf (when closing popup) https://github.com/junegunn/fzf.vim/issues/248
+abbr -a ms "m sleep"
+abbr -a ml "m lock"
+abbr -a bi "brew install"
+abbr -a bic "brew install --cask"
+abbr -a bu "brew uninstall"
+abbr -a bre "brew reinstall"
+abbr -a bs "brew search"
+abbr -a bif "brew info"
 # alias p "percol" # brew install percol
-alias ss reload
-alias se "nvim ~/.local/share/chezmoi/private_dot_config/private_fish/config.fish"
+abbr -a ss reload
+# chezmoi-managed files: edit the source (--hardlink=false keeps the real path, so git
+# integration works in nvim), then apply it once nvim exits
+alias se "chezmoi edit --apply --hardlink=false ~/.config/fish/config.fish"
 alias sl "nvim ~/.config/fish/config.local.fish"
-alias sea "nvim ~/.local/share/chezmoi/private_dot_config/private_fish/dot_fish_aliases"
+alias sea "chezmoi edit --apply --hardlink=false ~/.config/fish/.fish_aliases"
 alias seal "nvim ~/.config/fish/.fish_aliases.local"
 alias seav "nvim ~/.config/fish/.fish_variables.local"
-alias sef "nvim ~/.local/share/chezmoi/private_dot_config/private_fish/dot_fish_functions"
-alias sev "nvim ~/.local/share/chezmoi/private_dot_config/private_fish/dot_fish_variables"
+alias sef "chezmoi edit --apply --hardlink=false ~/.config/fish/.fish_functions"
+alias sev "chezmoi edit --apply --hardlink=false ~/.config/fish/.fish_variables"
 
 alias cp='cp -iv' # Preferred 'cp' implementation
-alias cpr='cp -ivR'
-alias cpp='command cp'
+abbr -a cpr 'cp -ivR'
+abbr -a cpp 'command cp'
 alias mv='mv -iv' # Preferred 'mv' implementation
-alias mvv='command mv'
+abbr -a mvv 'command mv'
 alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
 
 alias numfiles='echo (command ls -1 | wc -l)' # numfiles:     Count of non-hidden files in current dir
 alias count_files='numfiles'
 
 alias emacs "/Applications/Emacs.app/Contents/MacOS/Emacs -nw"
-alias em='emacs'
+abbr -a em emacs
 
 # alias fp='ls | fpp'
 
@@ -227,12 +236,12 @@ alias cal='cal | grep --color -EC6 "\b"(date +%e | sed "s/ //g")'
 alias rg="rg -i --color=always --hidden --smart-case"
 # ripgrep-all: rg that also searches PDFs, Office docs, e-books and archives (brew install ripgrep-all)
 # alias rga="rga --hidden"
-alias rgf="rg -F"
-alias rgw="rg -w"
-alias rgn="rg -l"
-alias rgh="rg --hidden"
+abbr -a rgf "rg -F"
+abbr -a rgw "rg -w"
+abbr -a rgn "rg -l"
+abbr -a rgh "rg --hidden"
 
-alias rr="yy"
+abbr -a rr yy
 
 alias ls='eza -lha --color=always --icons --git --group-directories-first'
 
@@ -247,27 +256,27 @@ alias tree='tree -a'
 # alias zless=$PAGER
 # alias cat=vimcat
 
-alias b='bat'
+abbr -a b bat
 
 alias totalfolderusage='command du -sh'
 
-alias unset 'set --erase'
+abbr -a unset 'set --erase'
 
-alias rmr 'rm -rf'
-alias ntla='ntl -A'
+abbr -a rmr 'rm -rf'
+abbr -a ntla 'ntl -A'
 # alias yarn='env NPQ_PKG_MGR=yarn npq-hero'
 # alias npm='npq-hero'
 
-alias p3='python3'
-alias pi='pip3 install'
-alias pir='pip3 install -r requirements.txt'
-alias pfr='pip3 freeze > requirements.txt'
+abbr -a p3 python3
+abbr -a pi 'pip3 install'
+abbr -a pir 'pip3 install -r requirements.txt'
+abbr -a pfr 'pip3 freeze > requirements.txt'
 alias activate='. venv/bin/activate.fish'
 
-alias gpu="legit publish"
-alias gup="legit unpublish"
-alias gsw="legit switch"
-alias lg="lazygit"
+abbr -a gpu "legit publish"
+abbr -a gup "legit unpublish"
+abbr -a gsw "legit switch"
+abbr -a lg lazygit
 
 # fuzzy select and jump into folder
 alias jf="cd (cat ~/Library/autojump/autojump.txt | sort -nr | awk '{print \$2}' | fzf +s)"
@@ -283,20 +292,20 @@ alias preview="fzf --preview 'bat --color \"always\" {}'"
 # --------------------------------------------------------------------------------
 # DOCKER ALIASES START
 # --------------------------------------------------------------------------------
-alias dps "docker ps"
-alias dlg "docker logs"
-alias dlgf "docker logs --follow"
-alias dka "docker kill (docker ps -q)"
-alias dr "docker restart"
+abbr -a dps "docker ps"
+abbr -a dlg "docker logs"
+abbr -a dlgf "docker logs --follow"
+abbr -a dka "docker kill (docker ps -q)"
+abbr -a dr "docker restart"
 
-alias dkps "docker ps"
-alias dkst "docker stats"
-alias dkpsa "docker ps -a"
-alias dkimgs "docker images"
-alias dkcpup "docker-compose up -d"
-alias dkcpdown "docker-compose down"
-alias dkcpstart "docker-compose start"
-alias dkcpstop "docker-compose stop"
+abbr -a dkps "docker ps"
+abbr -a dkst "docker stats"
+abbr -a dkpsa "docker ps -a"
+abbr -a dkimgs "docker images"
+abbr -a dkcpup "docker-compose up -d"
+abbr -a dkcpdown "docker-compose down"
+abbr -a dkcpstart "docker-compose start"
+abbr -a dkcpstop "docker-compose stop"
 
 alias docker-clean-unused='docker system prune --all --force --volumes'
 
@@ -307,26 +316,26 @@ alias docker-clean-containers='docker container stop (docker container ls -a -q)
 # DOCKER ALIASES END
 # --------------------------------------------------------------------------------
 
-alias bsl="brew services list"
-alias bss="brew services start"
-alias bst="brew services stop"
-alias bsr="brew services run"
-alias bsre="brew services restart"
+abbr -a bsl "brew services list"
+abbr -a bss "brew services start"
+abbr -a bst "brew services stop"
+abbr -a bsr "brew services run"
+abbr -a bsre "brew services restart"
 
 # --------------------------------------------------------------------------------
 # HEROKU ALIASES START
 # --------------------------------------------------------------------------------
-alias ha="heroku run bash" # connect to heroku app
-alias hd="heroku ps:exec" # connect to running dyno
-alias hl="heroku logs --tail"
+abbr -a ha "heroku run bash" # connect to heroku app
+abbr -a hd "heroku ps:exec" # connect to running dyno
+abbr -a hl "heroku logs --tail"
 # --------------------------------------------------------------------------------
 # HEROKU ALIASES END
 # --------------------------------------------------------------------------------
 
 alias youtube-dl-channel='yt-dlp -ciw -o "%(title)s.%(ext)s" -v --download-archive .downloadslist'
 
-alias o.="open ."
-alias o="open ."
+abbr -a o. "open ."
+abbr -a o "open ."
 
 # remote hosts often lack xterm-kitty/xterm-ghostty terminfo
 alias ssh "env TERM=xterm-256color ssh"
