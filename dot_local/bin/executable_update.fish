@@ -12,6 +12,14 @@ end
 colorize_text '>>> start updating ...'
 sudo --validate
 
+# first, so the later steps run with the freshly updated brew-installed tools
+colorize_text '>>> updating Homebrew'
+brew update
+# --greedy-auto-updates also upgrades casks that normally update themselves
+brew upgrade --greedy-auto-updates --yes
+brew cleanup
+brew tap --repair
+
 # pulls the dotfiles repo and applies it, which also runs the run_onchange install scripts
 colorize_text '>>> updating dotfiles'
 chezmoi update
@@ -21,15 +29,6 @@ autojump --purge
 
 colorize_text '>>> syncing atuin history'
 atuin sync
-
-colorize_text '>>> updating Homebrew'
-brew update
-# refresh the cache: pkg-based casks need sudo, and earlier steps can outlast the 5-minute timeout
-sudo --validate
-# --greedy-auto-updates also upgrades casks that normally update themselves
-brew upgrade --greedy-auto-updates --yes
-brew cleanup
-brew tap --repair
 
 colorize_text '>>> updating neovim plugins'
 nvim --headless "+Lazy! sync" "+UpdateRemotePlugins" +qa
