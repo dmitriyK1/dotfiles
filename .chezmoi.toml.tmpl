@@ -1,0 +1,7 @@
+{{- /* chezmoi's own config, rendered into ~/.config/chezmoi/chezmoi.toml by `chezmoi init`. */ -}}
+{{- /* After editing this template, re-run `chezmoi init` to regenerate the config. */ -}}
+{{- if lookPath "delta" }}
+[diff]
+    command = "delta"
+    args = ["--paging=never"]
+{{- end }}
