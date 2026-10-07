@@ -7,6 +7,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 packages=(
   ntl
+  recursive-blame
   github:ruyadorno/git-iadd # npm registry tarball is gone (404)
 )
 npm install -g "${packages[@]}"

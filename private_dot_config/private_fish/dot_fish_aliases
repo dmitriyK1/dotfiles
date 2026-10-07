@@ -69,8 +69,6 @@ abbr -a grE 'git reset --hard "@{u}"'
 abbr -a grch "git reset .; git checkout ."
 abbr -a gi "git init"
 abbr -a gia git-iadd
-abbr -a gis "git ishow"
-abbr -a gish "git ishow"
 abbr -a gai git-iadd
 abbr -a rb recursive-blame
 alias gl="git log --format='%Cred%h%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset%C(yellow)%d%Creset'"
@@ -93,7 +91,6 @@ abbr -a --set-cursor gac 'git add -u; git commit -m "%"'
 alias grepall="git branch -a | command tr -d \* | sed '/->/d' | xargs git grep"
 # alias gf "git fetch --all --prune --quiet"
 abbr -a gf "git fetch --all --prune"
-abbr -a gfo "git follow" # requires https://github.com/nickolasburr/git-follow
 abbr -a gs "git status"
 alias gsm "git status --short | grep '^[MARCD]'" # show only modified (without new files)
 abbr -a gS "git branch-status"
@@ -115,7 +112,6 @@ abbr -a gstpu "git stash push"
 
 # the cursor lands inside the quotes: type "gc", space, then the message itself
 abbr -a --set-cursor gc 'git commit -v -m "%"'
-abbr -a gcz "git cz"
 abbr -a gco "git checkout"
 abbr -a gch "git checkout"
 abbr -a gch. "git checkout ."
@@ -232,9 +228,6 @@ alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
 alias numfiles='echo (command ls -1 | wc -l)' # numfiles:     Count of non-hidden files in current dir
 alias count_files='numfiles'
 
-alias emacs "/Applications/Emacs.app/Contents/MacOS/Emacs -nw"
-abbr -a em emacs
-
 # alias fp='ls | fpp'
 
 alias cal='cal | grep --color -EC6 "\b"(date +%e | sed "s/ //g")'
@@ -326,16 +319,6 @@ abbr -a bss "brew services start"
 abbr -a bst "brew services stop"
 abbr -a bsr "brew services run"
 abbr -a bsre "brew services restart"
-
-# --------------------------------------------------------------------------------
-# HEROKU ALIASES START
-# --------------------------------------------------------------------------------
-abbr -a ha "heroku run bash" # connect to heroku app
-abbr -a hd "heroku ps:exec" # connect to running dyno
-abbr -a hl "heroku logs --tail"
-# --------------------------------------------------------------------------------
-# HEROKU ALIASES END
-# --------------------------------------------------------------------------------
 
 alias youtube-dl-channel='yt-dlp -ciw -o "%(title)s.%(ext)s" -v --download-archive .downloadslist'
 
