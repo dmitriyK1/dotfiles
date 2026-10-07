@@ -11,7 +11,8 @@ fi
 
 echo "Installing LazyVim starter..."
 starter_tmp="$(mktemp -d)"
-trap 'rm -rf "$starter_tmp"' EXIT
+copy_tmp=""
+trap 'rm -rf "$starter_tmp"; if [ -n "$copy_tmp" ]; then rm -f "$copy_tmp"; fi' EXIT
 
 git clone --depth=1 https://github.com/LazyVim/starter.git "$starter_tmp/repo"
 # Export tracked files so the Neovim config doesn't become a nested Git repo.
@@ -21,10 +22,22 @@ test -f "$starter_tmp/files/init.lua"
 test -f "$starter_tmp/files/lua/config/lazy.lua"
 # Preserve files from an earlier, partial chezmoi setup.
 # Copy only missing files: macOS cp -n returns failure when it skips a file.
-while IFS= read -r -d '' starter_file; do
-  destination="$nvim_config/${starter_file#"$starter_tmp/files/"}"
+copy_missing_file() {
+  local starter_file="$1"
+  local destination="$nvim_config/${starter_file#"$starter_tmp/files/"}"
   if [ ! -e "$destination" ] && [ ! -L "$destination" ]; then
     mkdir -p "$(dirname "$destination")"
-    cp -P "$starter_file" "$destination"
+    # Publish only complete files so retries never preserve a truncated copy.
+    copy_tmp="$(mktemp "$destination.XXXXXX")"
+    cp -P "$starter_file" "$copy_tmp"
+    mv "$copy_tmp" "$destination"
+    copy_tmp=""
   fi
-done < <(find "$starter_tmp/files" \( -type f -o -type l \) -print0)
+}
+
+while IFS= read -r -d '' starter_file; do
+  copy_missing_file "$starter_file"
+done < <(find "$starter_tmp/files" \( -type f -o -type l \) ! -path "$starter_tmp/files/init.lua" -print0)
+
+# Publish the entrypoint only after all supporting files are installed.
+copy_missing_file "$starter_tmp/files/init.lua"

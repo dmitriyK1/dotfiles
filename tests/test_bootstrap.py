@@ -121,6 +121,49 @@ exec "$TEST_REAL_GIT" "$@"
         self.assertFalse(self.target.exists())
         self.assertEqual(list(self.tmp.iterdir()), [])
 
+    def test_copy_failure_can_be_retried_without_publishing_entrypoint(self):
+        wrapper = self.bin / "cp"
+        wrapper.write_text("""#!/bin/sh
+case "$2" in
+    */lua/config/lazy.lua)
+        printf 'partial' > "$3"
+        exit 8 ;;
+esac
+exec /bin/cp "$@"
+""")
+        wrapper.chmod(0o700)
+        result = self.install()
+        self.assertEqual(result.returncode, 8, result.stderr)
+        self.assertFalse((self.target / "init.lua").exists())
+        self.assertFalse((self.target / "lua/config/lazy.lua").exists())
+        self.assertEqual(list(self.target.rglob("*.??????")), [])
+        self.assertEqual(list(self.tmp.iterdir()), [])
+        wrapper.unlink()
+        result = self.install()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((self.target / "lua/config/lazy.lua").is_file())
+        self.assertEqual((self.target / "init.lua").read_text(), 'require("config.lazy")\n')
+
+    def test_partial_entrypoint_copy_is_cleaned_up_and_retry_succeeds(self):
+        wrapper = self.bin / "cp"
+        wrapper.write_text("""#!/bin/sh
+case "$2" in
+    */init.lua)
+        printf 'partial' > "$3"
+        exit 8 ;;
+esac
+exec /bin/cp "$@"
+""")
+        wrapper.chmod(0o700)
+        result = self.install()
+        self.assertEqual(result.returncode, 8, result.stderr)
+        self.assertFalse((self.target / "init.lua").exists())
+        self.assertEqual(list(self.target.glob("init.lua.*")), [])
+        wrapper.unlink()
+        result = self.install()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((self.target / "init.lua").read_text(), 'require("config.lazy")\n')
+
 
 class GroTests(FishTest):
     def setUp(self):

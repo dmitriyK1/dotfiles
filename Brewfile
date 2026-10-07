@@ -42,6 +42,8 @@ brew "gitui"
 brew "glab"
 # Make JSON searchable with grep (used by `gro`)
 brew "gron"
+# JSON processor used by `build_status`
+brew "jq"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Command-line interface for Git, optimized for workflow simplicity
