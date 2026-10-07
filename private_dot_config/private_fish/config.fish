@@ -30,25 +30,43 @@ if status --is-interactive
 
     # defining aliases takes ~30 ms per shell, so cache them as plain function definitions,
     # followed by the abbrs from the same files;
-    # the cache is rebuilt whenever .fish_aliases or .fish_aliases.local changes
+    # Rebuild when either file changes, including creation/deletion of the local file.
     set -l alias_file ~/.config/fish/.fish_aliases
     set -l alias_cache ~/.cache/fish/aliases.fish
-    if not test -f $alias_cache; or test $alias_file -nt $alias_cache; or test $alias_file.local -nt $alias_cache
-        mkdir -p ~/.cache/fish
+    set -l alias_local_state missing
+    test -f $alias_file.local; and set alias_local_state present
+    set -l alias_key "# aliases-v1 local=$alias_local_state"
+    set -l alias_header
+    test -f $alias_cache; and read alias_header <$alias_cache
+    set -l alias_cache_valid false
+    if test -f $alias_file; and test "$alias_header" = "$alias_key"; and not test $alias_file -nt $alias_cache; and not test $alias_file.local -nt $alias_cache
+        set alias_cache_valid true
+    else
         # alias-defined functions are the only ones whose --details is "-". An abbr would shadow
         # a same-named alias, so drop it to let .fish_aliases.local override an abbr with an alias
-        fish --no-config -c 'source $argv[1]
-            for f in (functions --all --names)
-                test "$(functions --details $f)" = "-"; or continue
-                functions $f
-                abbr -q -- $f; and abbr -e -- $f
+        if command mkdir -p ~/.cache/fish
+            set -l alias_tmp (command mktemp "$alias_cache.XXXXXX")
+            if test -n "$alias_tmp"
+                if fish --no-config -c 'source $argv[1]; or exit $status
+                    printf "%s\n" $argv[2]
+                    for f in (functions --all --names)
+                        test "$(functions --details $f)" = "-"; or continue
+                        functions $f
+                        abbr -q -- $f; and abbr -e -- $f
+                    end
+                    abbr --show' $alias_file $alias_key >$alias_tmp
+                    if command mv -- $alias_tmp $alias_cache
+                        set alias_cache_valid true
+                    end
+                end
+                test -f $alias_tmp; and command rm -f -- $alias_tmp
             end
-            abbr --show' $alias_file >$alias_cache.tmp
-        and command mv $alias_cache.tmp $alias_cache
+        end
     end
-    if test -f $alias_cache
+    if test $alias_cache_valid = true
         source $alias_cache
     else
+        echo "fish: could not rebuild aliases cache; loading source definitions" >&2
         source $alias_file
     end
 

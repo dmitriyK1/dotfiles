@@ -1,2 +1,4 @@
 # read from the source dir by run_onchange_before_10-install-packages.sh; not needed in ~
 Brewfile
+# Repository-only regression checks.
+tests
