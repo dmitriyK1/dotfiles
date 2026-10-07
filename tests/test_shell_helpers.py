@@ -1,0 +1,179 @@
+"""Sleep, remote Git comparison, and directory helper regression checks."""
+
+from pathlib import Path
+import shlex
+import unittest
+
+from test_reliability import FishTest, ROOT
+
+FUNCTIONS = ROOT / "private_dot_config/private_fish/dot_fish_functions"
+SLEEP_FUNCTION = ROOT / "private_dot_config/private_fish/functions/toggle-sleep.fish"
+
+
+class SleepTests(FishTest):
+    def setUp(self):
+        super().setUp()
+        self.calls = self.home / "sleep-calls"
+        self.env.update(
+            TEST_SLEEP_CALLS=str(self.calls), TEST_PMSET_STATUS="0",
+            TEST_POWER_SETTINGS=" SleepDisabled 0\n", TEST_SUDO_STATUS="0",
+        )
+        stub = self.bin / "sleep-stub"
+        stub.write_text("""#!/bin/sh
+tool=${0##*/}
+printf '%s\n' "$tool $*" >> "$TEST_SLEEP_CALLS"
+if [ "$tool" = pmset ]; then
+    printf '%s' "$TEST_POWER_SETTINGS"
+    exit "$TEST_PMSET_STATUS"
+fi
+exit "$TEST_SUDO_STATUS"
+""")
+        stub.chmod(0o700)
+        for name in ["pmset", "sudo"]:
+            (self.bin / name).symlink_to(stub)
+
+    def toggle(self):
+        return self.run_fish(f"source {shlex.quote(str(SLEEP_FUNCTION))}\ntoggle-sleep")
+
+    def test_failed_queries_never_change_power_settings(self):
+        for output in ["", " SleepDisabled 1\n"]:
+            with self.subTest(output=output):
+                self.env.update(TEST_PMSET_STATUS="7", TEST_POWER_SETTINGS=output)
+                result = self.toggle()
+                self.assertEqual(result.returncode, 7, result.stderr)
+                self.assertEqual(self.calls.read_text(), "pmset -g\n")
+                self.assertEqual(result.stdout, "")
+                self.calls.unlink()
+
+    def test_toggle_and_missing_flag_keep_existing_semantics(self):
+        for output, value, message in [
+            (" SleepDisabled 1\n", "0", "Sleep enabled"),
+            (" SleepDisabled 0\n", "1", "Sleep disabled"),
+            (" sleep 1\n", "1", "Sleep disabled"),
+        ]:
+            with self.subTest(output=output):
+                self.env["TEST_POWER_SETTINGS"] = output
+                result = self.toggle()
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(self.calls.read_text().splitlines(), [
+                    "pmset -g", f"sudo pmset -a disablesleep {value}",
+                ])
+                self.assertIn(message, result.stdout)
+                self.calls.unlink()
+
+    def test_failed_changes_do_not_report_success(self):
+        self.env["TEST_SUDO_STATUS"] = "5"
+        for value in ["0", "1"]:
+            with self.subTest(value=value):
+                self.env["TEST_POWER_SETTINGS"] = f" SleepDisabled {value}\n"
+                result = self.toggle()
+                self.assertEqual(result.returncode, 5, result.stderr)
+                self.assertEqual(result.stdout, "")
+
+
+class RemoteComparisonTests(FishTest):
+    def setUp(self):
+        super().setUp()
+        self.calls = self.home / "git-comparison-calls"
+        self.env.update(
+            TEST_GIT_CALLS=str(self.calls), TEST_FETCH_STATUS="0", TEST_COMPARE_STATUS="0",
+        )
+        stub = self.bin / "git"
+        stub.write_text("""#!/bin/sh
+printf '%s\n' "$*" >> "$TEST_GIT_CALLS"
+if [ "$1" = fetch ]; then exit "$TEST_FETCH_STATUS"; fi
+printf 'comparison output\n'
+exit "$TEST_COMPARE_STATUS"
+""")
+        stub.chmod(0o700)
+
+    def compare(self, function, *args):
+        return self.run_fish(
+            f"source {shlex.quote(str(FUNCTIONS))}\n{function} {shlex.join(args)}"
+        )
+
+    def test_invalid_arguments_never_fetch(self):
+        for function in ["gdrb", "glrb"]:
+            for args in [(), ("",), ("main", "other")]:
+                with self.subTest(function=function, args=args):
+                    result = self.compare(function, *args)
+                    self.assertEqual(result.returncode, 2, result.stderr)
+                    self.assertIn(f"usage: {function} BRANCH", result.stderr)
+                    self.assertFalse(self.calls.exists())
+
+    def test_fetch_failure_never_compares_stale_refs(self):
+        self.env["TEST_FETCH_STATUS"] = "7"
+        for function in ["gdrb", "glrb"]:
+            with self.subTest(function=function):
+                result = self.compare(function, "main")
+                self.assertEqual(result.returncode, 7, result.stderr)
+                self.assertEqual(result.stdout, "")
+                self.assertEqual(self.calls.read_text(), "fetch origin\n")
+                self.calls.unlink()
+
+    def test_successful_fetch_compares_requested_branch_and_propagates_status(self):
+        for function, subcommand in [("gdrb", "diff"), ("glrb", "log")]:
+            for status in [0, 9]:
+                with self.subTest(function=function, status=status):
+                    self.env["TEST_COMPARE_STATUS"] = str(status)
+                    result = self.compare(function, "topic/example")
+                    self.assertEqual(result.returncode, status, result.stderr)
+                    self.assertEqual(result.stdout, "comparison output\n")
+                    self.assertEqual(self.calls.read_text().splitlines(), [
+                        "fetch origin", f"{subcommand} ...origin/topic/example",
+                    ])
+                    self.calls.unlink()
+
+
+class MkcdTests(FishTest):
+    def setUp(self):
+        super().setUp()
+        self.workspace = self.home / "work"
+        self.workspace.mkdir()
+        self.calls = self.home / "cd-calls"
+        self.env["TEST_CD_CALLS"] = str(self.calls)
+        self.prelude = f"""source {shlex.quote(str(FUNCTIONS))}
+builtin cd -- {shlex.quote(str(self.workspace))}
+function cd
+    printf '%s\\n' "$argv" >> "$TEST_CD_CALLS"
+    builtin cd $argv
+end
+"""
+
+    def create_and_enter(self, *args):
+        return self.run_fish(self.prelude + f"""mkcd {shlex.join(args)}
+set -l result_status $status
+printf '%s\\n' "$PWD"
+exit $result_status
+""")
+
+    def test_invalid_arguments_do_not_create_directories_or_change_cwd(self):
+        for args in [(), ("",), ("first", "second")]:
+            with self.subTest(args=args):
+                result = self.create_and_enter(*args)
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertIn("usage: mkcd DIRECTORY", result.stderr)
+                self.assertEqual(Path(result.stdout.strip()).resolve(), self.workspace.resolve())
+                self.assertEqual(list(self.workspace.iterdir()), [])
+                self.assertFalse(self.calls.exists())
+
+    def test_mkdir_failure_never_calls_cd(self):
+        (self.workspace / "blocked").write_text("file, not directory\n")
+        result = self.create_and_enter("blocked/child")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(Path(result.stdout.strip()).resolve(), self.workspace.resolve())
+        self.assertFalse(self.calls.exists())
+
+    def test_spaces_leading_dash_and_existing_directories(self):
+        for directory in ["nested/dir with spaces", "-leading-dash"]:
+            for attempt in range(2):
+                with self.subTest(directory=directory, attempt=attempt):
+                    result = self.create_and_enter(directory)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    target = self.workspace / directory
+                    self.assertTrue(target.is_dir())
+                    self.assertEqual(Path(result.stdout.splitlines()[-1]).resolve(), target.resolve())
+
+
+if __name__ == "__main__":
+    unittest.main()

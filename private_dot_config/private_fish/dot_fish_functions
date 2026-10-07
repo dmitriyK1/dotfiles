@@ -184,19 +184,31 @@ end
 
 # compare current branch with a specified remote branch
 function gdrb
-    git fetch
-    git diff ...origin/$argv
+    if test (count $argv) -ne 1; or test -z "$argv[1]"
+        echo "usage: gdrb BRANCH" >&2
+        return 2
+    end
+    git fetch origin; or return
+    git diff "...origin/$argv[1]"
 end
 
 # compare logs of a current branch with a specified remote branch
 function glrb
-    git fetch
-    git log ...origin/$argv
+    if test (count $argv) -ne 1; or test -z "$argv[1]"
+        echo "usage: glrb BRANCH" >&2
+        return 2
+    end
+    git fetch origin; or return
+    git log "...origin/$argv[1]"
 end
 
 function mkcd
-    mkdir -pv $argv
-    cd $argv
+    if test (count $argv) -ne 1; or test -z "$argv[1]"
+        echo "usage: mkcd DIRECTORY" >&2
+        return 2
+    end
+    command mkdir -pv -- "$argv[1]"; or return
+    cd -- "$argv[1]"
 end
 
 function commit-count
