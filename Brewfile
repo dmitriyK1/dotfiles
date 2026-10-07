@@ -14,6 +14,8 @@ brew "btop"
 brew "chezmoi"
 # Music player with an ncurses based interface
 brew "cmus"
+# Syntax-aware diff used by `git dft`
+brew "difftastic"
 # Disk Usage/Free Utility - a better 'df' alternative
 brew "duf"
 # Modern, maintained replacement for ls
@@ -38,6 +40,8 @@ brew "git-recent"
 brew "gitui"
 # Open-source GitLab command-line tool
 brew "glab"
+# Make JSON searchable with grep (used by `gro`)
+brew "gron"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Command-line interface for Git, optimized for workflow simplicity

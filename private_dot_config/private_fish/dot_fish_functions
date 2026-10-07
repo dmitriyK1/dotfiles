@@ -23,7 +23,17 @@ function gdlh
 end
 
 function gro
-    gron $argv[2] | fgrep $argv[1] | norg
+    if test (count $argv) -ne 2
+        echo "usage: gro FILTER FILE_OR_URL" >&2
+        return 2
+    end
+    gron -- "$argv[2]" | grep -F -- "$argv[1]" | gron --ungron
+    set -l gro_status $pipestatus
+    for step_status in $gro_status
+        if test $step_status -ne 0
+            return $step_status
+        end
+    end
 end
 
 # PIDs of processes listening on a TCP port (use sudo for other users' processes)
