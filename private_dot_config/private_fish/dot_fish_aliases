@@ -57,7 +57,7 @@ alias multipull "find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} p
 # alias gh "git rev-parse --verify HEAD"
 abbr -a ggc "git gc --aggressive"
 alias ghash "git log -1 --pretty=%h; git log -1 --pretty=format:%h | pbcopy" # print and copy short hash of HEAD (copied without a trailing newline)
-alias gm "git log -1 --pretty=%B; git log -1 --pretty=%B | pbcopy"
+alias gm "git log -1 --pretty=format:%B; git log -1 --pretty=%B | string collect | pbcopy" # print and copy HEAD's message (copied without trailing newlines)
 abbr -a gwa "git worktree add"
 abbr -a gwr "git worktree remove"
 abbr -a gwl "git worktree list"
