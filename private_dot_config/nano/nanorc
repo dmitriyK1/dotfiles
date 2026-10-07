@@ -1,0 +1,25 @@
+# nano 9 settings (from the old configs/.nanorc); see man nanorc
+# syntax highlighting comes from Homebrew's /opt/homebrew/etc/nanorc
+set autoindent
+set cutfromcursor
+set softwrap
+set smarthome
+set tabsize 4
+set tabstospaces
+set mouse
+set regexp
+set quickblank
+set noconvert
+set locking
+# ^R reads a file into a new buffer
+set newbuffer
+set historylog
+set positionlog
+set nohelp
+
+# numbered backups on every save; chezmoi creates the directory
+set backup
+set backupdir "~/.local/state/nano/backups"
+
+bind M-B chopwordleft main
+bind M-N chopwordright main
