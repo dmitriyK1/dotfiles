@@ -84,8 +84,13 @@ if status --is-interactive
         set -l first
         if not test -f $cache; or not read first <$cache; or test "$first" != "$key"
             set -l out (command $argv); or return
-            mkdir -p ~/.cache/fish
-            printf '%s\n' $key $out >$cache
+            command mkdir -p ~/.cache/fish; or return
+            set -l tmp (command mktemp "$cache.XXXXXX"); or return
+            printf '%s\n' $key $out >$tmp
+            and command mv -- $tmp $cache
+            set -l cache_status $status
+            test -f $tmp; and command rm -f -- $tmp
+            test $cache_status -eq 0; or return $cache_status
         end
         echo $cache
     end

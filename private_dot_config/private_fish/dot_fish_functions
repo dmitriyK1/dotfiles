@@ -9,7 +9,13 @@ end
 
 # Git find all commits unique to a current branch
 function gitu
-    git log (git rev-parse --abbrev-ref HEAD) --not (git for-each-ref --format='%(refname)' refs/heads/ | grep -v "refs/heads/"(git rev-parse --abbrev-ref HEAD))
+    set -l current (git symbolic-ref --quiet HEAD); or return
+    set -l refs (git for-each-ref --format='%(refname)' refs/heads/); or return
+    set -l others
+    for ref in $refs
+        test "$ref" = "$current"; or set -a others $ref
+    end
+    git log HEAD --not $others
 end
 
 # Diff current branch with specified branch
@@ -38,15 +44,22 @@ end
 
 # PIDs of processes listening on a TCP port (use sudo for other users' processes)
 function findbyport
-    lsof -ti tcp:$argv[1] -sTCP:LISTEN
+    if test (count $argv) -ne 1; or not string match -rq '^[0-9]{1,5}$' -- "$argv[1]"; or test "$argv[1]" -lt 1; or test "$argv[1]" -gt 65535
+        echo "usage: findbyport PORT (1-65535)" >&2
+        return 2
+    end
+    lsof -ti "tcp:$argv[1]" -sTCP:LISTEN
 end
 
 function killbyport
-    set -l pids (findbyport $argv[1])
+    set -l pids (findbyport $argv)
+    set -l lookup_status $status
+    test $lookup_status -le 1; or return $lookup_status
     if test (count $pids) -eq 0
         echo "Nothing listening on port $argv[1]"
         return 1
     end
+    test $lookup_status -eq 0; or return $lookup_status
     kill -9 $pids
 end
 
@@ -140,7 +153,19 @@ function fzf-cdhist-widget -d 'cd to one of the previously visited locations'
 end
 
 function fco -d "Fuzzy-find and checkout a branch"
-    git branch --all | grep -v HEAD | string trim | fzf | read -l result; and git checkout "$result"
+    # Skip symbolic remote HEAD refs; keep full refs as hidden picker metadata.
+    set -l refs (git for-each-ref --format='%(if)%(symref)%(then)%(else)%(refname)%(end)' refs/heads/ refs/remotes/); or return
+    begin
+        for ref in $refs
+            printf '%s\t%s\n' (string replace -r '^refs/(heads/)?' '' -- $ref) $ref
+        end
+    end | fzf --no-multi --delimiter=\t --with-nth=1 | read -l name ref
+    or return
+    if string match -q 'refs/heads/*' -- "$ref"
+        git switch -- (string replace 'refs/heads/' '' -- $ref)
+    else
+        git switch --track -- (string replace 'refs/remotes/' '' -- $ref)
+    end
 end
 
 function fcoc -d "Fuzzy-find and checkout a commit"
