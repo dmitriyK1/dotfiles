@@ -61,7 +61,7 @@ set --export MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
 # keep .pyc files in one cache dir instead of __pycache__ next to sources; disabling bytecode
 # entirely would recompile every module on each run (slow, and repeats compile-time warnings)
-set -xg PYTHONPYCACHEPREFIX ~/.cache/pycache
+set -gx PYTHONPYCACHEPREFIX ~/.cache/pycache
 set -gx PIPENV_VENV_IN_PROJECT 1 # to create .venv in a project dir
 
 # requires https://github.com/rkitover/vimpager#install

@@ -99,7 +99,13 @@ else
 end
 
 colorize_text '>>> checking Apple updates'
-update_step 'Apple updates' /usr/sbin/softwareupdate --all --install --force
+
+if set -q SKIP_SOFTWAREUPDATE
+    echo 'Apple updates: SKIPPED'
+    set -ga __update_results 'Apple updates: SKIPPED (SKIP_SOFTWAREUPDATE set)'
+else
+    update_step 'Apple updates' /usr/sbin/softwareupdate --all --install --force
+end
 
 colorize_text '>>> update summary'
 printf '%s\n' $__update_results
