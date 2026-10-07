@@ -9,7 +9,6 @@ from test_reliability import FishTest, ROOT
 
 FUNCTIONS = ROOT / "private_dot_config/private_fish/dot_fish_functions"
 SLEEP_FUNCTION = ROOT / "private_dot_config/private_fish/functions/toggle-sleep.fish"
-JQ = shutil.which("jq")
 RG = shutil.which("rg")
 
 
@@ -62,80 +61,6 @@ grep -Fx -- "$choice" "$TEST_PICKER_CALLS.$stage"
                 self.assertEqual(result.returncode, 130, result.stderr)
                 self.assertEqual(result.stdout, "")
                 self.assertEqual(len(self.calls.read_text().splitlines()), count)
-
-
-@unittest.skipUnless(JQ, "jq is required")
-class BuildStatusTests(FishTest):
-    def setUp(self):
-        super().setUp()
-        self.calls = self.home / "aws-calls"
-        self.env.update(
-            TEST_AWS_CALLS=str(self.calls), TEST_LIST_STATUS="0", TEST_BATCH_STATUS="0",
-            TEST_LIST_OUTPUT='{"ids":["project:build-id"]}',
-            TEST_BATCH_OUTPUT='{"builds":[{"phases":[{"phaseType":"BUILD","phaseStatus":"SUCCEEDED"}]}]}',
-        )
-        jq = self.bin / "jq"
-        jq.write_text(f'#!/bin/sh\nexec {shlex.quote(JQ)} "$@"\n')
-        jq.chmod(0o700)
-        aws = self.bin / "aws"
-        aws.write_text("""#!/bin/sh
-printf '%s\n' "$*" >> "$TEST_AWS_CALLS"
-if [ "$2" = list-builds-for-project ]; then
-    printf '%s\n' "$TEST_LIST_OUTPUT"
-    exit "$TEST_LIST_STATUS"
-fi
-printf '%s\n' "$TEST_BATCH_OUTPUT"
-exit "$TEST_BATCH_STATUS"
-""")
-        aws.chmod(0o700)
-
-    def build_status(self, *args):
-        return self.run_fish(f"source {shlex.quote(str(FUNCTIONS))}\nbuild_status {shlex.join(args)}")
-
-    def test_default_and_explicit_project(self):
-        for args, project in [((), "lwa-ui-dev-build"), (("custom-project",), "custom-project")]:
-            with self.subTest(args=args):
-                self.calls.unlink(missing_ok=True)
-                result = self.build_status(*args)
-                self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertEqual(result.stdout, project + '\n"SUCCEEDED"\n')
-                self.assertEqual(self.calls.read_text().splitlines(), [
-                    f"codebuild list-builds-for-project --project-name {project}",
-                    "codebuild batch-get-builds --ids project:build-id",
-                ])
-
-    def test_invalid_arguments_do_not_query_aws(self):
-        for args in [("",), ("one", "two")]:
-            with self.subTest(args=args):
-                result = self.build_status(*args)
-                self.assertEqual(result.returncode, 2, result.stderr)
-                self.assertIn("usage: build_status", result.stderr)
-                self.assertFalse(self.calls.exists())
-
-    def test_failed_list_does_not_fetch_build_even_with_partial_output(self):
-        self.env["TEST_LIST_STATUS"] = "7"
-        result = self.build_status()
-        self.assertEqual(result.returncode, 7, result.stderr)
-        self.assertEqual(len(self.calls.read_text().splitlines()), 1)
-
-    def test_empty_or_invalid_response_does_not_fetch_build(self):
-        for output in ['{"ids":[]}', '{}', '{"ids":[null]}', '{"ids":[""]}',
-                       '{"ids":[123]}', 'invalid json']:
-            with self.subTest(output=output):
-                self.calls.unlink(missing_ok=True)
-                self.env["TEST_LIST_OUTPUT"] = output
-                result = self.build_status()
-                self.assertNotEqual(result.returncode, 0)
-                self.assertIn("could not find a build ID", result.stderr)
-                self.assertEqual(len(self.calls.read_text().splitlines()), 1)
-
-    def test_batch_aws_and_json_errors_propagate(self):
-        self.env["TEST_BATCH_STATUS"] = "9"
-        result = self.build_status()
-        self.assertEqual(result.returncode, 9, result.stderr)
-        self.env.update(TEST_BATCH_STATUS="0", TEST_BATCH_OUTPUT="invalid json")
-        result = self.build_status()
-        self.assertNotEqual(result.returncode, 0)
 
 
 class SleepTests(FishTest):

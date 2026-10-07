@@ -222,30 +222,6 @@ function diff_commits
     end
 end
 
-function build_status
-    if test (count $argv) -gt 1; or contains -- '' $argv
-        echo "usage: build_status [PROJECT]" >&2
-        return 2
-    end
-    set -l projectname lwa-ui-dev-build
-    test (count $argv) -eq 0; or set projectname "$argv[1]"
-
-    echo $projectname
-
-    set -l builds (aws codebuild list-builds-for-project --project-name "$projectname"); or return
-    set -l id (printf '%s\n' $builds | jq -er '.ids[0] | select(type == "string" and length > 0)')
-    set -l lookup_status $status
-    if test $lookup_status -ne 0
-        echo "build_status: could not find a build ID for $projectname" >&2
-        return $lookup_status
-    end
-    aws codebuild batch-get-builds --ids "$id" | jq '.builds[].phases[] | select (.phaseType=="BUILD") | .phaseStatus'
-    set -l build_statuses $pipestatus
-    for step_status in $build_statuses
-        test $step_status -eq 0; or return $step_status
-    end
-end
-
 function yy
     set tmp (mktemp -t "yazi-cwd.XXXXXX")
     yazi $argv --cwd-file="$tmp"
