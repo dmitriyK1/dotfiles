@@ -6,14 +6,6 @@ export LESSOPEN='|bat --color=always --style=plain --paging=never %s'
 
 # set --export NODE_ENV development
 
-# These paths are set with this omf plugin https://github.com/oh-my-fish/plugin-brew
-#   /usr/local/bin
-#   /usr/bin
-#   /bin
-#   /usr/local/sbin
-#   /usr/sbin
-#   /sbin
-
 # XDG Base Directory Specification
 if not test -d "$HOME/.runtime"
     mkdir -p "$HOME/.runtime"

@@ -1,15 +1,3 @@
-# colorizer:
-# https://github.com/oh-my-fish/plugin-grc
-
-# git flow completion:
-# https://github.com/oh-my-fish/plugin-git-flow
-
-# https://github.com/oh-my-fish/plugin-node-binpath
-# https://github.com/oh-my-fish/plugin-brew
-
-# fasd support here:
-# https://github.com/fishgretel/fasd
-
 set -g theme_powerline_fonts no
 set -g theme_nerd_fonts yes
 set -g theme_display_node always
