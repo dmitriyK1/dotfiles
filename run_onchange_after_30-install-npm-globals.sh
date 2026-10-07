@@ -10,4 +10,5 @@ packages=(
   recursive-blame
   github:ruyadorno/git-iadd # npm registry tarball is gone (404)
 )
-npm install -g "${packages[@]}"
+# npm 12 refuses git specs by default (allow-git=none); root allows only the ones listed here
+npm install -g --allow-git=root "${packages[@]}"
