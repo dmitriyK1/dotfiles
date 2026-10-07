@@ -62,6 +62,7 @@ set --export LESS '--incsearch --quit-if-one-screen --ignore-case --status-colum
 set --export BAT_PAGER less
 # NOTE: disable '--ansi' and '--color=always' to speedup
 set --export BAT_THEME TwoDark
+set --export MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
 # TODO alias to ctrl+o
 # fzf --preview '/usr/local/bin/bat {} --color=always'
