@@ -1,14 +1,14 @@
 #!/bin/bash
 # macOS preferences (curated from the old configs/osx.sh); re-runs whenever this file changes.
-# Every write is attempted even if one fails; a failure makes the script exit non-zero so
-# chezmoi runs it again on the next apply.
+# Preferences are best-effort: managed Macs may forbid individual writes.
+# Warn on failures without blocking chezmoi; retry when this file changes.
 set -uo pipefail
 
 failed=0
 write() {
   if ! defaults write "$@"; then
-    echo "defaults write $* failed" >&2
-    failed=1
+    echo "Warning: defaults write $* failed; continuing (the preference may be restricted)." >&2
+    failed=$((failed + 1))
   fi
 }
 
@@ -45,4 +45,8 @@ write com.apple.TextEdit RichText -int 0
 # restart the apps whose preferences changed; they may not be running
 killall Finder Dock >/dev/null 2>&1 || true
 
-exit $failed
+if [ "$failed" -gt 0 ]; then
+  echo "Warning: $failed macOS preference write(s) failed; chezmoi will continue." >&2
+fi
+
+exit 0
