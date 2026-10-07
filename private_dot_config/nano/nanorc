@@ -15,7 +15,7 @@ set locking
 set newbuffer
 set historylog
 set positionlog
-set nohelp
+# set nohelp
 
 # numbered backups on every save; chezmoi creates the directory
 set backup
