@@ -1,0 +1,7 @@
+# Ghostty settings; list all options with `ghostty +show-config --default --docs`
+# Nerd Font icons (eza, bobthefish) come from Ghostty's built-in symbols font
+font-family = "Fira Code"
+font-size = 15
+
+# if icons render wrong, draw only the Nerd Font ranges with the Brewfile's symbols font:
+# font-codepoint-map = U+E000-U+F8FF,U+F0000-U+FFFFD=Symbols Nerd Font Mono
