@@ -3,5 +3,9 @@
 font-family = "Fira Code"
 font-size = 15
 
+cursor-style = underline
+# Ghostty's shell integration switches the cursor to a bar at the prompt
+shell-integration-features = no-cursor
+
 # if icons render wrong, draw only the Nerd Font ranges with the Brewfile's symbols font:
 # font-codepoint-map = U+E000-U+F8FF,U+F0000-U+FFFFD=Symbols Nerd Font Mono
