@@ -38,6 +38,8 @@ brew "git-delta"
 brew "git-recent"
 # Blazing fast terminal-ui for git written in rust
 brew "gitui"
+# GPG, needed by `git log --show-signature` to check PGP-signed commits (e.g. made on github.com)
+brew "gnupg"
 # Open-source GitLab command-line tool
 brew "glab"
 # Make JSON searchable with grep (used by `gro`)
