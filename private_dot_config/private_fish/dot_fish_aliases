@@ -56,7 +56,7 @@ abbr -a g git
 alias multipull "find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} pull \;"
 # alias gh "git rev-parse --verify HEAD"
 abbr -a ggc "git gc --aggressive"
-alias ghash "git log --pretty=format:'%h' -n 1 | pbcopy" # copy short hash of HEAD
+alias ghash "git log -1 --pretty=%h; git log -1 --pretty=format:%h | pbcopy" # print and copy short hash of HEAD (copied without a trailing newline)
 alias gm "git log -1 --pretty=%B; git log -1 --pretty=%B | pbcopy"
 abbr -a gwa "git worktree add"
 abbr -a gwr "git worktree remove"
@@ -93,7 +93,7 @@ alias grepall="git branch -a | command tr -d \* | sed '/->/d' | xargs git grep"
 abbr -a gf "git fetch --all --prune"
 abbr -a gs "git status"
 alias gsm "git status --short | grep '^[MARCD]'" # show only modified (without new files)
-abbr -a gS "git branch-status"
+abbr -a gS "git branch -vva" # same as gbv
 abbr -a gss "git status -sb"
 abbr -a gsy "legit sync"
 abbr -a gb "git branch"
