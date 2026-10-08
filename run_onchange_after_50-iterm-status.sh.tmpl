@@ -1,0 +1,14 @@
+#!/bin/bash
+# Codex hook: {{ include "private_dot_config/iterm2/codex-status.py" | sha256sum }}
+# Installer: {{ include "private_dot_config/iterm2/install-codex-status.py" | sha256sum }}
+# Claude hook: {{ include "private_dot_config/iterm2/executable_cc-status-green.py" | sha256sum }}
+# Launcher: {{ include "private_dot_config/iterm2/codex-launch.sh" | sha256sum }}
+# Fish: {{ include "private_dot_config/private_fish/functions/codex.fish" | sha256sum }}
+if [[ "$(uname -s)" != Darwin ]]; then
+    exit 0
+fi
+if ! command -v codex >/dev/null 2>&1 || [[ ! -x /Applications/iTerm.app/Contents/Resources/utilities/it2 ]]; then
+    echo "Skipping iTerm status setup: install Codex and iTerm2 first."
+    exit 0
+fi
+/usr/bin/python3 "$HOME/.config/iterm2/install-codex-status.py"
