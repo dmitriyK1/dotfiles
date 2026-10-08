@@ -72,12 +72,16 @@ brew "prettyping"
 brew "procs"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Intuitive find and replace CLI
+brew "sd"
 # Modern and pretty fancy file manager for the terminal
 brew "superfile"
 # Terminal file explorer
 brew "tere"
 # Text interface for Git repositories
 brew "tig"
+# Count lines of code by language
+brew "tokei"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Internet file retriever
