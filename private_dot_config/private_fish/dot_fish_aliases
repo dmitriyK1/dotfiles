@@ -122,6 +122,8 @@ abbr -a gdn "git diff --name-only"
 abbr -a gd "git diff"
 # alias gdc "git diff --color --cached | diff-so-fancy | less --tabs=4 -RFXi --pattern '^(Date|added|deleted|modified): '"
 abbr -a gdc "git diff --cached"
+abbr -a gdf "git dft"
+abbr -a gdfc "git dft --cached"
 # alias gdcnp "git diff --color --cached -- ':!package-lock.json' ':!yarn.lock' | diff-so-fancy | less --tabs=4 -RFXi --pattern '^(Date|added|deleted|modified): '"
 abbr -a gdcnp "git diff --color -- ':!package-lock.json' ':!yarn.lock'"
 # alias gddc "git diff --color --cached | diff-so-fancy"
@@ -282,7 +284,7 @@ alias diff="delta"
 # alias ncdu="ncdu --color dark -x --exclude .git --exclude node_modules"
 alias ncdu="ncdu --color dark -x --exclude .git"
 alias du="ncdu"
-alias cat='bat'
+alias cat='bat --paging=never --style=plain'
 alias ping='prettyping --nolegend'
 alias preview="fzf --preview 'bat --color \"always\" {}'"
 # alias top="sudo htop" # alias top and fix high sierra bug
