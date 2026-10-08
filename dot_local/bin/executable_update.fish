@@ -53,11 +53,11 @@ colorize_text '>>> start updating ...'
 
 # first, so the later steps run with the freshly updated brew-installed tools
 colorize_text '>>> updating Homebrew'
+update_step 'brew tap --repair' brew tap --repair
 update_step 'brew update' brew update
 # --greedy-auto-updates also upgrades casks that normally update themselves
 update_step 'brew upgrade' brew upgrade --greedy-auto-updates --yes
 update_step 'brew cleanup' brew cleanup
-update_step 'brew tap --repair' brew tap --repair
 
 # pulls the dotfiles repo and applies it, which also runs the run_onchange install scripts
 colorize_text '>>> updating dotfiles'
@@ -106,5 +106,16 @@ else
 end
 
 colorize_text '>>> update summary'
-printf '%s\n' $__update_results
+for result in $__update_results
+    switch $result
+        case '*: OK'
+            set_color green
+        case '*: FAILED*'
+            set_color red
+        case '*'
+            set_color yellow
+    end
+    echo $result
+    set_color normal
+end
 exit $__update_failed
