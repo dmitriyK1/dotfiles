@@ -94,7 +94,6 @@ brew "yt-dlp"
 brew "zoxide"
 # App to build and share containerised applications and microservices
 cask "docker-desktop"
-cask "font-fira-code"
-cask "font-symbols-only-nerd-font"
+cask "font-fira-code-nerd-font"
 # Keyboard customiser
 cask "karabiner-elements"

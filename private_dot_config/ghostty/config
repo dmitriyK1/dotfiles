@@ -1,6 +1,6 @@
 # Ghostty settings; list all options with `ghostty +show-config --default --docs`
-# Nerd Font icons (eza, bobthefish) come from Ghostty's built-in symbols font
-font-family = "Fira Code"
+# Nerd Font icons (eza, bobthefish) come from FiraCode Nerd Font
+font-family = "FiraCode Nerd Font"
 font-size = 15
 
 cursor-style = underline
