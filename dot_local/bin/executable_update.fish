@@ -98,12 +98,10 @@ else
     set -ga __update_results 'rustup: SKIPPED (not installed)'
 end
 
-colorize_text '>>> checking Apple updates'
-
-if set -q SKIP_SOFTWAREUPDATE
-    echo 'Apple updates: SKIPPED'
+if test -n "$SKIP_SOFTWAREUPDATE"; and test "$SKIP_SOFTWAREUPDATE" != 0
     set -ga __update_results 'Apple updates: SKIPPED (SKIP_SOFTWAREUPDATE set)'
 else
+    colorize_text '>>> checking Apple updates'
     update_step 'Apple updates' /usr/sbin/softwareupdate --all --install --force
 end
 
