@@ -51,8 +51,10 @@ set -gx FZF_ENABLE_OPEN_PREVIEW 1 # available via <Ctrl-g>
 
 # pager config
 set --export LESS '--incsearch --quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
-# Disable less's status column so bat's borders fit the terminal width.
+# Disable less's status column so bat's borders and delta's separator lines fit the terminal width
+# (delta reads only DELTA_PAGER or PAGER, not BAT_PAGER).
 set --export BAT_PAGER 'less -+J'
+set --export DELTA_PAGER 'less -+J'
 # NOTE: disable '--ansi' and '--color=always' to speedup
 set --export BAT_THEME TwoDark
 set --export MANPAGER "sh -c 'col -bx | bat -l man -p'"
