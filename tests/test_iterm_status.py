@@ -219,6 +219,26 @@ class ClaudeColorTests(unittest.TestCase):
     def test_subagent_stop_leaves_native_status_unchanged(self):
         self.assertFalse(self.claude.becomes_idle({'hook_event_name': 'SubagentStop'}, lambda: 0))
 
+    def native_command(self, argv):
+        calls = []
+        def run(args, **kwargs):
+            calls.append(args)
+            return subprocess.CompletedProcess(args, 1)
+        stdin = io.TextIOWrapper(io.BytesIO(b'{}'))
+        with patch.object(self.claude.subprocess, 'run', run), \
+             patch('sys.argv', ['cc-status-green.py'] + argv), patch('sys.stdin', stdin):
+            self.claude.main()
+        return calls[0][0]
+
+    def test_runs_cc_status_named_by_hook_or_bundled_fallback(self):
+        bundled = str(self.claude.UTILITIES / 'cc-status')
+        with tempfile.TemporaryDirectory() as tmp:
+            link = Path(tmp) / 'cc-status'
+            self.assertEqual(self.native_command([str(link)]), bundled)
+            link.write_text('')
+            self.assertEqual(self.native_command([str(link)]), str(link))
+        self.assertEqual(self.native_command([]), bundled)
+
 
 class FishLauncherTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which('fish'), 'fish is required')

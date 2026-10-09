@@ -68,10 +68,19 @@ def build_plan(home):
     claude = home / '.claude/settings.json'
     claude_data = read_json(claude, {})
     claude_groups = claude_data.setdefault('hooks', {})
-    claude_command = shlex.quote(str(home / '.config/iterm2/cc-status'))
+    # iTerm owns ~/.config/iterm2/cc-status and re-points it at its bundle on
+    # launch. Passing that path to the wrapper lets iTerm recognize this hook
+    # as its own, so it neither reports the integration broken nor adds the
+    # bare hook beside it. Replace the bare hook so cc-status runs once.
+    native = shlex.quote(str(home / '.config/iterm2/cc-status'))
+    claude_command = shlex.quote(str(home / '.config/iterm2/cc-status-green.py')) + ' ' + native
     for event in ('Notification', 'PermissionRequest', 'PostToolUse', 'PreToolUse',
                   'SessionEnd', 'SessionStart', 'Stop', 'StopFailure', 'SubagentStop', 'UserPromptSubmit'):
         existing = claude_groups.setdefault(event, [])
+        for group in existing:
+            if any(handler.get('command') == native for handler in group.get('hooks', [])):
+                group['hooks'] = [h for h in group['hooks'] if h.get('command') != native]
+        existing[:] = [group for group in existing if group.get('hooks', True)]
         if not any(handler.get('command') == claude_command
                    for group in existing for handler in group.get('hooks', [])):
             existing.append({'hooks': [{'type': 'command', 'command': claude_command}]})

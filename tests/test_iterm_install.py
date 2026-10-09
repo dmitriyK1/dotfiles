@@ -2,6 +2,7 @@ import importlib.util
 import io
 import json
 from pathlib import Path
+import shlex
 import subprocess
 import tempfile
 import unittest
@@ -119,6 +120,29 @@ class MigrationTests(unittest.TestCase):
             self.assertEqual(data['model'], 'keep')
             self.assertIn(other, data['hooks']['PreToolUse'])
             self.assertEqual(len(data['hooks']['PreToolUse']), 2)
+
+    def test_claude_hook_replaces_bare_cc_status_and_names_it_for_iterm(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp)
+            self.fixture(home)
+            (home / '.claude').mkdir()
+            bare = {'type': 'command', 'command': str(home / '.config/iterm2/cc-status')}
+            shared = {'hooks': [bare, {'type': 'command', 'command': 'memory-hook'}]}
+            settings = home / '.claude/settings.json'
+            settings.write_text(json.dumps({'hooks': {'Stop': [{'hooks': [bare]}], 'PreToolUse': [shared]}}))
+            data = json.loads(installer.build_plan(home)[settings])
+            for event, groups in data['hooks'].items():
+                commands = [h['command'] for g in groups for h in g['hooks']]
+                self.assertNotIn(bare['command'], commands, event)
+                ours = [c for c in commands if 'cc-status-green.py' in c]
+                self.assertEqual(len(ours), 1, event)
+                # iTerm treats a hook as its own when a word ends in /cc-status.
+                words = shlex.split(ours[0])
+                self.assertEqual(words, [str(home / '.config/iterm2/cc-status-green.py'), bare['command']])
+            self.assertEqual(len(data['hooks']['Stop']), 1)
+            self.assertIn({'type': 'command', 'command': 'memory-hook'}, data['hooks']['PreToolUse'][0]['hooks'])
+            settings.write_text(json.dumps(data))
+            self.assertEqual(json.loads(installer.build_plan(home)[settings]), data)
 
 
 if __name__ == '__main__':

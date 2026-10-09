@@ -10,6 +10,8 @@ The fish codex function and the profile launcher use --no-daemon and pass
 CODEX_ITERM2_TAB so resumed conversations follow their new terminal tab.
 Claude uses iTerm's original cc-status with an idle-text color override.
 idle is green, working is orange, waiting is blue.
+iTerm owns the cc-status symlink and resets it on launch, so chezmoi leaves
+it alone. Claude hooks run cc-status-green.py with that symlink as argument.
 
 Diagnostics: /usr/bin/python3 ~/.config/iterm2/codex-status.py --doctor
 Manual setup: /usr/bin/python3 ~/.config/iterm2/install-codex-status.py

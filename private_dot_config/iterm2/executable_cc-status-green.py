@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-"""Run iTerm's Claude hook, then make idle text match its green indicator."""
+"""Run iTerm's Claude hook, then make idle text match its green indicator.
+
+Usage: cc-status-green.py [PATH-TO-CC-STATUS]
+"""
 import json
 import os
 from pathlib import Path
@@ -40,8 +43,11 @@ def becomes_idle(payload, stored_count):
 
 def main():
     raw = sys.stdin.buffer.read()
+    # The hook passes iTerm's cc-status symlink. iTerm creates it on launch,
+    # so use the bundled binary until it exists.
+    native = sys.argv[1] if len(sys.argv) > 1 and os.path.exists(sys.argv[1]) else str(UTILITIES / 'cc-status')
     try:
-        result = subprocess.run([str(UTILITIES / 'cc-status')], input=raw,
+        result = subprocess.run([native], input=raw,
                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=3)
         if result.returncode != 0:
             return
