@@ -74,6 +74,8 @@ brew "procs"
 brew "ripgrep"
 # Intuitive find and replace CLI
 brew "sd"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
 # Modern and pretty fancy file manager for the terminal
 brew "superfile"
 # Terminal file explorer
@@ -88,6 +90,8 @@ brew "tree"
 brew "wget"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
+# Process YAML, JSON, XML, CSV and properties documents from the CLI
+brew "yq"
 # Feature-rich command-line audio/video downloader
 brew "yt-dlp"
 # Shell extension to navigate your filesystem faster
