@@ -2,6 +2,8 @@
 	format = ssh
 [commit]
 	gpgsign = true
+	# show the staged diff in the commit message editor
+	verbose = true
 [push]
 	autoSetupRemote = true
 [alias]
@@ -13,9 +15,15 @@
 	recommit = commit --amend --no-edit
 	# syntax-aware side-by-side diff via difftastic (git dft, git dft HEAD~1)
 	dft = -c diff.external=difft diff --ext-diff
+	root = rev-parse --show-toplevel
+	# commits on any local branch that aren't on any remote
+	out = log --branches --not --remotes
+	who = shortlog -sn
 [core]
 	excludesfile = ~/.gitignore_global
 	pager = delta
+	# show non-ASCII (e.g. Cyrillic) paths as-is instead of octal escapes
+	quotepath = false
 [credential "https://github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
@@ -45,6 +53,11 @@
 [pull]
 	# replay local commits on top of upstream instead of creating merge commits
 	rebase = true
+# clone shorthands: git clone gh:user/repo
+[url "https://github.com/"]
+	insteadOf = gh:
+[url "https://gist.github.com/"]
+	insteadOf = gist:
 # Machine-specific settings (user.email, user.signingkey); keep last so it can override the above
 [include]
 	path = ~/.gitconfig.local
