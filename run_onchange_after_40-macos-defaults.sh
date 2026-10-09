@@ -26,9 +26,10 @@ write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
-# Keyboard; values below the System Settings minimum (2 and 15), applied after logging out
-write NSGlobalDomain KeyRepeat -int 1
-write NSGlobalDomain InitialKeyRepeat -int 10
+# Keyboard; fast repeat with a longer initial delay so brief key holds do not duplicate letters
+# (System Settings minimums are 2 and 15), applied after logging out
+write NSGlobalDomain KeyRepeat -int 2
+write NSGlobalDomain InitialKeyRepeat -int 25
 # key repeat instead of the accent picker when holding a key
 write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
