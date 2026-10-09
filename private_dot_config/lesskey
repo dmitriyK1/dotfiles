@@ -1,0 +1,4 @@
+# less key bindings (see man lesskey); / and ? searches wrap around the file (^W modifier)
+#command
+/ forw-search ^W
+? back-search ^W

@@ -1,0 +1,5 @@
+set main-view = line-number:no,interval=5 id:yes date:relative author:full commit-title:yes,graph,refs,overflow=no
+set line-graphics = utf-8
+
+# F4 in the status view: syntax-aware diff of the selected file via difftastic (`git dft`)
+bind status <F4> !sh -c "git dft -- \"$(git rev-parse --show-toplevel)/%(file)\""
