@@ -19,6 +19,10 @@
 	# commits on any local branch that aren't on any remote
 	out = log --branches --not --remotes
 	who = shortlog -sn
+	# resolve conflicted files by taking one side and staging it (git ours <path>...);
+	# during a rebase, "ours" is the branch being rebased onto and "theirs" is your commits
+	ours = "!f() { cd -- \"${GIT_PREFIX:-.}\" && git checkout --ours -- \"$@\" && git add -- \"$@\"; }; f"
+	theirs = "!f() { cd -- \"${GIT_PREFIX:-.}\" && git checkout --theirs -- \"$@\" && git add -- \"$@\"; }; f"
 [core]
 	excludesfile = ~/.gitignore_global
 	pager = delta
@@ -50,6 +54,8 @@
 [rerere]
 	# remember how conflicts were resolved and reapply the resolution automatically
 	enabled = true
+	# also stage the files rerere resolved, so they don't need a separate git add
+	autoUpdate = true
 [pull]
 	# replay local commits on top of upstream instead of creating merge commits
 	rebase = true
