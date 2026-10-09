@@ -22,6 +22,8 @@ write com.apple.finder FXDefaultSearchScope -string "SCcf"
 write com.apple.finder FXEnableExtensionChangeWarning -bool false
 # list view in all Finder windows
 write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+# empty the Trash without a confirmation dialog
+write com.apple.finder WarnOnEmptyTrash -bool false
 # no .DS_Store files on network or USB volumes
 write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 write com.apple.desktopservices DSDontWriteUSBStores -bool true
@@ -37,11 +39,20 @@ write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 # Dock
 write com.apple.dock autohide -bool true
 write com.apple.dock autohide-delay -float 0
+# show and hide the Dock instantly instead of sliding it in
+write com.apple.dock autohide-time-modifier -float 0
+# don't bounce app icons while apps launch
+write com.apple.dock launchanim -bool false
 # keep Spaces in a fixed order instead of rearranging them by recent use
 write com.apple.dock mru-spaces -bool false
 
 # TextEdit: plain text documents
 write com.apple.TextEdit RichText -int 0
+
+# Activity Monitor: sort by CPU usage, highest first, and show CPU usage as the Dock icon
+write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
+write com.apple.ActivityMonitor SortDirection -int 0
+write com.apple.ActivityMonitor IconType -int 5
 
 # restart the apps whose preferences changed; they may not be running
 killall Finder Dock >/dev/null 2>&1 || true
