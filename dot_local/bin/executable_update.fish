@@ -72,7 +72,6 @@ update_step 'neovim plugins' nvim --headless "+Lazy! sync" "+UpdateRemotePlugins
 colorize_text '>>> updating fish plugins and completions'
 update_step 'fisher update' fisher update
 update_step 'fish completions' fish_update_completions
-update_step 'omf update' omf update
 
 # brew's npm, the same node that run_onchange_after_30-install-npm-globals.sh installs into
 colorize_text '>>> updating global npm packages'

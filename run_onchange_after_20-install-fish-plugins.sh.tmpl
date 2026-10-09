@@ -1,20 +1,19 @@
 #!/bin/bash
-# Install oh-my-fish (bobthefish theme) and fisher plugins; re-runs when either plugin list changes.
-# omf bundle hash: {{ include "private_dot_config/omf/private_bundle" | sha256sum }}
+# Install fisher plugins, including the bobthefish prompt; re-runs when the plugin list changes.
 # fish_plugins hash: {{ include "private_dot_config/private_fish/fish_plugins" | sha256sum }}
 set -euo pipefail
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-if [ ! -d "$HOME/.local/share/omf" ]; then
-  echo "Installing oh-my-fish..."
-  installer="$(mktemp)"
-  curl -fsSL https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install -o "$installer"
-  fish "$installer" --noninteractive --yes
-  rm -f "$installer"
-fi
-# with no arguments, omf installs everything listed in ~/.config/omf/bundle
-fish -c 'omf install'
-
 # fisher itself comes from Homebrew; this installs the plugins listed in ~/.config/fish/fish_plugins
 fish -c 'fisher update'
+
+# bobthefish used to come from oh-my-fish; remove it (only once fisher's copy is installed above)
+# so its loader doesn't keep a second theme copy ahead of fisher's on the function path
+omf_path="${XDG_DATA_HOME:-$HOME/.local/share}/omf"
+omf_loader="${XDG_CONFIG_HOME:-$HOME/.config}/fish/conf.d/omf.fish"
+if [ -e "$omf_path" ] || [ -e "$omf_loader" ]; then
+  echo "Removing oh-my-fish; bobthefish now comes from fisher..."
+  rm -rf "$omf_path" "${XDG_CONFIG_HOME:-$HOME/.config}/omf" "${XDG_CACHE_HOME:-$HOME/.cache}/omf"
+  rm -f "$omf_loader"
+fi
