@@ -72,7 +72,7 @@ exit 0
 
     def run_update(self, optional=False):
         names = [
-            "brew", "chezmoi", "autojump", "atuin", "nvim", "fisher",
+            "brew", "chezmoi", "atuin", "nvim", "fisher",
             "fish_update_completions", "omf", "cut",
         ]
         if optional:
@@ -105,7 +105,7 @@ exit 0
         result = self.run_update()
         self.assertEqual(result.returncode, 0, result.stderr)
         summary = result.stdout.split(">>> update summary", 1)[1]
-        self.assertEqual(summary.count(": OK"), 13)
+        self.assertEqual(summary.count(": OK"), 12)
         self.assertIn("uv: SKIPPED (not installed)", summary)
         self.assertIn("rustup: SKIPPED (not installed)", summary)
         self.assertIn("all global npm packages are up to date", result.stdout)
@@ -118,7 +118,6 @@ exit 0
             "brew cleanup": "brew cleanup",
             "brew tap --repair": "brew tap --repair",
             "chezmoi update": "chezmoi update",
-            "autojump --purge": "autojump --purge",
             "atuin sync": "atuin sync",
             "nvim --headless +Lazy! sync +UpdateRemotePlugins +qa": "neovim plugins",
             "fisher update": "fisher update",

@@ -63,9 +63,6 @@ update_step 'brew cleanup' brew cleanup
 colorize_text '>>> updating dotfiles'
 update_step 'chezmoi update' chezmoi update
 
-colorize_text '>>> purging autojump database from non-existing paths'
-update_step 'autojump --purge' autojump --purge
-
 colorize_text '>>> syncing atuin history'
 update_step 'atuin sync' atuin sync
 

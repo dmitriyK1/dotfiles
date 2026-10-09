@@ -2,8 +2,6 @@
 brew "ast-grep"
 # Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
-# Shell extension to jump to frequently used directories
-brew "autojump"
 # Official Amazon AWS command-line interface
 brew "awscli"
 # Clone of cat(1) with syntax highlighting and Git integration

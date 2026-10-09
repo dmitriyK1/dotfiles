@@ -86,8 +86,8 @@ if status --is-interactive
     # fzf before atuin so atuin's ctrl-r binding wins over fzf-history-widget
     set -l init (__cached_init fzf --fish); and source $init
     set -l init (__cached_init atuin init fish); and source $init
-    # zoxide only tracks directories for superfile's zoxide panel; autojump provides `j`
-    set -l init (__cached_init zoxide init fish --no-cmd); and source $init
+    # zoxide provides `j` and `ji` (pick with fzf), and feeds superfile's zoxide panel
+    set -l init (__cached_init zoxide init fish --cmd j); and source $init
     functions -e __cached_init
 
     # caniuse --completion-fish | source
@@ -101,8 +101,6 @@ if status --is-interactive
     # end
 
     # source (pyenv init -|psub)
-
-    [ -f "$HOMEBREW_PREFIX/share/autojump/autojump.fish" ]; and source "$HOMEBREW_PREFIX/share/autojump/autojump.fish"
 
     #function fish_exit --on-event fish_exit
     #    atuin sync -f >/dev/null 2>&1

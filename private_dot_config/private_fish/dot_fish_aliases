@@ -278,8 +278,8 @@ abbr -a gpu "legit publish"
 abbr -a gsw "legit switch"
 abbr -a lg lazygit
 
-# fuzzy select and jump into folder
-alias jf="cd (cat ~/Library/autojump/autojump.txt | sort -nr | awk '{print \$2}' | fzf +s)"
+# fuzzy select and jump into folder (zoxide's ji)
+abbr -a jf ji
 alias diff="delta"
 # alias ncdu="ncdu --color dark -x --exclude .git --exclude node_modules"
 alias ncdu="ncdu --color dark -x --exclude .git"
