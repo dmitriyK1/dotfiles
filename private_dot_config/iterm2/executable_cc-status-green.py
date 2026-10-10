@@ -11,6 +11,8 @@ import subprocess
 import sys
 
 UTILITIES = Path('/Applications/iTerm.app/Contents/Resources/utilities')
+if not (UTILITIES / 'cc-status').is_file():
+    UTILITIES = Path.home() / 'Applications/iTerm.app/Contents/Resources/utilities'
 FINISHED = {'completed', 'failed', 'cancelled', 'canceled', 'killed', 'stopped', 'done'}
 
 
@@ -46,6 +48,7 @@ def main():
     # The hook passes iTerm's cc-status symlink. iTerm creates it on launch,
     # so use the bundled binary until it exists.
     native = sys.argv[1] if len(sys.argv) > 1 and os.path.exists(sys.argv[1]) else str(UTILITIES / 'cc-status')
+    utilities = Path(native).resolve().parent
     try:
         result = subprocess.run([native], input=raw,
                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=3)
@@ -60,13 +63,13 @@ def main():
             return
         def stored_count():
             try:
-                result = subprocess.run([str(UTILITIES / 'it2'), 'session',
+                result = subprocess.run([str(utilities / 'it2'), 'session',
                     'get-background-tasks', '--session', terminal], capture_output=True, timeout=1)
                 return max(0, int(result.stdout)) if result.returncode == 0 else 0
             except (OSError, ValueError, subprocess.TimeoutExpired):
                 return 0
         if becomes_idle(payload, stored_count):
-            subprocess.run([str(UTILITIES / 'it2'), 'session', 'set-status',
+            subprocess.run([str(utilities / 'it2'), 'session', 'set-status',
                 '--session', terminal, '--text-color', '#00d75f'],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=1)
     except (OSError, ValueError, subprocess.TimeoutExpired):

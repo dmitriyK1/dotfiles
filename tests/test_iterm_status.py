@@ -239,6 +239,28 @@ class ClaudeColorTests(unittest.TestCase):
             self.assertEqual(self.native_command([str(link)]), str(link))
         self.assertEqual(self.native_command([]), bundled)
 
+    def test_idle_color_uses_utilities_beside_symlink_target(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            utilities = Path(tmp) / 'Applications/iTerm.app/Contents/Resources/utilities'
+            utilities.mkdir(parents=True)
+            native = utilities / 'cc-status'
+            native.touch()
+            link = Path(tmp) / 'cc-status'
+            link.symlink_to(native)
+            calls = []
+            def run(args, **kwargs):
+                calls.append(args)
+                return subprocess.CompletedProcess(args, 0, stdout=b'0')
+            stdin = io.TextIOWrapper(io.BytesIO(b'{"hook_event_name":"SessionStart"}'))
+            with patch.object(self.claude.subprocess, 'run', run), \
+                 patch('sys.argv', ['cc-status-green.py', str(link)]), \
+                 patch('sys.stdin', stdin), \
+                 patch.dict(os.environ, {'TERM_SESSION_ID': TERMINAL}):
+                self.claude.main()
+            self.assertEqual(calls[0], [str(link)])
+            self.assertEqual(calls[1][0], str(utilities.resolve() / 'it2'))
+            self.assertEqual(calls[1][-2:], ['--text-color', '#00d75f'])
+
 
 class FishLauncherTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which('fish'), 'fish is required')
