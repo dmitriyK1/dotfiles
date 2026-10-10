@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install fisher plugins, including the bobthefish prompt; re-runs when the plugin list changes.
+# Install fisher plugins, including Tide; re-runs when the plugin list changes.
 # fish_plugins hash: {{ include "private_dot_config/private_fish/fish_plugins" | sha256sum }}
 set -euo pipefail
 
@@ -8,12 +8,30 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # fisher itself comes from Homebrew; this installs the plugins listed in ~/.config/fish/fish_plugins
 fish -c 'fisher update'
 
-# bobthefish used to come from oh-my-fish; remove it (only once fisher's copy is installed above)
-# so its loader doesn't keep a second theme copy ahead of fisher's on the function path
+# Tide's fish_prompt exits non-interactive fish when Fisher sources it. Configure
+# it in a separate process, clearing global overrides in that process so the
+# preset can write universal defaults without shadowing warnings.
+# shellcheck disable=SC2016 # Variables in the quoted program are expanded by fish.
+fish -c '
+  for name in (set --global --names | string match --regex "^tide_")
+    set --erase --global $name
+  end
+  if not contains -- ilancosman/tide@v6 $_fisher_plugins
+    echo "Tide was not installed; leaving the old theme loader in place." >&2
+    exit 1
+  end
+  tide configure --auto --style=Lean --prompt_colors="True color" \
+    --show_time=No --lean_prompt_height="Two lines" \
+    --prompt_connection=Disconnected --prompt_spacing=Sparse \
+    --icons="Many icons" --transient=No
+'
+
+# The theme used to come from oh-my-fish; remove its loader only after Fisher's
+# prompt is installed and configured so it cannot shadow Tide on the function path.
 omf_path="${XDG_DATA_HOME:-$HOME/.local/share}/omf"
 omf_loader="${XDG_CONFIG_HOME:-$HOME/.config}/fish/conf.d/omf.fish"
 if [ -e "$omf_path" ] || [ -e "$omf_loader" ]; then
-  echo "Removing oh-my-fish; bobthefish now comes from fisher..."
+  echo "Removing oh-my-fish; Tide now comes from fisher..."
   rm -rf "$omf_path" "${XDG_CONFIG_HOME:-$HOME/.config}/omf" "${XDG_CACHE_HOME:-$HOME/.cache}/omf"
   rm -f "$omf_loader"
 fi

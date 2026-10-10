@@ -1,12 +1,10 @@
-set -g theme_powerline_fonts no
-set -g theme_nerd_fonts yes
-set -g theme_display_node always
-set -g theme_display_nvm yes
-# set -g theme_display_docker_machine yes
-set -g fish_prompt_pwd_dir_length 0
-set -g theme_display_jobs_verbose yes
-set -g theme_show_exit_status yes
-set -g theme_date_format "+%a %d-%m-%Y [%H:%M]"
+# Tide's async workers also load config.fish, so keep prompt settings outside
+# the interactive block. The bootstrap script supplies the Lean preset.
+set -g tide_left_prompt_items pwd git newline character
+set -g tide_right_prompt_items status cmd_duration context jobs node time
+set -g tide_jobs_number_threshold 1
+set -g tide_time_format '%a %d-%m-%Y [%H:%M]'
+set -gx VIRTUAL_ENV_DISABLE_PROMPT true
 # set -g fish_hybrid_key_bindings
 
 source ~/.config/fish/.fish_variables

@@ -1,5 +1,5 @@
 # Ghostty settings; list all options with `ghostty +show-config --default --docs`
-# Nerd Font icons (eza, bobthefish) come from FiraCode Nerd Font
+# Nerd Font icons (eza, Tide) come from FiraCode Nerd Font
 font-family = "FiraCode Nerd Font"
 font-size = 15
 
