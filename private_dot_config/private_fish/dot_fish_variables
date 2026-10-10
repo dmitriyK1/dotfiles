@@ -45,6 +45,8 @@ set --export FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set --export FZF_DEFAULT_OPTS '--ansi --highlight-line'
 # Ctrl-T selects a file; Ctrl-G toggles its syntax-highlighted preview.
 set --export FZF_CTRL_T_OPTS "--preview 'bat --color=always --style=numbers --paging=never -- {}' --preview-window 'right,50%,hidden' --bind 'ctrl-g:toggle-preview'"
+# Yazi's Z uses zoxide's fzf picker; override the plugin's --exact default.
+set --export YAZI_ZOXIDE_OPTS '--no-exact'
 
 # pager config
 set --export LESS '--incsearch --quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'

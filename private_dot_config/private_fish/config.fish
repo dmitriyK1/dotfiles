@@ -66,6 +66,10 @@ if status --is-interactive
     function __cached_init
         set -l bin (command -s $argv[1]); or return
         set -l key "# "(path resolve $bin)" $argv"
+        # The zoxide wrapper delegates init; invalidate its cache on Homebrew upgrades too.
+        if test $argv[1] = zoxide
+            set key "$key native="(path resolve /opt/homebrew/bin/zoxide)
+        end
         set -l cache ~/.cache/fish/init-$argv[1].fish
         set -l first
         if not test -f $cache; or not read first <$cache; or test "$first" != "$key"
@@ -84,7 +88,8 @@ if status --is-interactive
     # fzf before atuin so atuin's ctrl-r binding wins over fzf-history-widget
     set -l init (__cached_init fzf --fish); and source $init
     set -l init (__cached_init atuin init fish); and source $init
-    # zoxide provides `j` and `ji` (pick with fzf), and feeds superfile's zoxide panel
+    # zoxide provides `j` and `ji`; ~/.local/bin/zoxide adds fuzzy query fallback for
+    # both `j` and Superfile's zoxide panel, while retaining native matches first.
     set -l init (__cached_init zoxide init fish --cmd j); and source $init
     functions -e __cached_init
 

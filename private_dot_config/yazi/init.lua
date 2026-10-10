@@ -11,7 +11,6 @@ function Status:name()
 	return ui.Line(" " .. h.name .. linked)
 end
 
--- Uncomment to add every folder opened in yazi to zoxide's database, like a `cd` in fish does,
--- so `j` in the shell and `Z` here can jump to folders you browsed to in yazi. Off by default
--- because folders you only pass through while browsing get counted too.
--- require("zoxide"):setup({ update_db = true })
+-- Record every directory change, including Z jumps and folders passed through,
+-- so j in fish and Z here share the same directory history.
+require("zoxide"):setup({ update_db = true })

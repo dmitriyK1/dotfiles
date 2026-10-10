@@ -1,0 +1,10 @@
+#!/bin/bash
+# Keep the shared fuzzy query fallback available to fish and Superfile.
+# Other commands go straight to Homebrew, including the frequent `add` hook.
+set -eu
+
+if [ "${1-}" = query ]; then
+    exec /usr/bin/python3 "$HOME/.local/libexec/zoxide-fuzzy.py" "$@"
+fi
+
+exec /opt/homebrew/bin/zoxide "$@"
