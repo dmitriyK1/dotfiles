@@ -208,3 +208,6 @@ records = true
 
 [ai]
 enabled = true
+
+[ai.opening]
+send_last_command = true
