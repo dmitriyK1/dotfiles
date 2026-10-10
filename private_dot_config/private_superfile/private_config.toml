@@ -25,7 +25,7 @@ auto_check_update = true
 #-- cd on quit
 # Should we cd the shell to the last directory open in superfile when the
 # program exits? 
-cd_on_quit = false
+cd_on_quit = true
 
 #-- File Preview
 # Should we open a file preview by default whenever selection-hovering over a
