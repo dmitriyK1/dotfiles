@@ -12,6 +12,12 @@ source ~/.config/fish/.fish_variables
 if status --is-interactive
     # Commands to run in interactive sessions
 
+    # Kitty handles long-command notifications itself; avoid duplicate done alerts.
+    # conf.d/done.fish loads before config.fish, so remove its event handlers here.
+    if set -q KITTY_WINDOW_ID
+        functions --erase __done_started __done_ended
+    end
+
     source ~/.config/fish/.fish_functions
 
     # defining aliases takes ~30 ms per shell, so cache them as plain function definitions,
