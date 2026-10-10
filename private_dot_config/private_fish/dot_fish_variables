@@ -43,11 +43,8 @@ set --export FZF_DEFAULT_COMMAND 'fd --type file --hidden --follow --color=alway
 set --export FZF_ALT_C_COMMAND 'fd --type directory --hidden --follow --color=always --exclude "{.DS_Store,.git,node_modules,flow-typed}"'
 set --export FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set --export FZF_DEFAULT_OPTS '--ansi --highlight-line'
-# https://github.com/jethrokuan/fzf options
-# set -U FZF_LEGACY_KEYBINDINGS 0
-set -gx FZF_ENABLE_OPEN_PREVIEW 1 # available via <Ctrl-g>
-# set -U FZF_CTRL_T_OPTS="--preview='head -$LINES {}'"
-# set -U FZF_COMPLETE 1 # Enable fzf for fish tab completion
+# Ctrl-T selects a file; Ctrl-G toggles its syntax-highlighted preview.
+set --export FZF_CTRL_T_OPTS "--preview 'bat --color=always --style=numbers --paging=never -- {}' --preview-window 'right,50%,hidden' --bind 'ctrl-g:toggle-preview'"
 
 # pager config
 set --export LESS '--incsearch --quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'

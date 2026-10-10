@@ -6,6 +6,12 @@
 	verbose = true
 [push]
 	autoSetupRemote = true
+[fetch]
+	# remove remote-tracking branches that no longer exist on the remote
+	prune = true
+[rebase]
+	# arrange fixup! and squash! commits automatically during interactive rebase
+	autoSquash = true
 [alias]
 	sync = !/opt/homebrew/bin/legit sync
 	publish = !/opt/homebrew/bin/legit publish

@@ -15,8 +15,8 @@ abbr -a n npm
 abbr -a ns "npm start"
 abbr -a nb "npm run build"
 abbr -a ni "npm i"
-abbr -a nib "npm install; npm run build"
-abbr -a nis "npm install; npm start"
+abbr -a nib "npm install; and npm run build"
+abbr -a nis "npm install; and npm start"
 abbr -a nit "npm it"
 abbr -a nig "/opt/homebrew/bin/npm i -g" # always brew node, whatever nvm version is active
 abbr -a nug "/opt/homebrew/bin/npm uninstall -g"
@@ -34,7 +34,7 @@ abbr -a nls "npm ls"
 
 abbr -a y yarn
 abbr -a ys "yarn start"
-abbr -a yas "yarn; yarn start"
+abbr -a yas "yarn; and yarn start"
 abbr -a yb "yarn build"
 abbr -a yt "yarn test"
 abbr -a ya "yarn add"
@@ -62,11 +62,11 @@ abbr -a gwa "git worktree add"
 abbr -a gwr "git worktree remove"
 abbr -a gwl "git worktree list"
 abbr -a gt "git checkout -"
-abbr -a gtl "git checkout -; git pull"
+abbr -a gtl "git checkout -; and git pull"
 abbr -a gre "git reset"
 abbr -a gre. "git reset ."
 abbr -a grE 'git reset --hard "@{u}"'
-abbr -a grch "git reset .; git checkout ."
+abbr -a grch "git reset .; and git checkout ."
 abbr -a gi "git init"
 abbr -a gia git-iadd
 abbr -a gai git-iadd
@@ -76,7 +76,7 @@ alias gl="git log --format='%Cred%h%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset%
 abbr -a gll "git log --oneline --decorate --no-merges"
 abbr -a glp "git log -p --stat --no-merges"
 abbr -a gls "git log -S"
-alias glr="git fetch --all --prune; git log ...origin/(git branch | grep \* | cut -d ' ' -f2)" # compare commit on remote branch
+alias glr="git fetch --all --prune; and git log ...origin/(git branch | grep \* | cut -d ' ' -f2)" # compare commit on remote branch
 abbr -a gma "git merge --abort"
 abbr -a gmra "git merge --abort"
 abbr -a gmr "git merge"
@@ -87,7 +87,7 @@ abbr -a gcln "git clean -df"
 abbr -a gca "git commit --amend"
 abbr -a gcaf "git commit --amend --no-verify"
 abbr -a gcaa "git commit --amend --reset-author --no-edit"
-abbr -a --set-cursor gac 'git add -u; git commit -m "%"'
+abbr -a --set-cursor gac 'git add -u; and git commit -m "%"'
 alias grepall="git branch -a | command tr -d \* | sed '/->/d' | xargs git grep"
 # alias gf "git fetch --all --prune --quiet"
 abbr -a gf "git fetch --all --prune"
@@ -136,9 +136,9 @@ abbr -a gDen "git diff dev HEAD --name-only"
 abbr -a gden "git diff develop HEAD --name-only"
 abbr -a gdm "git diff master HEAD"
 # from https://stackoverflow.com/questions/4944376/how-to-check-real-git-diff-before-merging-from-remote-branch
-alias gdr "git fetch --all --prune; git diff ...origin/(git branch | grep \* | cut -d ' ' -f2)" # compare with a same remote branch
-abbr -a gdrm "git fetch --all --prune; git diff ...origin/master"
-abbr -a gdrd "git fetch --all --prune; git diff ...origin/develop"
+alias gdr "git fetch --all --prune; and git diff ...origin/(git branch | grep \* | cut -d ' ' -f2)" # compare with a same remote branch
+abbr -a gdrm "git fetch --all --prune; and git diff ...origin/master"
+abbr -a gdrd "git fetch --all --prune; and git diff ...origin/develop"
 abbr -a ga "git add"
 abbr -a ga. "git add ."
 abbr -a gaa "git add ."

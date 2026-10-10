@@ -1,4 +1,4 @@
-"""Sleep, remote Git comparison, and directory helper regression checks."""
+"""Shell shortcut, sleep, Git comparison, and directory helper regression checks."""
 
 from pathlib import Path
 import shlex
@@ -8,6 +8,7 @@ import unittest
 from test_reliability import FishTest, ROOT
 
 FUNCTIONS = ROOT / "private_dot_config/private_fish/dot_fish_functions"
+ALIASES = ROOT / "private_dot_config/private_fish/dot_fish_aliases"
 SLEEP_FUNCTION = ROOT / "private_dot_config/private_fish/functions/toggle-sleep.fish"
 RG = shutil.which("rg")
 
@@ -226,6 +227,174 @@ exit $result_status
                     target = self.workspace / directory
                     self.assertTrue(target.is_dir())
                     self.assertEqual(Path(result.stdout.splitlines()[-1]).resolve(), target.resolve())
+
+
+class CommandChainTests(FishTest):
+    chains = {
+        "nib": ["npm install", "npm run build"],
+        "nis": ["npm install", "npm start"],
+        "yas": ["yarn ", "yarn start"],
+        "gtl": ["git checkout -", "git pull"],
+        "grch": ["git reset .", "git checkout ."],
+        "gac": ["git add -u", "git commit -m %"],
+        "glr": ["git fetch --all --prune", "git branch", "git log ...origin/main"],
+        "gdr": ["git fetch --all --prune", "git branch", "git diff ...origin/main"],
+        "gdrm": ["git fetch --all --prune", "git diff ...origin/master"],
+        "gdrd": ["git fetch --all --prune", "git diff ...origin/develop"],
+    }
+
+    def setUp(self):
+        super().setUp()
+        self.calls = self.home / "chain-calls"
+        self.env.update(TEST_CHAIN_CALLS=str(self.calls), TEST_FAIL_COMMAND="")
+        stub = self.bin / "chain-stub"
+        stub.write_text("""#!/bin/sh
+tool=${0##*/}
+printf '%s\n' "$tool $*" >> "$TEST_CHAIN_CALLS"
+if [ "$tool $*" = "$TEST_FAIL_COMMAND" ]; then exit 7; fi
+if [ "$tool $*" = 'git branch' ]; then printf '* main\n'; fi
+""")
+        stub.chmod(0o700)
+        for name in ["npm", "yarn", "git"]:
+            (self.bin / name).symlink_to(stub)
+
+    def run_chain(self, name):
+        prelude = f"source {shlex.quote(str(ALIASES))}\n"
+        if name in ["glr", "gdr"]:
+            return self.run_fish(prelude + name)
+        definition = self.run_fish(prelude + "abbr --show")
+        self.assertEqual(definition.returncode, 0, definition.stderr)
+        definitions = [shlex.split(line) for line in definition.stdout.splitlines()]
+        expansions = [parts[-1] for parts in definitions if parts[-2] == name]
+        self.assertEqual(len(expansions), 1, definition.stdout)
+        return self.run_fish(prelude + expansions[0])
+
+    def test_failed_prerequisite_stops_each_chain(self):
+        for name, calls in self.chains.items():
+            with self.subTest(name=name):
+                self.env["TEST_FAIL_COMMAND"] = calls[0]
+                result = self.run_chain(name)
+                self.assertEqual(result.returncode, 7, result.stderr)
+                self.assertEqual(self.calls.read_text().splitlines(), calls[:1])
+                self.calls.unlink()
+
+    def test_success_runs_commands_in_order(self):
+        for name, calls in self.chains.items():
+            with self.subTest(name=name):
+                result = self.run_chain(name)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(self.calls.read_text().splitlines(), calls)
+                self.calls.unlink()
+
+    def test_final_command_failure_is_returned(self):
+        for name, calls in self.chains.items():
+            with self.subTest(name=name):
+                self.env["TEST_FAIL_COMMAND"] = calls[-1]
+                result = self.run_chain(name)
+                self.assertEqual(result.returncode, 7, result.stderr)
+                self.assertEqual(self.calls.read_text().splitlines(), calls)
+                self.calls.unlink()
+
+
+class YaziTests(FishTest):
+    def setUp(self):
+        super().setUp()
+        self.workspace = self.home / "work"
+        self.workspace.mkdir()
+        self.destination = self.workspace / "dir with spaces and 'quotes'"
+        self.destination.mkdir()
+        self.tmp = self.home / "tmp"
+        self.tmp.mkdir()
+        self.args = self.home / "yazi-args"
+        self.cwd_file = self.home / "yazi-cwd-file"
+        self.env.update(
+            TEST_YAZI_TMP=str(self.tmp), TEST_MKTEMP_STATUS="0",
+            TEST_YAZI_ARGS=str(self.args), TEST_YAZI_CWD_FILE=str(self.cwd_file),
+            TEST_YAZI_CWD=str(self.destination), TEST_YAZI_STATUS="0",
+            TEST_YAZI_REMOVE_CWD_FILE="0",
+        )
+        mktemp = self.bin / "mktemp"
+        mktemp.write_text("""#!/bin/sh
+if [ "$TEST_MKTEMP_STATUS" != 0 ]; then exit "$TEST_MKTEMP_STATUS"; fi
+exec /usr/bin/mktemp "$TEST_YAZI_TMP/yazi-cwd.XXXXXX"
+""")
+        mktemp.chmod(0o700)
+        yazi = self.bin / "yazi"
+        yazi.write_text("""#!/bin/sh
+printf '%s\n' "$@" > "$TEST_YAZI_ARGS"
+for arg do
+    case "$arg" in --cwd-file=*) cwd_file=${arg#--cwd-file=} ;; esac
+done
+printf '%s' "$cwd_file" > "$TEST_YAZI_CWD_FILE"
+if [ "$TEST_YAZI_REMOVE_CWD_FILE" = 1 ]; then
+    rm -f -- "$cwd_file"
+else
+    printf '%s' "$TEST_YAZI_CWD" > "$cwd_file"
+fi
+exit "$TEST_YAZI_STATUS"
+""")
+        yazi.chmod(0o700)
+
+    def open_yazi(self, *args):
+        return self.run_fish(f"""source {shlex.quote(str(FUNCTIONS))}
+builtin cd -- {shlex.quote(str(self.workspace))}
+yy {shlex.join(args)}
+set -l result_status $status
+printf '%s\\n' "$PWD"
+exit $result_status
+""")
+
+    def assert_cleaned(self):
+        self.assertEqual(list(self.tmp.iterdir()), [])
+        self.assertFalse(Path(self.cwd_file.read_text()).exists())
+
+    def test_success_changes_directory_and_preserves_arguments(self):
+        args = ["--chooser-file", "file with spaces and 'quotes'"]
+        result = self.open_yazi(*args)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(Path(result.stdout.strip()).resolve(), self.destination.resolve())
+        self.assertEqual(self.args.read_text().splitlines(), [
+            *args, f"--cwd-file={self.cwd_file.read_text()}",
+        ])
+        self.assert_cleaned()
+
+    def test_yazi_failure_is_returned_without_changing_directory(self):
+        self.env["TEST_YAZI_STATUS"] = "42"
+        result = self.open_yazi()
+        self.assertEqual(result.returncode, 42, result.stderr)
+        self.assertEqual(Path(result.stdout.strip()).resolve(), self.workspace.resolve())
+        self.assert_cleaned()
+
+    def test_empty_or_unchanged_directory_is_a_successful_noop(self):
+        for cwd in ["", str(self.workspace.resolve())]:
+            with self.subTest(cwd=cwd):
+                self.env["TEST_YAZI_CWD"] = cwd
+                result = self.open_yazi()
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(Path(result.stdout.strip()).resolve(), self.workspace.resolve())
+                self.assert_cleaned()
+
+    def test_invalid_directory_is_reported_and_temp_file_is_cleaned(self):
+        self.env["TEST_YAZI_CWD"] = str(self.workspace / "missing")
+        result = self.open_yazi()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(Path(result.stdout.strip()).resolve(), self.workspace.resolve())
+        self.assert_cleaned()
+
+    def test_read_failure_is_reported(self):
+        self.env["TEST_YAZI_REMOVE_CWD_FILE"] = "1"
+        result = self.open_yazi()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(Path(result.stdout.strip()).resolve(), self.workspace.resolve())
+        self.assert_cleaned()
+
+    def test_temp_file_failure_never_launches_yazi(self):
+        self.env["TEST_MKTEMP_STATUS"] = "9"
+        result = self.open_yazi()
+        self.assertEqual(result.returncode, 9, result.stderr)
+        self.assertEqual(Path(result.stdout.strip()).resolve(), self.workspace.resolve())
+        self.assertFalse(self.args.exists())
+        self.assertEqual(list(self.tmp.iterdir()), [])
 
 
 if __name__ == "__main__":

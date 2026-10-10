@@ -1,3 +1,5 @@
+tap "teamookla/speedtest"
+
 # Download manager with resuming and segmented downloads (aria2c)
 brew "aria2"
 # Code searching, linting, rewriting
@@ -78,6 +80,8 @@ brew "ripgrep"
 brew "sd"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
+# Official Ookla CLI for measuring internet speed (speedtest)
+brew "teamookla/speedtest/speedtest"
 # Modern and pretty fancy file manager for the terminal
 brew "superfile"
 # Terminal file explorer
@@ -103,5 +107,11 @@ brew "zoxide"
 # App to build and share containerised applications and microservices
 cask "docker-desktop"
 cask "font-fira-code-nerd-font"
+# Fast terminal with native macOS UI
+cask "ghostty"
+# Terminal with profiles, split panes and shell integration
+cask "iterm2"
 # Keyboard customiser
 cask "karabiner-elements"
+# GPU-based terminal with splits and kittens
+cask "kitty"

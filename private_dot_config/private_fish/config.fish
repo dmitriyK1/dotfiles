@@ -1,7 +1,7 @@
 # Tide's async workers also load config.fish, so keep prompt settings outside
 # the interactive block. The bootstrap script supplies the Lean preset.
 set -g tide_left_prompt_items pwd git newline character
-set -g tide_right_prompt_items status cmd_duration context jobs node time
+set -g tide_right_prompt_items status cmd_duration context jobs node python time
 set -g tide_jobs_number_threshold 1
 set -g tide_time_format '%a %d-%m-%Y [%H:%M]'
 set -gx VIRTUAL_ENV_DISABLE_PROMPT true

@@ -223,12 +223,23 @@ function diff_commits
 end
 
 function yy
-    set tmp (mktemp -t "yazi-cwd.XXXXXX")
+    set -l tmp (command mktemp -t "yazi-cwd.XXXXXX"); or return
     yazi $argv --cwd-file="$tmp"
-    if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
-        builtin cd -- "$cwd"
+    set -l result_status $status
+    if test $result_status -eq 0
+        set -l cwd (command cat -- "$tmp")
+        set result_status $status
+        if test $result_status -eq 0; and test -n "$cwd"; and test "$cwd" != "$PWD"
+            builtin cd -- "$cwd"
+            set result_status $status
+        end
     end
-    rm -f -- "$tmp"
+    command rm -f -- "$tmp"
+    set -l cleanup_status $status
+    if test $result_status -ne 0
+        return $result_status
+    end
+    return $cleanup_status
 end
 
 # vim: filetype=fish
