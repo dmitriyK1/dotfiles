@@ -124,7 +124,7 @@ file_preview_width = 0
 #-- File Preview Border
 # Enable border around the file preview panel for better visual separation.
 # Default: false (no border)
-enable_file_preview_border = false
+enable_file_preview_border = true
 
 #-- Sidebar Width
 # If you don't want to display the sidebar, you can input 0 directly.
