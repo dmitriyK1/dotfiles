@@ -33,6 +33,9 @@
 - Use `jq` or `yq` to extract relevant structured data and keep output bounded.
 - Use `eza` for directory overviews and `tokei` for language statistics when
   those help the task; neither is a required startup step.
+- `aria2` provides the `aria2c` command for file downloads with resuming,
+  parallel connections, and URL lists. Use it when these features help;
+  e.g. `aria2c -c -x4 -s4 'URL'` for a large file.
 - Use preferred tools when available and appropriate. Fall back to available
   alternatives when needed.
 - This is macOS with BSD command-line tools. GNU coreutils adds commands macOS

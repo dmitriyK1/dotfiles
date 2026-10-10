@@ -1,3 +1,5 @@
+# Download manager with resuming and segmented downloads (aria2c)
+brew "aria2"
 # Code searching, linting, rewriting
 brew "ast-grep"
 # Improved shell history for zsh, bash, fish and nushell
