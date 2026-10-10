@@ -11,6 +11,7 @@ source ~/.config/fish/.fish_variables
 
 if status --is-interactive
     # Commands to run in interactive sessions
+    set -g fish_greeting
 
     # Kitty handles long-command notifications itself; avoid duplicate done alerts.
     # conf.d/done.fish loads before config.fish, so remove its event handlers here.

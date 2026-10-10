@@ -111,6 +111,8 @@ cask "font-fira-code-nerd-font"
 cask "ghostty"
 # Terminal with profiles, split panes and shell integration
 cask "iterm2"
+# Integrated web browser for iTerm2
+cask "itermbrowserplugin"
 # Keyboard customiser
 cask "karabiner-elements"
 # GPU-based terminal with splits and kittens
