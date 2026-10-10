@@ -12,6 +12,8 @@ brew "btop"
 brew "chezmoi"
 # Music player with an ncurses based interface
 brew "cmus"
+# GNU File, Shell, and Text utilities: timeout, tac, nproc, and g-prefixed GNU versions of macOS tools (gdate, gstat)
+brew "coreutils"
 # Syntax-aware diff used by `git dft`
 brew "difftastic"
 # Disk Usage/Free Utility - a better 'df' alternative

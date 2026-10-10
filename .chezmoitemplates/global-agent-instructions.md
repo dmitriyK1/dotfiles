@@ -35,6 +35,9 @@
   those help the task; neither is a required startup step.
 - Use preferred tools when available and appropriate. Fall back to available
   alternatives when needed.
+- This is macOS with BSD command-line tools. GNU coreutils adds commands macOS
+  lacks (`timeout`, `nproc`, `tac`); GNU versions of the rest use a `g` prefix
+  (`gdate`, `gstat`).
 - Run CLI commands non-interactively with explicit arguments. Avoid commands
   that wait for terminal prompts or open text editors.
 
