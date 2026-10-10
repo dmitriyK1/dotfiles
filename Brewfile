@@ -81,7 +81,7 @@ brew "sd"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
 # Official Ookla CLI for measuring internet speed (speedtest)
-brew "teamookla/speedtest/speedtest"
+brew "teamookla/speedtest/speedtest", trusted: true
 # Modern and pretty fancy file manager for the terminal
 brew "superfile"
 # Terminal file explorer
