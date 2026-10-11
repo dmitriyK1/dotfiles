@@ -259,7 +259,8 @@ class ClaudeColorTests(unittest.TestCase):
                 self.claude.main()
             self.assertEqual(calls[0], [str(link)])
             self.assertEqual(calls[1][0], str(utilities.resolve() / 'it2'))
-            self.assertEqual(calls[1][-2:], ['--text-color', '#00d75f'])
+            self.assertEqual(calls[1][1:], ['session', 'set-status', '--session', TERMINAL,
+                                          '--dot-color', '#00d75f', '--text-color', '#00d75f'])
 
 
 class FishLauncherTests(unittest.TestCase):

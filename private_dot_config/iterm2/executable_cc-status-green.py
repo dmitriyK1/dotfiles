@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Run iTerm's Claude hook, then make idle text match its green indicator.
+"""Run iTerm's Claude hook, then make the idle dot and text green.
 
 Usage: cc-status-green.py [PATH-TO-CC-STATUS]
 """
@@ -70,7 +70,7 @@ def main():
                 return 0
         if becomes_idle(payload, stored_count):
             subprocess.run([str(utilities / 'it2'), 'session', 'set-status',
-                '--session', terminal, '--text-color', '#00d75f'],
+                '--session', terminal, '--dot-color', '#00d75f', '--text-color', '#00d75f'],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=1)
     except (OSError, ValueError, subprocess.TimeoutExpired):
         pass

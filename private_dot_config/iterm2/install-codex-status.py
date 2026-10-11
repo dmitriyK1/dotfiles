@@ -69,17 +69,20 @@ def build_plan(home):
     claude_data = read_json(claude, {})
     claude_groups = claude_data.setdefault('hooks', {})
     # iTerm owns ~/.config/iterm2/cc-status and re-points it at its bundle on
-    # launch. Passing that path to the wrapper lets iTerm recognize this hook
-    # as its own, so it neither reports the integration broken nor adds the
-    # bare hook beside it. Replace the bare hook so cc-status runs once.
+    # launch. Its 3.7.4 health check treats the entire command as a file path,
+    # so passing it as an argument to our wrapper still triggers the warning.
+    # Use a separate executable ending in /cc-status that calls the wrapper.
+    # Replace both previous forms so the native status hook runs only once.
     native = shlex.quote(str(home / '.config/iterm2/cc-status'))
-    claude_command = shlex.quote(str(home / '.config/iterm2/cc-status-green.py')) + ' ' + native
+    wrapper = shlex.quote(str(home / '.config/iterm2/cc-status-green.py'))
+    old_commands = {native, wrapper, wrapper + ' ' + native}
+    claude_command = shlex.quote(str(home / '.config/iterm2/claude/cc-status'))
     for event in ('Notification', 'PermissionRequest', 'PostToolUse', 'PreToolUse',
                   'SessionEnd', 'SessionStart', 'Stop', 'StopFailure', 'SubagentStop', 'UserPromptSubmit'):
         existing = claude_groups.setdefault(event, [])
         for group in existing:
-            if any(handler.get('command') == native for handler in group.get('hooks', [])):
-                group['hooks'] = [h for h in group['hooks'] if h.get('command') != native]
+            if any(handler.get('command') in old_commands for handler in group.get('hooks', [])):
+                group['hooks'] = [h for h in group['hooks'] if h.get('command') not in old_commands]
         existing[:] = [group for group in existing if group.get('hooks', True)]
         if not any(handler.get('command') == claude_command
                    for group in existing for handler in group.get('hooks', [])):
