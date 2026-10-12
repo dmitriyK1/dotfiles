@@ -4,12 +4,3 @@ Brewfile
 tests
 # Repository-only instructions for coding agents.
 AGENTS.md
-
-# Set data.mailClients = false in the local chezmoi config to skip mail clients.
-{{ if and (hasKey . "mailClients") (not .mailClients) }}
-.config/neomutt
-.config/neomutt/**
-.config/matcha
-.config/matcha/**
-.local/bin/neomutt
-{{ end }}
