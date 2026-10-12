@@ -1,0 +1,17 @@
+#!/bin/bash
+# macOS otherwise consumes Ctrl-O as the terminal's discard character.
+if [ ! -t 0 ]; then
+    exec /opt/homebrew/bin/neomutt "$@"
+fi
+
+neomutt_tty_state=$(/bin/stty -g) || exit "$?"
+restore_neomutt_tty() {
+    /bin/stty "$neomutt_tty_state"
+}
+trap restore_neomutt_tty EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+/bin/stty discard undef -flusho || exit "$?"
+/opt/homebrew/bin/neomutt "$@"

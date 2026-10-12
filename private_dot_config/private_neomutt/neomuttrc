@@ -17,6 +17,16 @@ set mail_check = 60
 set timeout = 15
 set ssl_force_tls = yes
 
+# Show subscribed folders with unread/total message counts.
+set sidebar_visible = yes
+set sidebar_width = 26
+set sidebar_short_path = yes
+set sidebar_format = "%B%* %<N?%N/>%S"
+set sidebar_divider_char = "|"
+set imap_check_subscribed = yes
+set mail_check_stats = yes
+set mail_check_stats_interval = 120
+
 # Prefer plain text; render HTML-only messages through w3m.
 set mailcap_path = "~/.config/neomutt/mailcap"
 alternative_order text/plain text/html
@@ -42,6 +52,15 @@ bind index,pager \Cd half-down
 bind index,pager <Tab> next-unread
 bind index,pager <BackTab> previous-unread
 macro index,pager \cb "<pipe-message>w3m<enter>" "Read message in w3m"
+
+bind index,pager \Cp sidebar-prev
+bind index,pager \Cn sidebar-next
+# ~/.local/bin/neomutt frees Ctrl-O from macOS's terminal discard action.
+bind index,pager \Co sidebar-open
+bind index,pager <F2> sidebar-open
+bind index,pager B sidebar-toggle-visible
+
+source colors
 
 # Created once by chezmoi; local changes survive subsequent applies.
 source account

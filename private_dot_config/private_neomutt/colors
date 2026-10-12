@@ -1,0 +1,7 @@
+# Gruvbox Dark by Stefan Huber, listed in the NeoMutt colorscheme catalog.
+# Source: https://github.com/shuber2/mutt-gruvbox
+# Revision: 91853cfee609ecad5d2cb7dce821a7dfe6d780ef
+# License: LGPL-3.0-only; license texts are included alongside the theme.
+# Vendored files only have trailing whitespace normalized.
+source themes/gruvbox/colors-gruvbox-shuber.muttrc
+source themes/gruvbox/colors-gruvbox-shuber-extended.muttrc
