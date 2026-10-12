@@ -5,3 +5,7 @@
     command = "delta"
     args = ["--paging=never"]
 {{- end }}
+
+[data]
+    # Preserve this machine's choice across subsequent chezmoi init runs.
+    mailClients = {{ if hasKey . "mailClients" }}{{ .mailClients }}{{ else }}true{{ end }}
