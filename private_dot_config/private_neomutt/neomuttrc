@@ -17,6 +17,11 @@ set mail_check = 60
 set timeout = 15
 set ssl_force_tls = yes
 
+# Reuse headers and downloaded message bodies between sessions.
+# The neomutt launcher creates these private directories before startup.
+set header_cache = "~/.cache/neomutt/headers/"
+set message_cache_dir = "~/.cache/neomutt/bodies/"
+
 # Show subscribed folders with unread/total message counts.
 set sidebar_visible = yes
 set sidebar_width = 26

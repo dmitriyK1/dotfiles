@@ -1,4 +1,10 @@
 #!/bin/bash
+# Header caching needs an existing directory to keep a database per mailbox.
+(
+    umask 077
+    /bin/mkdir -p "$HOME/.cache/neomutt/headers" "$HOME/.cache/neomutt/bodies"
+) || exit "$?"
+
 # macOS otherwise consumes Ctrl-O as the terminal's discard character.
 if [ ! -t 0 ]; then
     exec /opt/homebrew/bin/neomutt "$@"
