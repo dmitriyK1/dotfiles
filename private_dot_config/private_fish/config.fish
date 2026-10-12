@@ -63,6 +63,23 @@ if status --is-interactive
         source $alias_file
     end
 
+    # Option-G: show Git log and preserve the current commandline, like Option-L.
+    bind alt-g '__fish_echo gl'
+
+    # Option-S: show Git status and preserve the current commandline, like Option-L.
+    bind alt-s '__fish_echo git status'
+
+    # Option-Shift-S: toggle a sudo prefix on the current commandline.
+    function __fish_toggle_sudo_prefix
+        set -l buffer (commandline)
+        if string match --quiet --regex '^sudo(\s|$)' -- $buffer
+            commandline --replace (string replace --regex '^sudo\s*' '' -- $buffer)
+        else
+            commandline --replace "sudo $buffer"
+        end
+    end
+    bind alt-S __fish_toggle_sudo_prefix
+
     [ -f $HOME/.config/fish/config.local.fish ]; and source $HOME/.config/fish/config.local.fish
 
     test -e {$HOME}/.iterm2_shell_integration.fish; and source {$HOME}/.iterm2_shell_integration.fish
