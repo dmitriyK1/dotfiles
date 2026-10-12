@@ -1,0 +1,28 @@
+# Local account settings. Chezmoi creates this file only when it is absent.
+# Edit ~/.config/neomutt/account, not this repository's seed file.
+# Keep passwords and OAuth tokens out of the chezmoi source repository.
+#
+# Gmail example: uncomment and replace the identity, then set up authentication.
+# Folder names may differ depending on the account's language and IMAP settings.
+# set from = "you@example.com"
+# set real_name = "Your Name"
+# set imap_user = $from
+# set smtp_user = $from
+# set folder = "imaps://imap.gmail.com:993"
+# set spool_file = "+INBOX"
+# set postponed = "+[Gmail]/Drafts"
+# set trash = "+[Gmail]/Trash"
+# set smtp_url = "smtps://smtp.gmail.com:465/"
+# unset record
+# mailboxes "+INBOX" "+[Gmail]/All Mail" "+[Gmail]/Drafts" "+[Gmail]/Sent Mail"
+#
+# Gmail saves sent messages itself, so record is disabled above.
+# Use OAuth, or an app password if available for your account.
+# To use an app password from macOS Keychain, enable these lines:
+# set imap_pass = "`/usr/bin/security find-generic-password -a \"$imap_user\" -s neomutt-gmail -w`"
+# set smtp_pass = $imap_pass
+# Add it once with the command below; -w prompts without saving it in shell history.
+# security add-generic-password -a "you@example.com" -s neomutt-gmail -U -w
+# Keep the Keychain account equal to imap_user.
+# Leave imap_pass and smtp_pass unset if you prefer password prompts instead.
+# OAuth setup: https://github.com/neomutt/neomutt/blob/main/contrib/oauth2/README.md

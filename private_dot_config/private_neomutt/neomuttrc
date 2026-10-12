@@ -1,0 +1,47 @@
+# Shared defaults; put account settings in the local account file.
+set editor = "nvim"
+set edit_headers = yes
+set charset = "utf-8"
+set send_charset = "us-ascii:utf-8"
+
+# Newest threads first, with replies in chronological order.
+set use_threads = threads
+set sort = reverse-last-date-received
+set sort_aux = date
+set pager_index_lines = 8
+set pager_context = 3
+set menu_scroll = yes
+set mark_old = no
+set move = no
+set mail_check = 60
+set timeout = 15
+set ssl_force_tls = yes
+
+# Prefer plain text; render HTML-only messages through w3m.
+set mailcap_path = "~/.config/neomutt/mailcap"
+alternative_order text/plain text/html
+auto_view text/html
+set pipe_decode = yes
+set wait_key = no
+
+# Vim-style navigation and unread-message jumps.
+bind index j next-entry
+bind index k previous-entry
+bind index g first-entry
+bind index G last-entry
+bind pager j next-line
+bind pager k previous-line
+bind pager g top
+bind pager G bottom
+bind pager h exit
+bind pager l view-attachments
+bind attach h exit
+bind attach l view-attach
+bind index,pager \Cu half-up
+bind index,pager \Cd half-down
+bind index,pager <Tab> next-unread
+bind index,pager <BackTab> previous-unread
+macro index,pager \cb "<pipe-message>w3m<enter>" "Read message in w3m"
+
+# Created once by chezmoi; local changes survive subsequent applies.
+source account

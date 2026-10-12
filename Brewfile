@@ -64,6 +64,8 @@ brew "mtr"
 brew "nano"
 # NCurses Disk Usage
 brew "ncdu"
+# Terminal mail client with IMAP and SMTP support
+brew "neomutt"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Open-source, cross-platform JavaScript runtime environment
@@ -94,6 +96,8 @@ brew "tokei"
 brew "tree"
 # Executes a program periodically, showing output fullscreen
 brew "watch"
+# Render HTML mail and browse messages from NeoMutt
+brew "w3m"
 # Internet file retriever
 brew "wget"
 # Blazing fast terminal file manager written in Rust, based on async I/O

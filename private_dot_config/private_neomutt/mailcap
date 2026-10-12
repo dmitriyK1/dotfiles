@@ -1,0 +1,3 @@
+# Interactive HTML viewer, followed by the automatic text renderer.
+text/html; w3m -T text/html -O UTF-8 '%s'; needsterminal; nametemplate=%s.html
+text/html; w3m -T text/html -O UTF-8 -dump -cols 100 -o display_link_number=1 '%s'; copiousoutput; nametemplate=%s.html
