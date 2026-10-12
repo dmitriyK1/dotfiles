@@ -1,3 +1,4 @@
+tap "floatpane/matcha"
 tap "teamookla/speedtest"
 
 # Download manager with resuming and segmented downloads (aria2c)
@@ -121,3 +122,5 @@ cask "itermbrowserplugin"
 cask "karabiner-elements"
 # GPU-based terminal with splits and kittens
 cask "kitty"
+# Terminal mail client; the official tap ships current releases as a cask
+cask "floatpane/matcha/matcha", trusted: true

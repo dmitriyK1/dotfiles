@@ -1,0 +1,11 @@
+{
+  "accounts": [],
+  "theme": "Matcha",
+  "enable_split_pane": true,
+  "split_pane_orientation": "vertical",
+  "enable_threaded": true,
+  "enable_detailed_dates": true,
+  "date_format": "DD/MM/YYYY HH:MM",
+  "disable_daemon": true,
+  "disable_notifications": true
+}
