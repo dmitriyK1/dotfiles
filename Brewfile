@@ -95,6 +95,8 @@ brew "tig"
 brew "tokei"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Select links from email messages in NeoMutt
+brew "urlscan"
 # Executes a program periodically, showing output fullscreen
 brew "watch"
 # Render HTML mail and browse messages from NeoMutt

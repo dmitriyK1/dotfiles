@@ -17,6 +17,9 @@ set mail_check = 60
 set timeout = 15
 set ssl_force_tls = yes
 
+# Gmail SMTP saves sent mail. Other providers can set record in account.
+unset record
+
 # Reuse headers and downloaded message bodies between sessions.
 # The neomutt launcher creates these private directories before startup.
 set header_cache = "~/.cache/neomutt/headers/"
@@ -57,6 +60,8 @@ bind index,pager \Cd half-down
 bind index,pager <Tab> next-unread
 bind index,pager <BackTab> previous-unread
 macro index,pager \cb "<pipe-message>w3m<enter>" "Read message in w3m"
+# Scan the original MIME message so HTML links survive plain-text rendering.
+macro index,pager ,u "<enter-command>unset pipe_decode<enter><pipe-message>TERM=xterm-256color urlscan --dedupe --colors 256 --run-safe '/usr/bin/open {}'<enter><enter-command>set pipe_decode<enter>" "Select a link to open in the browser"
 
 bind index,pager \Cp sidebar-prev
 bind index,pager \Cn sidebar-next
