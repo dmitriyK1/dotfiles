@@ -1,4 +1,8 @@
 # Ghostty settings; list all options with `ghostty +show-config --default --docs`
+# Download stable updates automatically; Ghostty prompts before installation.
+auto-update = download
+auto-update-channel = stable
+
 # Nerd Font icons (eza, Tide) come from FiraCode Nerd Font
 font-family = "FiraCode Nerd Font"
 font-size = 15
