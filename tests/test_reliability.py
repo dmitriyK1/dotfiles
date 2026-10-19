@@ -111,6 +111,22 @@ exit 0
         self.assertIn("all global npm packages are up to date", result.stdout)
         self.assertNotIn("npm install", self.calls.read_text())
 
+    def test_local_updates_are_sourced_and_reported(self):
+        local_update = self.home / ".config/fish/update.local.fish"
+        local_update.parent.mkdir(parents=True)
+        for status in [0, 9]:
+            with self.subTest(status=status):
+                local_update.write_text(
+                    'echo "local hook ran"\n'
+                    f'return {status}\n'
+                )
+                result = self.run_update()
+                self.assertEqual(result.returncode, int(status != 0), result.stderr)
+                self.assertIn("local hook ran", result.stdout)
+                outcome = "OK" if status == 0 else "FAILED (exit 9)"
+                summary = result.stdout.split(">>> update summary", 1)[1]
+                self.assertIn(f"local updates: {outcome}", summary)
+
     def test_each_step_failure_is_reported_and_later_steps_run(self):
         steps = {
             "brew update": "brew update",

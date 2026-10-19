@@ -100,6 +100,14 @@ else
     update_step 'Apple updates' /usr/sbin/softwareupdate --all --install --force
 end
 
+if test -f "$HOME/.config/fish/update.local.fish"
+    colorize_text '>>> running local updates'
+    function update_local
+        source "$HOME/.config/fish/update.local.fish"
+    end
+    update_step 'local updates' update_local
+end
+
 colorize_text '>>> update summary'
 for result in $__update_results
     switch $result
