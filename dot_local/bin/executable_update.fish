@@ -80,8 +80,7 @@ colorize_text '>>> updating global npm packages'
 update_step 'global npm packages' update_npm_globals
 
 if type -q uv
-    colorize_text '>>> updating uv and uv tools'
-    update_step 'uv self update' uv self update
+    colorize_text '>>> updating uv tools'
     update_step 'uv tool upgrade' uv tool upgrade --all
 else
     set -ga __update_results 'uv: SKIPPED (not installed)'

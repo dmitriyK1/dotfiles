@@ -172,10 +172,10 @@ exit 0
     def test_optional_tools_success_and_failures(self):
         result = self.run_update(optional=True)
         self.assertEqual(result.returncode, 0, result.stderr)
-        for label in ["uv self update", "uv tool upgrade", "rustup update"]:
+        self.assertNotIn("uv self update", self.calls.read_text())
+        for label in ["uv tool upgrade", "rustup update"]:
             self.assertIn(f"{label}: OK", result.stdout)
         for command, label in [
-            ("uv self update", "uv self update"),
             ("uv tool upgrade --all", "uv tool upgrade"),
             ("rustup update", "rustup update"),
         ]:

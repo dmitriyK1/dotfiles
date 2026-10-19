@@ -97,6 +97,8 @@ brew "tokei"
 brew "tree"
 # Select links from email messages in NeoMutt
 brew "urlscan"
+# Python package and project manager
+brew "uv"
 # Executes a program periodically, showing output fullscreen
 brew "watch"
 # Render HTML mail and browse messages from NeoMutt
