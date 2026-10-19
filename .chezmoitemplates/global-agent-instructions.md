@@ -24,6 +24,9 @@
 
 ## Tools and execution
 
+- Use ImageMagick (`magick`) for command-line image conversion, resizing, and
+  inspection, and Pillow (`from PIL import Image`) for Python image processing.
+  Both are installed through Homebrew; use `/opt/homebrew/bin/python3` for Pillow.
 - Prefer `rg` for text search and `rg --files` or `fd` for file discovery.
 - Keep searches and output focused. Search dependencies, generated files, and
   hidden files when the task requires them.

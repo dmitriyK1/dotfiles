@@ -49,6 +49,8 @@ brew "gnupg"
 brew "glab"
 # Make JSON searchable with grep (used by `gro`)
 brew "gron"
+# Command-line image conversion, resizing, and inspection
+brew "imagemagick"
 # Command-line JSON processor
 brew "jq"
 # Simple terminal UI for git commands
@@ -71,6 +73,8 @@ brew "neomutt"
 brew "neovim"
 # Open-source, cross-platform JavaScript runtime environment
 brew "node"
+# Python image processing library (PIL)
+brew "pillow"
 # Fast, disk space efficient package manager
 brew "pnpm"
 # Wrapper to colorize and simplify ping's output
