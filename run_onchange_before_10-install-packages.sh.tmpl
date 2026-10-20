@@ -1,6 +1,10 @@
+{{- $localBrewfile := joinPath .chezmoi.homeDir ".config/homebrew/Brewfile.local" -}}
+{{- $localInstaller := joinPath .chezmoi.homeDir ".config/homebrew/install.local.sh" -}}
 #!/bin/bash
-# Install Homebrew and Brewfile packages; re-runs whenever the Brewfile changes.
+# Install shared and laptop-local tools; re-runs when either list or installer changes.
 # Brewfile hash: {{ include "Brewfile" | sha256sum }}
+# Local Brewfile hash: {{ if stat $localBrewfile }}{{ include $localBrewfile | sha256sum }}{{ else }}absent{{ end }}
+# Local installer hash: {{ if stat $localInstaller }}{{ include $localInstaller | sha256sum }}{{ else }}absent{{ end }}
 set -euo pipefail
 
 if [ ! -x /opt/homebrew/bin/brew ]; then
@@ -10,3 +14,13 @@ fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 brew bundle --file="{{ .chezmoi.sourceDir }}/Brewfile"
+
+local_brewfile="$HOME/.config/homebrew/Brewfile.local"
+if [ -f "$local_brewfile" ]; then
+  brew bundle --file="$local_brewfile"
+fi
+
+local_installer="$HOME/.config/homebrew/install.local.sh"
+if [ -f "$local_installer" ]; then
+  /bin/bash "$local_installer"
+fi

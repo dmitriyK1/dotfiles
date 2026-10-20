@@ -14,6 +14,14 @@ managed Macs.
   templates.
 - Keep repository-only files in `.chezmoiignore`, including this file, tests,
   and `Brewfile`. `Brewfile` is read directly from the source directory.
+- Keep packages needed on every Mac in `Brewfile`. Laptop-specific extras go in
+  the unmanaged `~/.config/homebrew/Brewfile.local`; the package installer reads
+  both and hashes both for change detection. Preserve this local file.
+- Native installers for laptop-specific tools go in the optional unmanaged
+  `~/.config/homebrew/install.local.sh`, run after both Brewfiles. Its contents
+  are also hashed for change detection; keep it non-interactive and repeatable.
+- Gate optional-tool instructions on tool availability. After installing a new
+  tool, rerun `chezmoi apply` to refresh instructions rendered before installation.
 - Preserve `before`/`after` script phases and numeric ordering within them.
   Bootstrap scripts must tolerate repeat runs and partial installations.
 - `run_onchange` scripts rerun when their rendered contents change. Preserve
