@@ -1,1 +1,7 @@
 {{ template "global-agent-instructions.md" . }}
+{{- if lookPath "rtk" }}
+@RTK.md
+{{ end }}
+{{- if lookPath "icm" }}
+{{ template "icm-instructions.md" . -}}
+{{ end -}}

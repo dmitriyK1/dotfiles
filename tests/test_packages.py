@@ -26,9 +26,7 @@ class PackageTests(unittest.TestCase):
         self.local = self.home / ".config/homebrew/Brewfile.local"
         self.local.parent.mkdir(parents=True)
         (self.source / "Brewfile").write_text('brew "shared"\n')
-        (self.source / ".chezmoitemplates").mkdir()
-        shutil.copy2(ROOT / ".chezmoitemplates/global-agent-instructions.md",
-                     self.source / ".chezmoitemplates/global-agent-instructions.md")
+        shutil.copytree(ROOT / ".chezmoitemplates", self.source / ".chezmoitemplates")
         self.config = self.root / "config.toml"
         self.config.write_text("")
         self.calls = self.root / "calls"
@@ -143,6 +141,10 @@ if [ "$file" = "$TEST_FAIL_BREWFILE" ]; then exit 9; fi
                 self.assertEqual("## Command output (RTK)" in rendered, "rtk" in tools)
                 self.assertEqual("<!-- icm:start -->" in rendered, "icm" in tools)
                 self.assertEqual("/.codex/RTK.md" in rendered, "rtk" in tools)
+                claude = self.render("private_dot_claude/CLAUDE.md.tmpl")
+                self.assertEqual("\n@RTK.md\n" in claude, "rtk" in tools)
+                self.assertEqual("<!-- icm:start -->" in claude, "icm" in tools)
+                self.assertFalse(claude.endswith("\n\n"))
 
 
 if __name__ == "__main__":
