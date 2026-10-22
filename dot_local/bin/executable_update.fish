@@ -74,6 +74,8 @@ update_step 'fisher update' fisher update
 update_step 'fish completions' fish_update_completions
 
 # brew's npm, the same node that run_onchange_after_30-install-npm-globals.sh installs into
+colorize_text '>>> updating npm'
+update_step 'npm self-update' /opt/homebrew/bin/npm install -g npm@latest
 colorize_text '>>> updating global npm packages'
 # install only what's outdated: `npm update -g` also re-fetches git-installed packages like
 # git-iadd from the registry, where its tarball is gone (404), and that aborts the whole update.

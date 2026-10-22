@@ -105,11 +105,13 @@ exit 0
         result = self.run_update()
         self.assertEqual(result.returncode, 0, result.stderr)
         summary = result.stdout.split(">>> update summary", 1)[1]
-        self.assertEqual(summary.count(": OK"), 11)
+        self.assertEqual(summary.count(": OK"), 12)
         self.assertIn("uv: SKIPPED (not installed)", summary)
         self.assertIn("rustup: SKIPPED (not installed)", summary)
         self.assertIn("all global npm packages are up to date", result.stdout)
-        self.assertNotIn("npm install", self.calls.read_text())
+        calls = self.calls.read_text()
+        self.assertLess(calls.index("npm install -g npm@latest"), calls.index("npm outdated"))
+        self.assertNotIn("npm install", calls.replace("npm install -g npm@latest\n", ""))
 
     def test_local_updates_are_sourced_and_reported(self):
         local_update = self.home / ".config/fish/update.local.fish"
@@ -138,6 +140,7 @@ exit 0
             "nvim --headless +Lazy! sync +UpdateRemotePlugins +qa": "neovim plugins",
             "fisher update": "fisher update",
             "fish_update_completions ": "fish completions",
+            "npm install -g npm@latest": "npm self-update",
             "softwareupdate --all --install --force": "Apple updates",
         }
         for command, label in steps.items():
@@ -166,7 +169,7 @@ exit 0
                 self.assertEqual(result.returncode, 1, result.stderr)
                 self.assertIn(f"global npm packages: FAILED (exit {status})", result.stdout)
                 self.assertNotIn("all global npm packages are up to date", result.stdout)
-                self.assertNotIn("npm install", self.calls.read_text())
+                self.assertNotIn("npm install", self.calls.read_text().replace("npm install -g npm@latest\n", ""))
                 self.assertIn("Apple updates: OK", result.stdout)
 
     def test_cut_failure_is_reported(self):
@@ -175,7 +178,7 @@ exit 0
         result = self.run_update()
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertIn("global npm packages: FAILED (exit 3)", result.stdout)
-        self.assertNotIn("npm install", self.calls.read_text())
+        self.assertNotIn("npm install", self.calls.read_text().replace("npm install -g npm@latest\n", ""))
 
     def test_npm_install_failure_is_reported(self):
         self.set_outdated()
