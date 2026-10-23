@@ -134,7 +134,8 @@ abbr -a gde "git diff develop HEAD"
 abbr -a gdv "git diff dev HEAD"
 abbr -a gDen "git diff dev HEAD --name-only"
 abbr -a gden "git diff develop HEAD --name-only"
-abbr -a gdm "git diff master HEAD"
+abbr -a gdm "git dm" # this branch's changes since it forked from main/master/develop/its start point
+abbr -a gdmr "git dmr" # the reverse: what that base gained since the fork
 # from https://stackoverflow.com/questions/4944376/how-to-check-real-git-diff-before-merging-from-remote-branch
 alias gdr "git fetch --all --prune; and git diff ...origin/(git branch | grep \* | cut -d ' ' -f2)" # compare with a same remote branch
 abbr -a gdrm "git fetch --all --prune; and git diff ...origin/master"

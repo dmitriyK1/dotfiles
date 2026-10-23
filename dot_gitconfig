@@ -21,6 +21,13 @@
 	recommit = commit --amend --no-edit
 	# syntax-aware side-by-side diff via difftastic (git dft, git dft HEAD~1)
 	dft = -c diff.external=difft diff --ext-diff
+	# the branch this one forked from: its reflog start point or the nearest of main, master,
+	# develop and dev (origin's copies included); fetch first for up-to-date results
+	base = !/bin/sh \"$HOME/.local/libexec/git-base.sh\"
+	# what this branch changed since it forked from its base (git dm --stat, git dm -- <path>)
+	dm = "!f() { cd -- \"${GIT_PREFIX:-.}\" && base=$(git base) && git diff \"$base...HEAD\" \"$@\"; }; f"
+	# the reverse: what the base gained since then, i.e. what a merge or rebase would bring in
+	dmr = "!f() { cd -- \"${GIT_PREFIX:-.}\" && base=$(git base) && git diff \"HEAD...$base\" \"$@\"; }; f"
 	root = rev-parse --show-toplevel
 	# commits on any local branch that aren't on any remote
 	out = log --branches --not --remotes
