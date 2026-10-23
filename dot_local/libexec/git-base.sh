@@ -7,14 +7,15 @@
 current=$(git symbolic-ref -q --short HEAD)
 start=
 if [ -n "$current" ]; then
-    start=$(git reflog show --format=%gs "refs/heads/$current" -- 2>/dev/null |
-        sed -n 's/^branch: Created from //p' | tail -n 1)
-    # created from the checkout: the start point is the branch left by its oldest checkout
+    log=$(git reflog show --format=%gs "refs/heads/$current" -- 2>/dev/null)
+    start=$(printf '%s\n' "$log" | sed -n 's/^branch: Created from //p' | tail -n 1)
+    # created from the checkout: the start point is the branch left by its oldest checkout,
+    # which HEAD's reflog records under the name the branch had at the time
     if [ "$start" = HEAD ]; then
-        start=$(git reflog show --format=%gs HEAD -- 2>/dev/null | awk -v to=" to $current" '
-            index($0, "checkout: moving from ") == 1 && substr($0, length($0) - length(to) + 1) == to {
-                from = substr($0, 23, length($0) - 22 - length(to))
-            }
+        names="$current $(printf '%s\n' "$log" | sed -n 's|^Branch: renamed refs/heads/\(.*\) to refs/heads/.*|\1|p' | tr '\n' ' ')"
+        start=$(git reflog show --format=%gs HEAD -- 2>/dev/null | awk -v names="$names" '
+            BEGIN { split(names, list, " "); for (i in list) name[list[i]] = 1 }
+            sub(/^checkout: moving from /, "") && NF == 3 && $2 == "to" && ($3 in name) { from = $1 }
             END { print from }')
     fi
 fi

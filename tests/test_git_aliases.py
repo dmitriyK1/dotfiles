@@ -72,6 +72,15 @@ class GitBaseTests(unittest.TestCase):
         self.commit("child")
         self.assertEqual(self.git("base"), "parent")
 
+    def test_renamed_branch_keeps_its_start_point(self):
+        self.git("switch", "--quiet", "-c", "example")
+        self.commit("example")
+        self.git("switch", "--quiet", "-c", "draft")
+        self.git("branch", "-m", "draft", "renamed.v2")
+        self.git("branch", "-m", "renamed.v2", "final")
+        self.commit("final")
+        self.assertEqual(self.git("base"), "example")
+
     def test_origin_copy_beats_stale_local_branch(self):
         self.git("switch", "--quiet", "-c", "other")
         self.commit("other")
