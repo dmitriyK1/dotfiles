@@ -12,6 +12,15 @@
   without asking for confirmation on routine, reversible intermediate steps.
   Ask when a missing decision materially affects scope or the next action
   requires authorization.
+- Before asking the user a question, or drafting one for someone else, try to
+  answer it yourself from the code and its history, linked tickets, merge
+  requests and design docs, related repositories such as consumers and
+  infrastructure, and authoritative vendor documentation. Ask only about
+  genuine decisions or facts you cannot reach, and include what you checked
+  and your recommended answer.
+- Keep questions and investigation within the current task. List problems
+  outside it as brief follow-ups at the end of your reply instead of asking
+  about them, unless they block the task or affect its correctness.
 
 ## Code quality
 
