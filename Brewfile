@@ -117,8 +117,6 @@ brew "yq"
 brew "yt-dlp"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# App to build and share containerised applications and microservices
-cask "docker-desktop"
 cask "font-fira-code-nerd-font"
 # Fast terminal with native macOS UI
 cask "ghostty"
