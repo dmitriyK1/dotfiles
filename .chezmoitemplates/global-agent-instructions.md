@@ -22,6 +22,15 @@
   outside it as brief follow-ups at the end of your reply instead of asking
   about them, unless they block the task or affect its correctness.
 
+{{ if lookPath "openspec" }}
+## OpenSpec
+
+- For substantial features and behavior changes, use OpenSpec only when the
+  repository contains `openspec/config.yaml`. Follow its `openspec/README.md`
+  and available OpenSpec skills when present. Routine fixes can use the
+  existing issue and tests.
+
+{{ end }}
 ## Code quality
 
 - Follow the project's typing and coding conventions. Keep functions focused
