@@ -13,12 +13,25 @@ set -g __update_results
 set -g __update_failed 0
 
 function update_step --argument-names label
-    $argv[2..-1]
-    set -l step_status $status
+    set -l step_log (mktemp -t update.XXXXXX)
+    or begin
+        set -ga __update_results "$label: FAILED (could not create log)"
+        set -g __update_failed 1
+        return 1
+    end
+    # Keep diagnostics even when a later updater redraws the terminal.
+    $argv[2..-1] 2>&1 | tee "$step_log"
+    set -l step_status $pipestatus
+    if test $step_status[1] -eq 0
+        set step_status $step_status[2]
+    else
+        set step_status $step_status[1]
+    end
     if test $step_status -eq 0
         set -ga __update_results "$label: OK"
+        rm -f "$step_log"
     else
-        set -ga __update_results "$label: FAILED (exit $step_status)"
+        set -ga __update_results "$label: FAILED (exit $step_status) — log: $step_log"
         set -g __update_failed 1
     end
     return $step_status

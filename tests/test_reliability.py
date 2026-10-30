@@ -51,6 +51,7 @@ class UpdateTests(FishTest):
         self.env.update(
             TEST_CALLS=str(self.calls), TEST_FAIL_COMMAND="",
             TEST_NPM_STATUS="0", TEST_NPM_OUTPUT="", TEST_CUT_STATUS="0",
+            TMPDIR=str(self.home),
         )
         self.stub = self.bin / "stub"
         self.stub.write_text("""#!/bin/sh
@@ -151,6 +152,56 @@ exit 0
                 self.assertEqual(result.returncode, 1, result.stderr)
                 self.assertIn(f"{label}: FAILED (exit 9)", result.stdout)
                 self.assertIn("softwareupdate --all --install --force", self.calls.read_text())
+
+    def test_failed_local_step_keeps_diagnostics_after_terminal_redraw(self):
+        local_update = self.home / ".config/fish/update.local.fish"
+        local_update.parent.mkdir(parents=True)
+        local_update.write_text(
+            'function fail_codex\n'
+            '    echo "Codex download failed" >&2\n'
+            '    return 9\n'
+            'end\n'
+            'update_step Codex fail_codex\n'
+            'printf "\\e[2J\\e[H"\n'
+            'update_step later echo "later update ran"\n'
+        )
+        result = self.run_update()
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("later update ran", result.stdout)
+        summary = result.stdout.split(">>> update summary", 1)[1]
+        failure = next(line for line in summary.splitlines() if "Codex: FAILED" in line)
+        log = Path(failure.split(" — log: ", 1)[1])
+        self.assertEqual(log.read_text(), "Codex download failed\n")
+        self.assertEqual(list(self.home.glob("update.*")), [log])
+
+    def test_log_creation_failure_is_reported_and_later_steps_run(self):
+        local_update = self.home / ".config/fish/update.local.fish"
+        local_update.parent.mkdir(parents=True)
+        local_update.write_text(
+            'function mktemp; return 1; end\n'
+            'update_step Codex echo "must not run without logging"\n'
+            'functions -e mktemp\n'
+            'update_step later echo "later update ran"\n'
+        )
+        result = self.run_update()
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("Codex: FAILED (could not create log)", result.stdout)
+        self.assertNotIn("must not run without logging", result.stdout)
+        self.assertIn("later: OK", result.stdout)
+
+    def test_log_write_failure_is_reported_and_later_steps_run(self):
+        local_update = self.home / ".config/fish/update.local.fish"
+        local_update.parent.mkdir(parents=True)
+        local_update.write_text(
+            'function tee; command cat >/dev/null; return 7; end\n'
+            'update_step Codex echo "update succeeded"\n'
+            'functions -e tee\n'
+            'update_step later echo "later update ran"\n'
+        )
+        result = self.run_update()
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("Codex: FAILED (exit 7)", result.stdout)
+        self.assertIn("later: OK", result.stdout)
 
     def test_outdated_packages_are_installed_with_scoped_names(self):
         self.set_outdated()
