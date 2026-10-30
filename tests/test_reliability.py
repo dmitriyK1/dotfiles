@@ -37,9 +37,9 @@ class FishTest(unittest.TestCase):
             PATH=f"{self.bin}:/usr/bin:/bin:/usr/sbin:/sbin",
         )
 
-    def run_fish(self, code):
+    def run_fish(self, code, args=()):
         return subprocess.run(
-            [FISH, "--no-config", "-c", code], env=self.env,
+            [FISH, "--no-config", "-c", code, "--", *args], env=self.env,
             text=True, capture_output=True, timeout=15,
         )
 
@@ -71,7 +71,7 @@ exit 0
 """)
         self.stub.chmod(0o700)
 
-    def run_update(self, optional=False):
+    def run_update(self, optional=False, args=()):
         names = [
             "brew", "chezmoi", "atuin", "nvim", "fisher",
             "fish_update_completions", "cut",
@@ -92,7 +92,7 @@ exit 0
         script = (ROOT / "dot_local/bin/executable_update.fish").read_text()
         script = script.replace("/opt/homebrew/bin/npm", "__test_npm")
         script = script.replace("/usr/sbin/softwareupdate", "__test_softwareupdate")
-        return self.run_fish(prelude + script)
+        return self.run_fish(prelude + script, args=args)
 
     def set_outdated(self):
         self.env["TEST_NPM_STATUS"] = "1"
@@ -152,6 +152,48 @@ exit 0
                 self.assertEqual(result.returncode, 1, result.stderr)
                 self.assertIn(f"{label}: FAILED (exit 9)", result.stdout)
                 self.assertIn("softwareupdate --all --install --force", self.calls.read_text())
+
+    def test_local_only_skips_shared_updates(self):
+        local_update = self.home / ".config/fish/update.local.fish"
+        local_update.parent.mkdir(parents=True)
+        local_update.write_text('update_step "local tool" echo "local hook ran"\n')
+        result = self.run_update(optional=True, args=("--local",))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.calls.exists(), "shared update commands must not run")
+        self.assertIn("local hook ran", result.stdout)
+        self.assertIn("local tool: OK", result.stdout)
+        self.assertIn("local updates: OK", result.stdout)
+
+    def test_local_only_reports_missing_script(self):
+        result = self.run_update(args=("--local",))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.calls.exists())
+        self.assertIn("local updates: SKIPPED (not configured)", result.stdout)
+
+    def test_local_only_retains_failure_log_and_runs_later_steps(self):
+        local_update = self.home / ".config/fish/update.local.fish"
+        local_update.parent.mkdir(parents=True)
+        local_update.write_text(
+            'function fail_local; echo "local tool failed" >&2; return 9; end\n'
+            'update_step "local tool" fail_local\n'
+            'update_step later echo "later update ran"\n'
+        )
+        result = self.run_update(args=("--local",))
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertFalse(self.calls.exists())
+        self.assertIn("later: OK", result.stdout)
+        summary = result.stdout.split(">>> update summary", 1)[1]
+        failure = next(line for line in summary.splitlines() if "local tool: FAILED" in line)
+        log = Path(failure.split(" — log: ", 1)[1])
+        self.assertEqual(log.read_text(), "local tool failed\n")
+
+    def test_invalid_arguments_run_no_updates(self):
+        for args in [("--unknown",), ("unexpected",)]:
+            with self.subTest(args=args):
+                result = self.run_update(args=args)
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertFalse(self.calls.exists())
+                self.assertTrue(result.stderr)
 
     def test_failed_local_step_keeps_diagnostics_after_terminal_redraw(self):
         local_update = self.home / ".config/fish/update.local.fish"
