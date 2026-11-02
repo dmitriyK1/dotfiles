@@ -1,0 +1,2 @@
+# update.sh was renamed to update.fish (a83b38d); chezmoi does not remove renamed targets.
+.local/bin/update.sh
