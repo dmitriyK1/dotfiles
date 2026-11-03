@@ -102,6 +102,114 @@ exit 0
             "@scope/pkg@3.0.0:global\n"
         )
 
+    def test_full_run_log_captures_output_and_preserves_failure(self):
+        local_update = self.home / ".config/fish/update.local.fish"
+        local_update.parent.mkdir(parents=True)
+        logs = []
+        for status in [0, 9]:
+            with self.subTest(status=status):
+                local_update.write_text(
+                    'echo "local stdout"\n'
+                    'echo "local stderr" >&2\n'
+                    f'return {status}\n'
+                )
+                result = self.run_update(args=("--local",))
+                self.assertEqual(result.returncode, int(status != 0), result.stderr)
+                log = Path(result.stdout.splitlines()[0].removeprefix("Full update log: "))
+                self.assertEqual(log.parent, self.home / "Library/Logs/update")
+                self.assertEqual(log.suffix, ".log")
+                self.assertEqual(log.stat().st_mode & 0o777, 0o600)
+                self.assertEqual(log.read_text(), result.stdout)
+                self.assertIn("local stdout", log.read_text())
+                self.assertIn("local stderr", log.read_text())
+                self.assertIn(">>> update summary", log.read_text())
+                clean_log = Path(result.stdout.splitlines()[1].removeprefix("Readable update log: "))
+                self.assertEqual(clean_log.name, log.stem + ".clean.log")
+                self.assertEqual(clean_log.stat().st_mode & 0o777, 0o600)
+                self.assertIn("local stderr", clean_log.read_text())
+                self.assertIn(">>> update summary", clean_log.read_text())
+                logs.append(log)
+        self.assertNotEqual(*logs)
+
+    def test_readable_log_removes_terminal_controls_and_completion_progress(self):
+        local_update = self.home / ".config/fish/update.local.fish"
+        local_update.parent.mkdir(parents=True)
+        local_update.write_text(
+            'printf "\\e[31mkeep stdout\\e[0m\\n"\n'
+            'printf "\\e]0;window title\\a"\n'
+            'printf "\\r 1 / 2 : one.1\\r\\n\\r 2 / 2 : two.1\\r\\n"\n'
+            'printf "\\n\\n\\nkeep section\\n\\n\\n"\n'
+            'echo "keep warning" >&2\n'
+            'printf "\\e[2J\\e[Hdone\\n"\n'
+        )
+        result = self.run_update(args=("--local",))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        raw = Path(result.stdout.splitlines()[0].removeprefix("Full update log: "))
+        clean = Path(result.stdout.splitlines()[1].removeprefix("Readable update log: "))
+        self.assertIn(b"\x1b[31m", raw.read_bytes())
+        self.assertIn(b"\r 1 / 2 : one.1", raw.read_bytes())
+        cleaned = clean.read_text()
+        self.assertNotIn("\n\n\n", cleaned)
+        for removed in ["\x1b", "\r", "one.1", "two.1", "window title"]:
+            self.assertNotIn(removed, cleaned)
+        for kept in ["keep stdout", "keep section", "keep warning", "done", ">>> update summary"]:
+            self.assertIn(kept, cleaned)
+
+    def test_readable_log_failure_preserves_raw_log_and_reports_failure(self):
+        self.env["PERL5OPT"] = "--invalid-option"
+        result = self.run_update(args=("--local",))
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("Writing readable update log failed", result.stderr)
+        raw = Path(result.stdout.splitlines()[0].removeprefix("Full update log: "))
+        self.assertIn(">>> update summary", raw.read_text())
+
+    def test_step_timestamps_and_elapsed_times_include_failures(self):
+        local_update = self.home / ".config/fish/update.local.fish"
+        local_update.parent.mkdir(parents=True)
+        local_update.write_text(
+            'function slow_failure; sleep 1; return 9; end\n'
+            'update_step "slow failure" slow_failure\n'
+            'update_step later true\n'
+        )
+        result = self.run_update(args=("--local",))
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertRegex(result.stdout, r"\[\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\] slow failure")
+        self.assertRegex(result.stdout, r"slow failure: FAILED \(exit 9\) \([1-9]\d* s\)")
+        self.assertRegex(result.stdout, r"later: OK \(\d+ s\)")
+
+    def test_local_hook_knows_whether_shared_brew_upgrade_succeeded(self):
+        local_update = self.home / ".config/fish/update.local.fish"
+        local_update.parent.mkdir(parents=True)
+        local_update.write_text('echo "shared brew upgraded=$__update_brew_upgraded"\n')
+        for args, failed_command, expected in [
+            ((), "", 1),
+            (("--local",), "", 0),
+            ((), "brew upgrade --greedy-auto-updates --yes", 0),
+        ]:
+            with self.subTest(args=args, failed_command=failed_command):
+                self.env["TEST_FAIL_COMMAND"] = failed_command
+                result = self.run_update(args=args)
+                self.assertEqual(result.returncode, int(bool(failed_command)), result.stderr)
+                self.assertIn(f"shared brew upgraded={expected}", result.stdout)
+
+    def test_full_run_log_creation_failure_runs_no_updates(self):
+        mktemp = self.bin / "mktemp"
+        mktemp.write_text('#!/bin/sh\necho "log creation failed" >&2\nexit 1\n')
+        mktemp.chmod(0o700)
+        result = self.run_update()
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("log creation failed", result.stderr)
+        self.assertFalse(self.calls.exists())
+
+    def test_full_run_log_write_failure_is_reported(self):
+        tee = self.bin / "tee"
+        tee.write_text('#!/bin/sh\n/usr/bin/tee "$@"\nexit 7\n')
+        tee.chmod(0o700)
+        result = self.run_update(args=("--local",))
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("Writing full update log failed (exit 7)", result.stderr)
+        self.assertIn(">>> update summary", result.stdout)
+
     def test_success_and_optional_skips(self):
         result = self.run_update()
         self.assertEqual(result.returncode, 0, result.stderr)
