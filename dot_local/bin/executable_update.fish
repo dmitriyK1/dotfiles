@@ -106,7 +106,9 @@ begin
         update_step 'atuin sync' atuin sync
 
         colorize_text '>>> updating neovim plugins'
-        update_step 'neovim plugins' nvim --headless "+Lazy! sync" "+UpdateRemotePlugins" +qa
+        # nvim-treesitter's build hook updates parsers asynchronously; wait so +qa doesn't kill the downloads.
+        # Loading mason first puts its tree-sitter CLI on PATH, as LazyVim's build hook does.
+        update_step 'neovim plugins' nvim --headless "+Lazy! sync" "+lua pcall(require, 'mason'); require('nvim-treesitter').update():wait(300000)" "+UpdateRemotePlugins" +qa
 
         colorize_text '>>> updating fish plugins and completions'
         update_step 'fisher update' fisher update

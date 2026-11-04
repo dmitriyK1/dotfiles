@@ -246,7 +246,7 @@ exit 0
             "brew tap --repair": "brew tap --repair",
             "chezmoi update": "chezmoi update",
             "atuin sync": "atuin sync",
-            "nvim --headless +Lazy! sync +UpdateRemotePlugins +qa": "neovim plugins",
+            "nvim --headless +Lazy! sync +lua pcall(require, 'mason'); require('nvim-treesitter').update():wait(300000) +UpdateRemotePlugins +qa": "neovim plugins",
             "fisher update": "fisher update",
             "fish_update_completions ": "fish completions",
             "npm install -g npm@latest": "npm self-update",
