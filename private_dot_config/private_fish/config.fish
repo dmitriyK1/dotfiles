@@ -82,6 +82,9 @@ if status --is-interactive
 
     [ -f $HOME/.config/fish/config.local.fish ]; and source $HOME/.config/fish/config.local.fish
 
+    # Optional: fish 4 already emits OSC 133 prompt marks; this adds iTerm's host/user tracking.
+    # Install with `curl -L https://iterm2.com/shell_integration/fish -o ~/.iterm2_shell_integration.fish`,
+    # not iTerm2 > Install Shell Integration, which may edit this chezmoi-managed file.
     test -e {$HOME}/.iterm2_shell_integration.fish; and source {$HOME}/.iterm2_shell_integration.fish
 
     # Print the path of a cached copy of a tool's generated init script, so it isn't regenerated
