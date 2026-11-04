@@ -110,6 +110,25 @@ class MigrationTests(unittest.TestCase):
             for path, text in installer.build_plan(home).items():
                 self.assertEqual(path.read_text(), text)
 
+    def test_without_codex_registers_only_claude_hooks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp)
+            (home / '.config/iterm2').mkdir(parents=True)
+            for name in ('codex-status.py', 'codex-launch.sh'):
+                (home / '.config/iterm2' / name).write_text('placeholder')
+            (home / '.claude').mkdir()
+            (home / '.claude/settings.json').write_text(json.dumps({'hooks': {'Stop': [
+                {'hooks': [{'type': 'command', 'command': str(home / '.config/iterm2/cc-status')}]}]}}))
+            with patch.object(installer.shutil, 'which', return_value=None), patch('sys.stdout', io.StringIO()):
+                installer.install(home, run=lambda *a, **kw: self.fail('Codex CLI called'))
+            claude = json.loads((home / '.claude/settings.json').read_text())
+            self.assertEqual(len(claude['hooks']), 10)
+            self.assertEqual([h['command'] for g in claude['hooks']['Stop'] for h in g['hooks']],
+                             [str(home / '.config/iterm2/claude/cc-status')])
+            self.assertFalse((home / '.codex').exists())
+            self.assertFalse((home / 'Library').exists())
+            self.assertTrue(list((home / '.config/iterm2/backups').glob('*/manifest.json')))
+
     def test_claude_registration_preserves_model_and_other_hooks(self):
         with tempfile.TemporaryDirectory() as tmp:
             home = Path(tmp)

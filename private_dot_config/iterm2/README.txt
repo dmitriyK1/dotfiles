@@ -1,6 +1,8 @@
 iTerm2 status integration for Codex and Claude Code
 
 chezmoi apply deploys these scripts and registers hooks with the after script.
+Without Codex on PATH it registers only the Claude hooks.
+Codex status also drives the tab's progress ring (needs iTerm 3.7.7+).
 Registration merges existing Codex and Claude settings and makes backups.
 The old iterm2-status@personal plugin is removed if it is installed.
 On a fresh Mac the installer also creates the optional Codex iTerm profile.

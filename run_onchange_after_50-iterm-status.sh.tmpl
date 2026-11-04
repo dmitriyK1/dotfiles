@@ -8,8 +8,13 @@
 if [[ "$(uname -s)" != Darwin ]]; then
     exit 0
 fi
-if ! command -v codex >/dev/null 2>&1 || { [[ ! -x /Applications/iTerm.app/Contents/Resources/utilities/it2 ]] && [[ ! -x "$HOME/Applications/iTerm.app/Contents/Resources/utilities/it2" ]]; }; then
-    echo "Skipping iTerm status setup: install Codex and iTerm2 first."
+if [[ ! -x /Applications/iTerm.app/Contents/Resources/utilities/it2 ]] && [[ ! -x "$HOME/Applications/iTerm.app/Contents/Resources/utilities/it2" ]]; then
+    echo "Skipping iTerm status setup: install iTerm2 first."
+    exit 0
+fi
+# The installer registers Claude hooks alone when Codex is missing.
+if ! command -v codex >/dev/null 2>&1 && ! command -v claude >/dev/null 2>&1 && [[ ! -d "$HOME/.claude" ]]; then
+    echo "Skipping iTerm status setup: install Codex or Claude Code first."
     exit 0
 fi
 /usr/bin/python3 "$HOME/.config/iterm2/install-codex-status.py"

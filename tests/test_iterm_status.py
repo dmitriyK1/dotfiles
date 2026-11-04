@@ -141,6 +141,18 @@ class RuntimeTests(unittest.TestCase):
                 self.assertEqual(args[args.index('--session') + 1], target)
             self.assertTrue(hook.read_state(data / (target + '.json'))['reported'])
 
+    def test_progress_ring_runs_only_while_working(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ,
+            TERM_PROGRAM='iTerm.app', ITERM_SESSION_ID=TERMINAL, XDG_CACHE_HOME=tmp):
+            with patch.object(hook.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0)) as run:
+                for payload, progress in [(event('SessionStart'), 'stopped'),
+                                          (event('UserPromptSubmit', turn_id='1'), 'running'),
+                                          (event('PermissionRequest', turn_id='1', tool_name='Bash',
+                                                 tool_input={'command': 'ls'}), 'stopped')]:
+                    hook.report(payload)
+                    args = run.call_args.args[0]
+                    self.assertEqual(args[args.index('--progress') + 1], progress, payload['hook_event_name'])
+
     def test_always_returns_empty_json(self):
         env = dict(os.environ, TERM_PROGRAM='other', ITERM_SESSION_ID='')
         for payload in ['bad json', '[]', '{}', json.dumps(event('Stop'))]:

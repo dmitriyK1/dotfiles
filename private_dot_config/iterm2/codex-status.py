@@ -199,10 +199,12 @@ def report(event):
             if snapshot.get("reported"):
                 return
             color = COLORS[snapshot["status"]]
+            # shortcut: needs iTerm 3.7.7+ it2; older it2 rejects --progress and status stops updating (see --doctor last_error)
             args = [str(it2), "session", "set-status", "--session", terminal,
                     "--status", snapshot["status"], "--dot-color", color,
                     "--text-color", TEXT_COLORS[snapshot["status"]], "--detail", snapshot["detail"],
-                    "--background-tasks", str(len(snapshot["agents"]))]
+                    "--background-tasks", str(len(snapshot["agents"])),
+                    "--progress", "running" if snapshot["status"] == "working" else "stopped"]
             try:
                 result = subprocess.run(args, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                                         stderr=subprocess.PIPE, timeout=1.2)

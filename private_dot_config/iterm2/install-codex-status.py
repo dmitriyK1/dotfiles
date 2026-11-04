@@ -4,6 +4,7 @@
 Run manually after deploying the scripts, or use the chezmoi after script:
   /usr/bin/python3 ~/.config/iterm2/install-codex-status.py
 Use --dry-run to inspect the migration. New hooks need trust via /hooks.
+Without codex on PATH, only the Claude hooks are registered.
 """
 import argparse
 from datetime import datetime, timezone
@@ -123,20 +124,25 @@ def atomic_write(path, text):
 
 
 def install(home, dry_run=False, run=subprocess.run):
+    codex = shutil.which('codex')
     plan = build_plan(home)
+    if not codex:
+        # Claude-only Mac: register the Claude hook and leave Codex files alone.
+        claude = home / '.claude/settings.json'
+        plan = {claude: plan[claude]}
     for path in plan:
         print('Update:', path)
-    print('Remove plugin:', SELECTOR)
-    print('Archive old runtime: ~/.config/codex-iterm2-status')
+    if codex:
+        print('Remove plugin:', SELECTOR)
+        print('Archive old runtime: ~/.config/codex-iterm2-status')
+    else:
+        print('Skip Codex hooks: codex is not on PATH.')
     if dry_run:
         return
-    codex = shutil.which('codex')
-    if not codex:
-        raise RuntimeError('codex is not on PATH; run this from your normal terminal.')
     # Resolve installation before touching any files. Codex removal writes its
     # config, so read the cleaned config again after that command succeeds.
     installed = False
-    if (home / '.agents/plugins/marketplace.json').exists():
+    if codex and (home / '.agents/plugins/marketplace.json').exists():
         result = run([codex, 'plugin', 'list', '--marketplace', 'personal', '--json'],
                      check=True, capture_output=True, text=True, timeout=30)
         installed = any(p.get('pluginId') == SELECTOR for p in json.loads(result.stdout).get('installed', []))
@@ -153,15 +159,19 @@ def install(home, dry_run=False, run=subprocess.run):
     # Register first, so a failed plugin uninstall leaves the old integration
     # working and the replacement available for review.
     hooks_path = home / '.codex/hooks.json'
-    atomic_write(hooks_path, plan[hooks_path])
-    if installed:
-        run([codex, 'plugin', 'remove', SELECTOR, '--json'], check=True, timeout=30)
-    config_path = home / '.codex/config.toml'
-    if config_path.exists():
-        plan[config_path] = remove_old_config(config_path.read_text())
+    if codex:
+        atomic_write(hooks_path, plan[hooks_path])
+        if installed:
+            run([codex, 'plugin', 'remove', SELECTOR, '--json'], check=True, timeout=30)
+        config_path = home / '.codex/config.toml'
+        if config_path.exists():
+            plan[config_path] = remove_old_config(config_path.read_text())
     for path, content in plan.items():
         if path != hooks_path:
             atomic_write(path, content)
+    if not codex:
+        print('Installed the Claude hook. Restart Claude Code in iTerm.')
+        return
     runtime = home / '.config/codex-iterm2-status'
     if runtime.exists():
         shutil.move(str(runtime), str(backup / 'old-runtime'))
