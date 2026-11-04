@@ -214,7 +214,7 @@ exit 0
         result = self.run_update()
         self.assertEqual(result.returncode, 0, result.stderr)
         summary = result.stdout.split(">>> update summary", 1)[1]
-        self.assertEqual(summary.count(": OK"), 12)
+        self.assertEqual(summary.count(": OK"), 13)
         self.assertIn("uv: SKIPPED (not installed)", summary)
         self.assertIn("rustup: SKIPPED (not installed)", summary)
         self.assertIn("all global npm packages are up to date", result.stdout)
@@ -247,6 +247,7 @@ exit 0
             "chezmoi update": "chezmoi update",
             "atuin sync": "atuin sync",
             "nvim --headless +Lazy! sync +lua pcall(require, 'mason'); require('nvim-treesitter').update():wait(300000) +UpdateRemotePlugins +qa": "neovim plugins",
+            "nvim --headless +lua require('mason_upgrade') +qa": "mason packages",
             "fisher update": "fisher update",
             "fish_update_completions ": "fish completions",
             "npm install -g npm@latest": "npm self-update",

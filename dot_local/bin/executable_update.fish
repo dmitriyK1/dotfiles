@@ -1,5 +1,5 @@
 #!/usr/bin/env fish
-# Update everything: dotfiles, Homebrew, nvim plugins, fish plugins, global packages, macOS.
+# Update everything: dotfiles, Homebrew, nvim plugins, Mason packages, fish plugins, global packages, macOS.
 # Steps keep going when one fails, so a single broken tool doesn't block the rest.
 # --local runs only ~/.config/fish/update.local.fish, with the same logging and summary.
 
@@ -109,6 +109,8 @@ begin
         # nvim-treesitter's build hook updates parsers asynchronously; wait so +qa doesn't kill the downloads.
         # Loading mason first puts its tree-sitter CLI on PATH, as LazyVim's build hook does.
         update_step 'neovim plugins' nvim --headless "+Lazy! sync" "+lua pcall(require, 'mason'); require('nvim-treesitter').update():wait(300000)" "+UpdateRemotePlugins" +qa
+        # after the plugin sync, so mason.nvim itself is already up to date
+        update_step 'mason packages' nvim --headless "+lua require('mason_upgrade')" +qa
 
         colorize_text '>>> updating fish plugins and completions'
         update_step 'fisher update' fisher update
