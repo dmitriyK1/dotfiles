@@ -13,10 +13,10 @@ CODEX_ITERM2_TAB so resumed conversations follow their new terminal tab.
 Claude uses iTerm's original cc-status with an idle dot and text color override.
 idle is green, working is orange, waiting is blue.
 iTerm owns the cc-status symlink and resets it on launch, so chezmoi leaves
-it alone. Claude hooks run ~/.config/iterm2/claude/cc-status, which calls
-cc-status-green.py with the native symlink as argument. This separate
-executable path satisfies iTerm 3.7.4's health check; a command containing
-the wrapper plus an argument fails that check and causes a repair warning.
+it alone. Claude hooks run cc-status-green.py with the native symlink as
+argument. iTerm 3.7.7's health check accepts this because a command word is
+a cc-status path in ~/.config/iterm2; a cc-status path in any other
+directory counts as another install and causes a repair warning.
 
 Diagnostics: /usr/bin/python3 ~/.config/iterm2/codex-status.py --doctor
 Manual setup: /usr/bin/python3 ~/.config/iterm2/install-codex-status.py

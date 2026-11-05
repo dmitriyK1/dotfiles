@@ -1,2 +1,4 @@
 # update.sh was renamed to update.fish (a83b38d); chezmoi does not remove renamed targets.
 .local/bin/update.sh
+# iTerm 3.7.7 rejects the 3.7.4 Claude entry point; hooks now call the wrapper directly.
+.config/iterm2/claude

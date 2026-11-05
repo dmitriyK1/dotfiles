@@ -124,7 +124,8 @@ class MigrationTests(unittest.TestCase):
             claude = json.loads((home / '.claude/settings.json').read_text())
             self.assertEqual(len(claude['hooks']), 10)
             self.assertEqual([h['command'] for g in claude['hooks']['Stop'] for h in g['hooks']],
-                             [str(home / '.config/iterm2/claude/cc-status')])
+                             [shlex.join([str(home / '.config/iterm2/cc-status-green.py'),
+                                          str(home / '.config/iterm2/cc-status')])])
             self.assertFalse((home / '.codex').exists())
             self.assertFalse((home / 'Library').exists())
             self.assertTrue(list((home / '.config/iterm2/backups').glob('*/manifest.json')))
@@ -149,45 +150,44 @@ class MigrationTests(unittest.TestCase):
             bare = {'type': 'command', 'command': str(home / '.config/iterm2/cc-status')}
             wrapper = str(home / '.config/iterm2/cc-status-green.py')
             old = [{'type': 'command', 'command': wrapper},
-                   {'type': 'command', 'command': wrapper + ' ' + bare['command']}]
+                   {'type': 'command', 'command': str(home / '.config/iterm2/claude/cc-status')}]
             shared = {'hooks': [bare, {'type': 'command', 'command': 'memory-hook'}]}
             settings = home / '.claude/settings.json'
             settings.write_text(json.dumps({'hooks': {'Stop': [{'hooks': [bare] + old}], 'PreToolUse': [shared]}}))
-            entry = home / '.config/iterm2/claude/cc-status'
-            entry.parent.mkdir()
-            entry.write_text((Path(__file__).resolve().parents[1] /
-                              'private_dot_config/iterm2/claude/executable_cc-status').read_text())
-            entry.chmod(0o700)
+            native = home / '.config/iterm2/cc-status'
+            native.write_text('')
+            native.chmod(0o700)
             data = json.loads(installer.build_plan(home)[settings])
             for event, groups in data['hooks'].items():
                 commands = [h['command'] for g in groups for h in g['hooks']]
                 self.assertNotIn(bare['command'], commands, event)
                 for handler in old:
                     self.assertNotIn(handler['command'], commands, event)
-                ours = [c for c in commands if c == str(entry)]
-                self.assertEqual(len(ours), 1, event)
-                # iTerm 3.7.4 checks the entire command as an executable path.
-                self.assertTrue(ours[0].endswith('/cc-status'))
-                self.assertTrue(os.access(ours[0], os.X_OK))
-                words = shlex.split(ours[0])
-                self.assertEqual(words, [str(entry)])
+                ours = [c for c in commands if 'cc-status' in c]
+                self.assertEqual(ours, [shlex.join([wrapper, str(native)])], event)
+                # iTerm 3.7.7 counts the hook as its own only if a word naming
+                # cc-status lies in its dot dir, and needs that word executable.
+                words = [w for w in shlex.split(ours[0]) if w.endswith('/cc-status')]
+                self.assertEqual(words, [str(native)])
+                self.assertTrue(os.access(words[0], os.X_OK))
             self.assertEqual(len(data['hooks']['Stop']), 1)
             self.assertIn({'type': 'command', 'command': 'memory-hook'}, data['hooks']['PreToolUse'][0]['hooks'])
             settings.write_text(json.dumps(data))
             self.assertEqual(json.loads(installer.build_plan(home)[settings]), data)
 
-    def test_claude_entry_point_forwards_payload_and_quoted_native_path(self):
-        entry = (Path(__file__).resolve().parents[1] /
-                 'private_dot_config/iterm2/claude/executable_cc-status')
+    def test_claude_command_forwards_payload_and_quoted_native_path(self):
         with tempfile.TemporaryDirectory(prefix='claude home ') as tmp:
             home = Path(tmp)
+            self.fixture(home)
             wrapper = home / '.config/iterm2/cc-status-green.py'
-            wrapper.parent.mkdir(parents=True)
-            wrapper.write_text('import json,sys\nprint(json.dumps([sys.argv[1:], sys.stdin.read()]))\n')
+            wrapper.write_text('#!/usr/bin/python3\nimport json,sys\nprint(json.dumps([sys.argv[1:], sys.stdin.read()]))\n')
+            wrapper.chmod(0o700)
+            data = json.loads(installer.build_plan(home)[home / '.claude/settings.json'])
+            [command] = [h['command'] for g in data['hooks']['Stop'] for h in g['hooks']]
             payload = '{"hook_event_name":"Stop"}'
-            result = subprocess.run(['/bin/sh', str(entry)], input=payload,
-                                    env=dict(os.environ, HOME=tmp), capture_output=True,
-                                    text=True, check=True)
+            # Claude Code runs hook commands with /bin/sh -c.
+            result = subprocess.run(['/bin/sh', '-c', command], input=payload,
+                                    capture_output=True, text=True, check=True)
             self.assertEqual(json.loads(result.stdout),
                              [[str(home / '.config/iterm2/cc-status')], payload])
 

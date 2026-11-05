@@ -70,14 +70,14 @@ def build_plan(home):
     claude_data = read_json(claude, {})
     claude_groups = claude_data.setdefault('hooks', {})
     # iTerm owns ~/.config/iterm2/cc-status and re-points it at its bundle on
-    # launch. Its 3.7.4 health check treats the entire command as a file path,
-    # so passing it as an argument to our wrapper still triggers the warning.
-    # Use a separate executable ending in /cc-status that calls the wrapper.
-    # Replace both previous forms so the native status hook runs only once.
+    # launch. Its 3.7.7 health check needs a command word naming cc-status in
+    # that directory, so pass the native path to the wrapper. Replace previous
+    # forms, including the 3.7.4 claude/cc-status entry point, so the native
+    # status hook runs only once.
     native = shlex.quote(str(home / '.config/iterm2/cc-status'))
     wrapper = shlex.quote(str(home / '.config/iterm2/cc-status-green.py'))
-    old_commands = {native, wrapper, wrapper + ' ' + native}
-    claude_command = shlex.quote(str(home / '.config/iterm2/claude/cc-status'))
+    old_commands = {native, wrapper, shlex.quote(str(home / '.config/iterm2/claude/cc-status'))}
+    claude_command = wrapper + ' ' + native
     for event in ('Notification', 'PermissionRequest', 'PostToolUse', 'PreToolUse',
                   'SessionEnd', 'SessionStart', 'Stop', 'StopFailure', 'SubagentStop', 'UserPromptSubmit'):
         existing = claude_groups.setdefault(event, [])
