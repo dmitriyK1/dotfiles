@@ -29,6 +29,7 @@ end
 set -g __update_results
 set -g __update_failed 0
 set -g __update_brew_upgraded 0
+set -g __update_uv_upgraded 0
 
 function update_step --argument-names label
     set -l step_started (date +%s)
@@ -127,6 +128,7 @@ begin
         if type -q uv
             colorize_text '>>> updating uv tools'
             update_step 'uv tool upgrade' uv tool upgrade --all
+            and set -g __update_uv_upgraded 1
         else
             set -ga __update_results 'uv: SKIPPED (not installed)'
         end
@@ -175,12 +177,13 @@ if test $log_status -ne 0
     echo "Writing full update log failed (exit $log_status): $run_log" >&2
     set -g __update_failed 1
 end
-# Remove terminal controls and fish completion progress from the readable copy.
+# Remove terminal controls and intermediate fish/Git progress from the readable copy.
 /usr/bin/perl -ne '
     s/\e\[[0-?]*[ -\/]*[@-~]//g;
     s/\e\][^\a\e]*(?:\a|\e\x5c)//g;
     s/\r/\n/g;
     s/^[ \t]*\d+[ \t]*\/[ \t]*\d+[ \t]*:[^\n]*(?:\n|$)//mg;
+    s/^(?:\[[^\]\n]+\][ \t]+(?:fetch|checkout)[ \t]+\|[ \t]*)?(?:remote:[ \t]*)?(?:Counting objects|Compressing objects|Receiving objects|Resolving deltas|Updating files):[ \t]*\d+%[ \t]*\(\d+\/\d+\)[ \t]*(?:\n|$)//mg;
     for (split /(?<=\n)/) {
         print if /\S/ || !$blank;
         $blank = !/\S/;

@@ -131,13 +131,20 @@ exit 0
                 logs.append(log)
         self.assertNotEqual(*logs)
 
-    def test_readable_log_removes_terminal_controls_and_completion_progress(self):
+    def test_readable_log_removes_terminal_controls_and_progress(self):
         local_update = self.home / ".config/fish/update.local.fish"
         local_update.parent.mkdir(parents=True)
         local_update.write_text(
             'printf "\\e[31mkeep stdout\\e[0m\\n"\n'
             'printf "\\e]0;window title\\a"\n'
             'printf "\\r 1 / 2 : one.1\\r\\n\\r 2 / 2 : two.1\\r\\n"\n'
+            'printf "[plugin] fetch | remote: Counting objects: 50%% (1/2)\\r\\n"\n'
+            'printf "remote: Compressing objects: 50%% (1/2)\\r\\n"\n'
+            'printf "Receiving objects: 50%% (1/2)\\rReceiving objects: 100%% (2/2), done.\\n"\n'
+            'printf "[plugin] fetch | Resolving deltas: 50%% (1/2)\\n"\n'
+            'printf "[plugin] checkout | Updating files: 50%% (1/2)\\n"\n'
+            'echo "[plugin] checkout | Updating files: 100% (2/2), done."\n'
+            'echo "warning: Receiving objects: 50% (1/2)"\n'
             'printf "\\n\\n\\nkeep section\\n\\n\\n"\n'
             'echo "keep warning" >&2\n'
             'printf "\\e[2J\\e[Hdone\\n"\n'
@@ -148,11 +155,17 @@ exit 0
         clean = Path(result.stdout.splitlines()[1].removeprefix("Readable update log: "))
         self.assertIn(b"\x1b[31m", raw.read_bytes())
         self.assertIn(b"\r 1 / 2 : one.1", raw.read_bytes())
+        self.assertIn("[plugin] fetch | remote: Counting objects: 50% (1/2)", raw.read_text())
         cleaned = clean.read_text()
         self.assertNotIn("\n\n\n", cleaned)
-        for removed in ["\x1b", "\r", "one.1", "two.1", "window title"]:
+        for removed in ["\x1b", "\r", "one.1", "two.1", "window title",
+                        "Counting objects:", "Compressing objects:", "Resolving deltas:",
+                        "Updating files: 50%", "\nReceiving objects: 50%"]:
             self.assertNotIn(removed, cleaned)
-        for kept in ["keep stdout", "keep section", "keep warning", "done", ">>> update summary"]:
+        for kept in ["keep stdout", "keep section", "keep warning", "done", ">>> update summary",
+                     "Receiving objects: 100% (2/2), done.",
+                     "[plugin] checkout | Updating files: 100% (2/2), done.",
+                     "warning: Receiving objects: 50% (1/2)"]:
             self.assertIn(kept, cleaned)
 
     def test_readable_log_failure_preserves_raw_log_and_reports_failure(self):
@@ -191,6 +204,22 @@ exit 0
                 result = self.run_update(args=args)
                 self.assertEqual(result.returncode, int(bool(failed_command)), result.stderr)
                 self.assertIn(f"shared brew upgraded={expected}", result.stdout)
+
+    def test_local_hook_knows_whether_shared_uv_upgrade_succeeded(self):
+        local_update = self.home / ".config/fish/update.local.fish"
+        local_update.parent.mkdir(parents=True)
+        local_update.write_text('echo "shared uv upgraded=$__update_uv_upgraded"\n')
+        for optional, args, failed_command, expected in [
+            (True, (), "", 1),
+            (False, (), "", 0),
+            (True, ("--local",), "", 0),
+            (True, (), "uv tool upgrade --all", 0),
+        ]:
+            with self.subTest(optional=optional, args=args, failed_command=failed_command):
+                self.env["TEST_FAIL_COMMAND"] = failed_command
+                result = self.run_update(optional=optional, args=args)
+                self.assertEqual(result.returncode, int(bool(failed_command)), result.stderr)
+                self.assertIn(f"shared uv upgraded={expected}", result.stdout)
 
     def test_full_run_log_creation_failure_runs_no_updates(self):
         mktemp = self.bin / "mktemp"
