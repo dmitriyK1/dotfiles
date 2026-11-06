@@ -43,6 +43,8 @@ function update_step --argument-names label
     # Keep diagnostics even when a later updater redraws the terminal.
     $argv[2..-1] 2>&1 | tee "$step_log"
     set -l step_status $pipestatus
+    # Some tools (nvim's UpdateRemotePlugins) end without a newline; keep the next step header on its own line.
+    test -s "$step_log"; and test -n "$(tail -c 1 "$step_log")"; and echo
     set -l elapsed (math (date +%s) - $step_started)
     if test $step_status[1] -eq 0
         set step_status $step_status[2]
@@ -177,13 +179,14 @@ if test $log_status -ne 0
     echo "Writing full update log failed (exit $log_status): $run_log" >&2
     set -g __update_failed 1
 end
-# Remove terminal controls and intermediate fish/Git progress from the readable copy.
+# Remove terminal controls, intermediate fish/Git progress and lazy.nvim task bookkeeping from the readable copy.
 /usr/bin/perl -ne '
     s/\e\[[0-?]*[ -\/]*[@-~]//g;
     s/\e\][^\a\e]*(?:\a|\e\x5c)//g;
     s/\r/\n/g;
     s/^[ \t]*\d+[ \t]*\/[ \t]*\d+[ \t]*:[^\n]*(?:\n|$)//mg;
     s/^(?:\[[^\]\n]+\][ \t]+(?:fetch|checkout)[ \t]+\|[ \t]*)?(?:remote:[ \t]*)?(?:Counting objects|Compressing objects|Receiving objects|Resolving deltas|Updating files):[ \t]*\d+%[ \t]*\(\d+\/\d+\)[ \t]*(?:\n|$)//mg;
+    s/^\[[^\]\n]+\][ \t]+[\w.]+[ \t]+\|[ \t]*(?:Running task [\w.]+|Finished task [\w.]+ in [\d.]+m?s)[ \t]*(?:\n|$)//mg;
     for (split /(?<=\n)/) {
         print if /\S/ || !$blank;
         $blank = !/\S/;

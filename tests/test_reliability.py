@@ -145,6 +145,9 @@ exit 0
             'printf "[plugin] checkout | Updating files: 50%% (1/2)\\n"\n'
             'echo "[plugin] checkout | Updating files: 100% (2/2), done."\n'
             'echo "warning: Receiving objects: 50% (1/2)"\n'
+            'echo "[p.nvim]    fetch | Running task fetch"\n'
+            'echo "[p.nvim]    fetch | Finished task fetch in 586ms"\n'
+            'echo "[p.nvim] checkout | HEAD is now at abc123 keep checkout"\n'
             'printf "\\n\\n\\nkeep section\\n\\n\\n"\n'
             'echo "keep warning" >&2\n'
             'printf "\\e[2J\\e[Hdone\\n"\n'
@@ -160,9 +163,11 @@ exit 0
         self.assertNotIn("\n\n\n", cleaned)
         for removed in ["\x1b", "\r", "one.1", "two.1", "window title",
                         "Counting objects:", "Compressing objects:", "Resolving deltas:",
-                        "Updating files: 50%", "\nReceiving objects: 50%"]:
+                        "Updating files: 50%", "\nReceiving objects: 50%",
+                        "Running task", "Finished task"]:
             self.assertNotIn(removed, cleaned)
         for kept in ["keep stdout", "keep section", "keep warning", "done", ">>> update summary",
+                     "[p.nvim] checkout | HEAD is now at abc123 keep checkout",
                      "Receiving objects: 100% (2/2), done.",
                      "[plugin] checkout | Updating files: 100% (2/2), done.",
                      "warning: Receiving objects: 50% (1/2)"]:
@@ -189,6 +194,17 @@ exit 0
         self.assertRegex(result.stdout, r"\[\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\] slow failure")
         self.assertRegex(result.stdout, r"slow failure: FAILED \(exit 9\) \([1-9]\d* s\)")
         self.assertRegex(result.stdout, r"later: OK \(\d+ s\)")
+
+    def test_step_output_without_trailing_newline_keeps_next_header_separate(self):
+        local_update = self.home / ".config/fish/update.local.fish"
+        local_update.parent.mkdir(parents=True)
+        local_update.write_text(
+            "update_step nonl printf 'no newline'\n"
+            'update_step next true\n'
+        )
+        result = self.run_update(args=("--local",))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertRegex(result.stdout, r"no newline\n\[\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\] next\n")
 
     def test_local_hook_knows_whether_shared_brew_upgrade_succeeded(self):
         local_update = self.home / ".config/fish/update.local.fish"
