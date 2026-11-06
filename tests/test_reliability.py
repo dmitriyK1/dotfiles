@@ -147,7 +147,13 @@ exit 0
             'echo "warning: Receiving objects: 50% (1/2)"\n'
             'echo "[p.nvim]    fetch | Running task fetch"\n'
             'echo "[p.nvim]    fetch | Finished task fetch in 586ms"\n'
+            'echo "[p.nvim] checkout | Previous HEAD position was 000000 keep previous"\n'
+            'echo "[q.nvim] checkout | HEAD is now at fff000 unchanged checkout"\n'
             'echo "[p.nvim] checkout | HEAD is now at abc123 keep checkout"\n'
+            'echo "[p.nvim] checkout | HEAD is now at abc123 repeated checkout"\n'
+            'echo "Installing owner/plugin"\n'
+            'echo "           /home/functions/plugin_file.fish"\n'
+            'echo "    /keep/path with words"\n'
             'printf "\\n\\n\\nkeep section\\n\\n\\n"\n'
             'echo "keep warning" >&2\n'
             'printf "\\e[2J\\e[Hdone\\n"\n'
@@ -164,10 +170,13 @@ exit 0
         for removed in ["\x1b", "\r", "one.1", "two.1", "window title",
                         "Counting objects:", "Compressing objects:", "Resolving deltas:",
                         "Updating files: 50%", "\nReceiving objects: 50%",
-                        "Running task", "Finished task"]:
+                        "Running task", "Finished task", "unchanged checkout",
+                        "repeated checkout", "plugin_file.fish"]:
             self.assertNotIn(removed, cleaned)
         for kept in ["keep stdout", "keep section", "keep warning", "done", ">>> update summary",
+                     "[p.nvim] checkout | Previous HEAD position was 000000 keep previous",
                      "[p.nvim] checkout | HEAD is now at abc123 keep checkout",
+                     "Installing owner/plugin", "    /keep/path with words",
                      "Receiving objects: 100% (2/2), done.",
                      "[plugin] checkout | Updating files: 100% (2/2), done.",
                      "warning: Receiving objects: 50% (1/2)"]:

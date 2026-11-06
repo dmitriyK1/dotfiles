@@ -179,7 +179,8 @@ if test $log_status -ne 0
     echo "Writing full update log failed (exit $log_status): $run_log" >&2
     set -g __update_failed 1
 end
-# Remove terminal controls, intermediate fish/Git progress and lazy.nvim task bookkeeping from the readable copy.
+# Remove terminal controls, intermediate fish/Git progress, lazy.nvim task bookkeeping,
+# fisher's per-file install list and lazy.nvim checkouts that did not move from the readable copy.
 /usr/bin/perl -ne '
     s/\e\[[0-?]*[ -\/]*[@-~]//g;
     s/\e\][^\a\e]*(?:\a|\e\x5c)//g;
@@ -187,7 +188,11 @@ end
     s/^[ \t]*\d+[ \t]*\/[ \t]*\d+[ \t]*:[^\n]*(?:\n|$)//mg;
     s/^(?:\[[^\]\n]+\][ \t]+(?:fetch|checkout)[ \t]+\|[ \t]*)?(?:remote:[ \t]*)?(?:Counting objects|Compressing objects|Receiving objects|Resolving deltas|Updating files):[ \t]*\d+%[ \t]*\(\d+\/\d+\)[ \t]*(?:\n|$)//mg;
     s/^\[[^\]\n]+\][ \t]+[\w.]+[ \t]+\|[ \t]*(?:Running task [\w.]+|Finished task [\w.]+ in [\d.]+m?s)[ \t]*(?:\n|$)//mg;
+    s/^[ \t]+\/\S+[ \t]*(?:\n|$)//mg;
     for (split /(?<=\n)/) {
+        # lazy.nvim re-checks out pinned plugins on every sync; git only adds these lines when HEAD moves.
+        $moved{$1} = 1 if /^\[([^\]\n]+)\][ \t]+checkout[ \t]+\|[ \t]*(?:Previous HEAD position was|Note: switching to) /;
+        next if /^\[([^\]\n]+)\][ \t]+checkout[ \t]+\|[ \t]*HEAD is now at / && !delete $moved{$1};
         print if /\S/ || !$blank;
         $blank = !/\S/;
     }
