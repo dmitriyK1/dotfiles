@@ -7,10 +7,20 @@ export LESSOPEN='|bat --color=always --style=plain --paging=never %s'
 # set --export NODE_ENV development
 
 # XDG Base Directory Specification
-if not test -d "$HOME/.runtime"
-    mkdir -p "$HOME/.runtime"
+# Preserve a private inherited directory, otherwise use macOS's user-private temp dir.
+# shortcut: macOS manages TMPDIR cleanup, not XDG logout lifetime; use a session service if required.
+set -l runtime_dirs "$XDG_RUNTIME_DIR" "$TMPDIR"
+set --erase --global XDG_RUNTIME_DIR
+for runtime_dir in $runtime_dirs
+    string match --quiet '/*' -- "$runtime_dir"; or continue
+    test -d "$runtime_dir"; and test -O "$runtime_dir"; or continue
+    test "$(command stat -f %Lp -- "$runtime_dir" 2>/dev/null)" = 700; or continue
+    set --global --export XDG_RUNTIME_DIR "$runtime_dir"
+    break
 end
-set --export XDG_RUNTIME_DIR $HOME/.runtime
+if not set -q XDG_RUNTIME_DIR
+    echo "fish: no private runtime directory available; XDG_RUNTIME_DIR is unset" >&2
+end
 set --export XDG_DATA_HOME $HOME/.local/share
 set --export XDG_CONFIG_HOME $HOME/.config
 set --export XDG_STATE_HOME $HOME/.local/state

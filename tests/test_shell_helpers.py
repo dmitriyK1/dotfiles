@@ -13,6 +13,65 @@ SLEEP_FUNCTION = ROOT / "private_dot_config/private_fish/functions/toggle-sleep.
 RG = shutil.which("rg")
 
 
+class RuntimeDirectoryTests(FishTest):
+    def setUp(self):
+        super().setUp()
+        self.runtime = self.home / "runtime with spaces"
+        self.runtime.mkdir(mode=0o700)
+        self.env.pop("XDG_RUNTIME_DIR", None)
+        self.env["TMPDIR"] = str(self.runtime)
+
+    def load(self):
+        variables = ROOT / "private_dot_config/private_fish/dot_fish_variables"
+        return self.run_fish(
+            f"source {shlex.quote(str(variables))}\n"
+            "command printenv XDG_RUNTIME_DIR"
+        )
+
+    def test_private_temporary_directory_is_reused_and_exported(self):
+        for _ in range(2):
+            result = self.load()
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout, str(self.runtime) + "\n")
+            self.assertEqual(result.stderr, "")
+        self.assertFalse((self.home / ".runtime").exists())
+        self.assertEqual(self.runtime.stat().st_mode & 0o7777, 0o700)
+
+    def test_private_inherited_directory_takes_precedence(self):
+        inherited = self.home / "inherited"
+        inherited.mkdir(mode=0o700)
+        self.env["XDG_RUNTIME_DIR"] = str(inherited)
+        result = self.load()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout, str(inherited) + "\n")
+
+    def test_invalid_inherited_directory_falls_back_without_changing_it(self):
+        old = self.home / ".runtime"
+        old.mkdir(mode=0o755)
+        file = self.home / "regular-file"
+        file.write_text("preserve me")
+        for directory in ["", ".", str(old), str(file), str(self.home / "missing")]:
+            with self.subTest(directory=directory):
+                self.env["XDG_RUNTIME_DIR"] = directory
+                result = self.load()
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(result.stdout, str(self.runtime) + "\n")
+                self.assertEqual(result.stderr, "")
+        self.assertEqual(old.stat().st_mode & 0o7777, 0o755)
+        self.assertEqual(file.read_text(), "preserve me")
+
+    def test_no_private_directory_leaves_variable_unset_and_reports_it(self):
+        self.runtime.chmod(0o755)
+        for directory in ["", str(self.runtime)]:
+            with self.subTest(directory=directory):
+                self.env["TMPDIR"] = directory
+                result = self.load()
+                self.assertEqual(result.returncode, 1, result.stderr)
+                self.assertEqual(result.stdout, "")
+                self.assertIn("no private runtime directory", result.stderr)
+        self.assertEqual(self.runtime.stat().st_mode & 0o7777, 0o755)
+
+
 @unittest.skipUnless(RG, "rg is required")
 class PathPickerTests(FishTest):
     def setUp(self):
