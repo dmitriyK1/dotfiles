@@ -53,6 +53,15 @@ class UpdateTests(FishTest):
             TEST_NPM_STATUS="0", TEST_NPM_OUTPUT="", TEST_CUT_STATUS="0",
             TMPDIR=str(self.home),
         )
+        # Some macOS versions ignore TMPDIR with -t; keep step logs inside the test home.
+        mktemp = self.bin / "mktemp"
+        mktemp.write_text('''#!/bin/sh
+if [ "$1" = -t ]; then
+    set -- "$TMPDIR/$2"
+fi
+exec /usr/bin/mktemp "$@"
+''')
+        mktemp.chmod(0o700)
         self.stub = self.bin / "stub"
         self.stub.write_text("""#!/bin/sh
 tool=$1
