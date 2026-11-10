@@ -2,5 +2,7 @@
 Brewfile
 # Repository-only regression checks.
 tests
+# Repository-only CI workflows.
+.github
 # Repository-only instructions for coding agents.
 AGENTS.md

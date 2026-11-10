@@ -1,0 +1,50 @@
+name: Checks
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    # Apple Silicon matches /opt/homebrew paths used by the config and tests.
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install check dependencies
+        run: brew install chezmoi fish ripgrep shellcheck zoxide
+
+      - name: Check fish syntax
+        run: |
+          while IFS= read -r -d '' file; do
+            printf 'Checking %s\n' "$file"
+            fish --no-config --no-execute "$file"
+          done < <(git ls-files -z -- '*.fish' '*/dot_fish_*')
+
+      - name: Check shell syntax and ShellCheck
+        run: |
+          check_tmp="$(mktemp -d)"
+          trap 'rm -rf "$check_tmp"' EXIT
+          mkdir "$check_tmp/home"
+          touch "$check_tmp/config.toml"
+          while IFS= read -r -d '' file; do
+            printf 'Checking %s\n' "$file"
+            script="$file"
+            if [[ "$file" == *.tmpl ]]; then
+              script="$check_tmp/rendered.sh"
+              HOME="$check_tmp/home" chezmoi --no-tty \
+                --config "$check_tmp/config.toml" --source "$PWD" \
+                --destination "$check_tmp/home" --cache "$check_tmp/cache" \
+                --persistent-state "$check_tmp/state" execute-template < "$file" > "$script"
+            fi
+            /bin/bash -n "$script"
+            shellcheck "$script"
+          done < <(git ls-files -z -- '*.sh' '*.sh.tmpl' \
+            dot_local/bin/executable_neomutt dot_local/bin/executable_zoxide)
+
+      - name: Run offline tests
+        run: python3 -B -m unittest discover -s tests -v

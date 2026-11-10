@@ -1,3 +1,4 @@
+#!/bin/sh
 # Print the branch the current one forked from, for git base, git dm and git dmr.
 # Candidates are the start point in the branch's reflog, origin's default branch, main,
 # master, develop and dev, each as origin's copy and the local branch. The one with the
