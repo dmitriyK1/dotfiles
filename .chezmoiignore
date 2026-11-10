@@ -6,3 +6,5 @@ tests
 .github
 # Repository-only instructions for coding agents.
 AGENTS.md
+# Repository-only recovery documentation.
+RESTORE.md
