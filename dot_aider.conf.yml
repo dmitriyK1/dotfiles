@@ -7,6 +7,11 @@ editor-model: deepseek/deepseek-flash
 editor-edit-format: editor-diff
 weak-model: deepseek/deepseek-flash
 
+# Короткие имена моделей для /model и --model (flash заменяет встроенный алиас Gemini)
+alias:
+  - pro:deepseek/deepseek-v4-pro
+  - flash:deepseek/deepseek-flash
+
 # Кэширование контекста (DeepSeek кэширует сам; пригодится для других провайдеров)
 cache-prompts: true
 
@@ -35,6 +40,12 @@ analytics-disable: true
 notifications: true
 
 yes-always: true
+
+# Обновления aider только через uv (uv tool upgrade aider-chat); иначе yes-always сам запустил бы pip install
+check-update: false
+
+# Не скачивать URL из сообщений автоматически (и не ставить Playwright); страницу добавлять через /web <url>
+detect-urls: false
 
 # Линтер и тесты задаются в .aider.conf.yml конкретного репозитория, например:
 # lint-cmd: "typescript: pnpm exec eslint"
