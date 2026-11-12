@@ -20,8 +20,15 @@ dirty-commits: true
 # Запускать pre-commit хуки репозитория для коммитов Aider
 git-commit-verify: true
 
-# История чата и ввода: по умолчанию в корне репозитория (.aider* уже в ~/.gitignore_global)
-restore-chat-history: true
+# История чата и ввода пишется в корень репозитория (.aider* в ~/.gitignore_global).
+# Не подгружать её при старте; продолжить прошлую сессию: aider --restore-chat-history
+
+# Общие инструкции агента (из chezmoi) и инструкции репозитория (CLAUDE.md / AGENTS.md), если есть
+# (относительный путь считается от папки запуска aider; симлинк на тот же файл читается один раз)
+read:
+  - ~/.aider/CONVENTIONS.md
+  - CLAUDE.md
+  - AGENTS.md
 
 map-tokens: 2048
 analytics-disable: true
