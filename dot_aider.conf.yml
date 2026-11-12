@@ -7,30 +7,29 @@ editor-model: deepseek/deepseek-flash
 editor-edit-format: editor-diff
 weak-model: deepseek/deepseek-flash
 
-# Включаем кэширование контекста
+# Кэширование контекста (DeepSeek кэширует сам; пригодится для других провайдеров)
 cache-prompts: true
 
 # Создавать коммит после каждого шага Aider
 auto-commits: true
 
-# Требовать чистый git status перед стартом (защита от потери кода)
-dirty-commits: false
+# Перед правкой файла сначала коммитить ваши незакоммиченные изменения отдельным коммитом
+# (иначе они попадут в коммит Aider и /undo откатит их вместе с ним)
+dirty-commits: true
 
-# Сохранять историю чата и ввода внутри служебной папки .git
-chat-history-file: .git/.aider.chat.history.md
-input-history-file: .git/.aider.input.history
+# Запускать pre-commit хуки репозитория для коммитов Aider
+git-commit-verify: true
 
-map-tokens: 1024
+# История чата и ввода: по умолчанию в корне репозитория (.aider* уже в ~/.gitignore_global)
+restore-chat-history: true
+
+map-tokens: 2048
 analytics-disable: true
 notifications: true
 
 yes-always: true
 
-# Autonomous test & fix loop
+# Линтер и тесты задаются в .aider.conf.yml конкретного репозитория, например:
+# lint-cmd: "typescript: pnpm exec eslint"
 # auto-test: true
 # test-cmd: pnpm test
-
-auto-lint: true
-lint-cmd: pnpm run lint
-
-restore-chat-history: true
