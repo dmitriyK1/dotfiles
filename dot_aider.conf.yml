@@ -1,0 +1,36 @@
+# Включить Architect Mode
+architect: true
+
+# Основная модель и редактор
+model: deepseek/deepseek-v4-pro
+editor-model: deepseek/deepseek-flash
+editor-edit-format: editor-diff
+weak-model: deepseek/deepseek-flash
+
+# Включаем кэширование контекста
+cache-prompts: true
+
+# Создавать коммит после каждого шага Aider
+auto-commits: true
+
+# Требовать чистый git status перед стартом (защита от потери кода)
+dirty-commits: false
+
+# Сохранять историю чата и ввода внутри служебной папки .git
+chat-history-file: .git/.aider.chat.history.md
+input-history-file: .git/.aider.input.history
+
+map-tokens: 1024
+analytics-disable: true
+notifications: true
+
+yes-always: true
+
+# Autonomous test & fix loop
+# auto-test: true
+# test-cmd: pnpm test
+
+auto-lint: true
+lint-cmd: pnpm run lint
+
+restore-chat-history: true
